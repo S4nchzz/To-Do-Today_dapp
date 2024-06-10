@@ -1,13 +1,8 @@
 package com.to_do_dapp.mainScene;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
 
-import org.json.JSONObject;
+import com.to_do_dapp.mainScene.controllers.loginAndCreation.LoginSceneController;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,8 +12,8 @@ import javafx.stage.Stage;
 public class S0_ToDoToday {
     public S0_ToDoToday(Stage stage) {
         FXMLLoader toDoLoader = new FXMLLoader();
-        toDoLoader.setLocation(getClass().getResource("/com/to_do_dapp/fxml/toDo_principalScene.fxml"));
-        toDoLoader.setController(this);
+        toDoLoader.setLocation(getClass().getResource("/com/to_do_dapp/fxml/loginAndCreation/toDo_LoginScene.fxml"));
+        toDoLoader.setController(new LoginSceneController(stage));
 
         try {
             Parent toDoParent = toDoLoader.load();

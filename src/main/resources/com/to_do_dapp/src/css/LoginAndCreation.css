@@ -1,0 +1,13 @@
+#fxid_nameField, #fxid_emailField, #fxid_passField {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: rgb(207, 207, 207);
+    -fx-background-color: white;
+}
+
+#fxid_loginButton , #fxid_registerButton{
+    -fx-background-color: #ed1616;
+    
+    -fx-background-radius: 100px;
+    -fx-border-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+}
