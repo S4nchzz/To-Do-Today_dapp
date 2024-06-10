@@ -1,11 +1,11 @@
-package com.to_do;
+package com.to_do_dapp;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import com.to_do.mainScene.S0_ToDoToday;
+import com.to_do_dapp.mainScene.S0_ToDoToday; 
 
 /**
  * JavaFX App

@@ -1,4 +1,4 @@
-package com.to_do.mainScene;
+package com.to_do_dapp.mainScene;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 public class S0_ToDoToday {
     public S0_ToDoToday(Stage stage) {
         FXMLLoader toDoLoader = new FXMLLoader();
-        toDoLoader.setLocation(getClass().getResource("/com/to_do/fxml/toDo_principalScene.fxml"));
+        toDoLoader.setLocation(getClass().getResource("/com/to_do_dapp/fxml/toDo_principalScene.fxml"));
         toDoLoader.setController(this);
 
         try {
