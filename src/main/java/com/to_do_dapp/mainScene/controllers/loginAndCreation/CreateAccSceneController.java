@@ -68,6 +68,7 @@ public class CreateAccSceneController {
                 final String password = fxid_passField.getText();
                 ApiConnection api = ApiConnection.getInstance();
                 api.addUser(new UserData(username, password, email));
+                loginAccountLoadScene();
             }
         }
     }
