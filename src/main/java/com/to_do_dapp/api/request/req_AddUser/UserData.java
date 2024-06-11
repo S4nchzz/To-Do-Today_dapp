@@ -1,4 +1,4 @@
-package com.to_do_dapp.api.resources.req_AddUser;
+package com.to_do_dapp.api.request.req_AddUser;
 
 public class UserData {
     private final String username;
