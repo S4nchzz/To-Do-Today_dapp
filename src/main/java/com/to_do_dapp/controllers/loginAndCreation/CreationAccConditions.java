@@ -1,6 +1,6 @@
-package com.to_do_dapp.mainScene.controllers.loginAndCreation;
+package com.to_do_dapp.controllers.loginAndCreation;
 
-public class CreationAccountConditions {
+public class CreationAccConditions {
     public static String emailSyntax(String email) {
         if (email.length() > 50) {
             return "El correo no debe exceder los 50 caracteres";

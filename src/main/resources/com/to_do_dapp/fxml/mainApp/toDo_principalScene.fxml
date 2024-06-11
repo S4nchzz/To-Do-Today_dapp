@@ -14,7 +14,7 @@
          <children>
             <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="14.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../src/pictures/usuario.png" />
+                  <Image url="@../../src/pictures/usuario.png" />
                </image>
             </ImageView>
             <Text layoutX="58.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{user.name}" />
@@ -22,10 +22,10 @@
                <children>
                   <Pane prefHeight="61.6" prefWidth="200.0">
                      <children>
-                        <Pane fx:id="fxid_hoverPaneA" layoutX="11.0" layoutY="9.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../src/css/Scene.css" />
+                        <Pane fx:id="fxid_hoverPaneA" layoutX="11.0" layoutY="9.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/Scene.css" />
                         <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../src/pictures/tick.png" />
+                              <Image url="@../../src/pictures/tick.png" />
                            </image>
                         </ImageView>
                         <Text layoutX="71.0" layoutY="36.0" mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Today">
@@ -37,10 +37,10 @@
                   </Pane>
                   <Pane prefHeight="61.6" prefWidth="200.0">
                      <children>
-                        <Pane fx:id="fxid_hoverPaneB" layoutX="11.0" layoutY="10.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../src/css/Scene.css" />
+                        <Pane fx:id="fxid_hoverPaneB" layoutX="11.0" layoutY="10.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/Scene.css" />
                         <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../src/pictures/checklist.png" />
+                              <Image url="@../../src/pictures/checklist.png" />
                            </image>
                         </ImageView>
                         <Text layoutX="71.0" layoutY="36.0" mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="To-Do List">
@@ -52,10 +52,10 @@
                   </Pane>
                   <Pane prefHeight="61.6" prefWidth="200.0">
                      <children>
-                        <Pane fx:id="fxid_hoverPaneC" layoutX="11.0" layoutY="11.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../src/css/Scene.css" />
+                        <Pane fx:id="fxid_hoverPaneC" layoutX="11.0" layoutY="11.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/Scene.css" />
                         <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../src/pictures/estrella.png" />
+                              <Image url="@../../src/pictures/estrella.png" />
                            </image>
                         </ImageView>
                         <Text layoutX="71.0" layoutY="36.0" mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Favourites">
@@ -67,10 +67,10 @@
                   </Pane>
                   <Pane prefHeight="61.6" prefWidth="200.0">
                      <children>
-                        <Pane fx:id="fxid_hoverPaneD" layoutX="11.0" layoutY="10.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../src/css/Scene.css" />
+                        <Pane fx:id="fxid_hoverPaneD" layoutX="11.0" layoutY="10.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/Scene.css" />
                         <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../src/pictures/post-it.png" />
+                              <Image url="@../../src/pictures/post-it.png" />
                            </image>
                         </ImageView>
                         <Text layoutX="71.0" layoutY="36.0" mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Notes">
@@ -82,10 +82,10 @@
                   </Pane>
                   <Pane prefHeight="61.6" prefWidth="200.0">
                      <children>
-                        <Pane fx:id="fxid_hoverPaneE" layoutX="11.0" layoutY="9.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../src/css/Scene.css" />
+                        <Pane fx:id="fxid_hoverPaneE" layoutX="11.0" layoutY="9.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/Scene.css" />
                         <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../src/pictures/cogwheel.png" />
+                              <Image url="@../../src/pictures/cogwheel.png" />
                            </image>
                         </ImageView>
                         <Text layoutX="71.0" layoutY="36.0" mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings">
@@ -111,7 +111,7 @@
                   <AnchorPane prefHeight="462.0" prefWidth="784.0" />
                </children>
             </VBox>
-            <Pane fx:id="fxid_addToDo" layoutX="22.0" layoutY="500.0" prefHeight="45.0" prefWidth="45.0" style="-fx-cursor: hand;" stylesheets="@../src/css/Scene.css">
+            <Pane fx:id="fxid_addToDo" layoutX="22.0" layoutY="500.0" prefHeight="45.0" prefWidth="45.0" style="-fx-cursor: hand;" stylesheets="@../../src/css/Scene.css">
                <children>
                   <Text fill="WHITE" layoutX="12.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="+" wrappingWidth="21.890625">
                      <font>

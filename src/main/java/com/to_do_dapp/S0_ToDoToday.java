@@ -1,8 +1,8 @@
-package com.to_do_dapp.mainScene;
+package com.to_do_dapp;
 
 import java.io.IOException;
 
-import com.to_do_dapp.mainScene.controllers.loginAndCreation.LoginSceneController;
+import com.to_do_dapp.controllers.loginAndCreation.LoginSceneController;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

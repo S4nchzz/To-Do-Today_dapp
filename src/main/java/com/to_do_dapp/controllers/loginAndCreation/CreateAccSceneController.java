@@ -1,4 +1,4 @@
-package com.to_do_dapp.mainScene.controllers.loginAndCreation;
+package com.to_do_dapp.controllers.loginAndCreation;
 
 import java.io.IOException;
 
@@ -76,18 +76,18 @@ public class CreateAccSceneController {
             final String email = fxid_emailField.getText();
             final String password = fxid_passField.getText();
 
-            if (CreationAccountConditions.usernameSyntax(username) != "") {
-                this.fxid_usernameRegWarn.setText(CreationAccountConditions.usernameSyntax(username));
+            if (CreationAccConditions.usernameSyntax(username) != "") {
+                this.fxid_usernameRegWarn.setText(CreationAccConditions.usernameSyntax(username));
                 return;
             }
 
-            if (CreationAccountConditions.emailSyntax(email) != "") {
-                this.fxid_emailRegWarn.setText(CreationAccountConditions.emailSyntax(email));
+            if (CreationAccConditions.emailSyntax(email) != "") {
+                this.fxid_emailRegWarn.setText(CreationAccConditions.emailSyntax(email));
                 return;
             }
 
-            if (CreationAccountConditions.paswordSyntax(password) != "") {
-                this.fxid_passwordRegWarn.setText(CreationAccountConditions.paswordSyntax(password));
+            if (CreationAccConditions.paswordSyntax(password) != "") {
+                this.fxid_passwordRegWarn.setText(CreationAccConditions.paswordSyntax(password));
                 return;
             }
 

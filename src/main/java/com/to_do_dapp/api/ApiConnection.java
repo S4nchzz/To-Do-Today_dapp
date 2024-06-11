@@ -77,7 +77,7 @@ public class ApiConnection {
             OutputStream out = connection.getOutputStream();
             out.write(DataToJson.loginJson(username, password).getBytes("UTF-8"));
 
-            System.out.println(ApiResponseReader.getResponse(connection.getInputStream()));
+            return ApiResponseReader.getResponse(connection.getInputStream());
         } catch (IOException | URISyntaxException e) {
             // ? LOG : Error while trying to connect to controller method using put
             e.printStackTrace();

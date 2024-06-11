@@ -15,7 +15,7 @@
          </font></Text>
       <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="709.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../src/pictures/favorito.png" />
+            <Image url="@../../../src/pictures/favorito.png" />
          </image>
       </ImageView>
       <VBox layoutX="570.0" prefHeight="90.0" prefWidth="74.0" />
@@ -26,7 +26,7 @@
       </Text>
       <ImageView fitHeight="27.0" fitWidth="27.0" layoutX="20.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../src/pictures/si_no_background.png" />
+            <Image url="@../../../src/pictures/si_no_background.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="15.0" fitWidth="15.0" layoutX="763.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">

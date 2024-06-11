@@ -8,20 +8,12 @@ import java.io.InputStreamReader;
 public class ApiResponseReader {
     public static String getResponse(InputStream in) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-        StringBuilder sb = new StringBuilder();
         try {
-            String readIInIteration = reader.readLine();
-            sb.append(readIInIteration);
-            while (readIInIteration != null) {
-                readIInIteration = reader.readLine();
-                sb.append(readIInIteration);
-            }
-
+            return reader.readLine();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return sb.toString();
+        return null;
     }
 }

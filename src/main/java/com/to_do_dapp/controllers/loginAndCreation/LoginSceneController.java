@@ -1,8 +1,9 @@
-package com.to_do_dapp.mainScene.controllers.loginAndCreation;
+package com.to_do_dapp.controllers.loginAndCreation;
 
 import java.io.IOException;
 
 import com.to_do_dapp.api.ApiConnection;
+import com.to_do_dapp.controllers.mainAppController.MainControllerApp;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -70,6 +71,28 @@ public class LoginSceneController {
         }
 
         ApiConnection api = ApiConnection.getInstance();
-        api.login(this.fxid_nameField.getText(), this.fxid_passField.getText());
+        if (api.login(this.fxid_nameField.getText(), this.fxid_passField.getText()).equals("true")) {
+            FXMLLoader toDoMainScene = new FXMLLoader();
+            toDoMainScene.setController(new MainControllerApp());
+            toDoMainScene.setLocation(getClass().getResource("/com/to_do_dapp/fxml/mainApp/toDo_principalScene.fxml"));
+            
+            Parent mainAppParent;
+            try {
+                mainAppParent = toDoMainScene.load();
+                Scene mainAppScene = new Scene(mainAppParent);
+                Stage mainAppStage = new Stage();
+
+                this.stage.close();
+                mainAppStage.setScene(mainAppScene);
+                mainAppStage.centerOnScreen();
+                mainAppStage.setResizable(false);
+                mainAppStage.show();
+                
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        
     }
 }
