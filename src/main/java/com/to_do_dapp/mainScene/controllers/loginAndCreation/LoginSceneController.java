@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class LoginSceneController {
@@ -22,6 +23,10 @@ public class LoginSceneController {
     private TextField fxid_passField;
     @FXML
     private Button fxid_loginButton;
+    @FXML
+    private Text fxid_usernameLoginWarning;
+    @FXML
+    private Text fxid_passwordLoginWarning;
     
     public LoginSceneController(Stage stage) {
         this.stage = stage;
@@ -51,6 +56,19 @@ public class LoginSceneController {
 
     @FXML
     private void loginAction() {
+        String username = this.fxid_nameField.getText();
+        String password = this.fxid_passField.getText();
+
+        if (username.isBlank()) {
+            this.fxid_usernameLoginWarning.setText("Rellena este campo");
+            return;
+        }
+
+        if (password.isBlank()) {
+            this.fxid_passwordLoginWarning.setText("Rellena este campo");
+            return;
+        }
+
         ApiConnection api = ApiConnection.getInstance();
         api.login(this.fxid_nameField.getText(), this.fxid_passField.getText());
     }

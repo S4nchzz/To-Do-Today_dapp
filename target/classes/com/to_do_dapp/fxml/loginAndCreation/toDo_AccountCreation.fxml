@@ -26,16 +26,19 @@
                   <Pane prefHeight="71.75" prefWidth="200.0">
                      <children>
                         <TextField fx:id="fxid_nameField" layoutX="50.0" layoutY="20.0" prefHeight="32.0" prefWidth="313.0" promptText="NAME" stylesheets="@../../src/css/LoginAndCreation.css" />
+                        <Text fx:id="fxid_usernameRegWarn" fill="RED" layoutX="56.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" />
                      </children>
                   </Pane>
                   <Pane prefHeight="71.75" prefWidth="200.0">
                      <children>
                         <TextField fx:id="fxid_emailField" layoutX="50.0" layoutY="20.0" prefHeight="32.0" prefWidth="313.0" promptText="EMAIL" stylesheets="@../../src/css/LoginAndCreation.css" />
+                        <Text fx:id="fxid_emailRegWarn" fill="RED" layoutX="56.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" />
                      </children>
                   </Pane>
                   <Pane prefHeight="71.75" prefWidth="200.0">
                      <children>
                         <TextField fx:id="fxid_passField" layoutX="50.0" layoutY="20.0" prefHeight="32.0" prefWidth="313.0" promptText="PASSWORD" stylesheets="@../../src/css/LoginAndCreation.css" />
+                        <Text fx:id="fxid_passwordRegWarn" fill="RED" layoutX="56.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" />
                      </children>
                   </Pane>
                </children>

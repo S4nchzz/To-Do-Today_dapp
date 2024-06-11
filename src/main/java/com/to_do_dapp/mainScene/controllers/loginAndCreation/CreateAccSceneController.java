@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class CreateAccSceneController {
@@ -29,6 +30,12 @@ public class CreateAccSceneController {
     private RadioButton fxid_policyAndConditions;
     @FXML
     private Button fxid_registerButton;
+    @FXML
+    private Text fxid_usernameRegWarn;
+    @FXML
+    private Text fxid_emailRegWarn;
+    @FXML
+    private Text fxid_passwordRegWarn;
 
     public CreateAccSceneController(Stage stage, LoginSceneController loginController) {
         this.stage = stage;
@@ -62,14 +69,33 @@ public class CreateAccSceneController {
         if (!fxid_policyAndConditions.isSelected()) {
             fxid_policyAndConditions.setStyle("-fx-background-color: red");
         } else {
-            if (!fxid_nameField.getText().isEmpty() && !fxid_emailField.getText().isEmpty() && !fxid_passField.getText().isEmpty()) {
-                final String username = fxid_nameField.getText();
-                final String email = fxid_emailField.getText();
-                final String password = fxid_passField.getText();
-                ApiConnection api = ApiConnection.getInstance();
-                api.addUser(new UserData(username, password, email));
-                loginAccountLoadScene();
+            this.fxid_usernameRegWarn.setText("");
+            this.fxid_emailRegWarn.setText("");
+
+            final String username = fxid_nameField.getText();
+            final String email = fxid_emailField.getText();
+            final String password = fxid_passField.getText();
+
+            if (CreationAccountConditions.usernameSyntax(username) != "") {
+                this.fxid_usernameRegWarn.setText(CreationAccountConditions.usernameSyntax(username));
+                return;
             }
+
+            if (CreationAccountConditions.emailSyntax(email) != "") {
+                this.fxid_emailRegWarn.setText(CreationAccountConditions.emailSyntax(email));
+                return;
+            }
+
+            if (CreationAccountConditions.paswordSyntax(password) != "") {
+                this.fxid_passwordRegWarn.setText(CreationAccountConditions.paswordSyntax(password));
+                return;
+            }
+
+
+            ApiConnection api = ApiConnection.getInstance();
+            api.addUser(new UserData(username, password, email));
+            loginAccountLoadScene();
+
         }
     }
 }

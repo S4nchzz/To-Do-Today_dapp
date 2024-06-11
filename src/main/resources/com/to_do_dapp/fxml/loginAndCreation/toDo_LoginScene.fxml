@@ -31,11 +31,21 @@
                   <Pane prefHeight="71.75" prefWidth="200.0">
                      <children>
                         <TextField fx:id="fxid_nameField" layoutX="50.0" layoutY="20.0" prefHeight="32.0" prefWidth="313.0" promptText="USERNAME" stylesheets="@../../src/css/LoginAndCreation.css" />
+                        <Text fx:id="fxid_usernameLoginWarning" fill="RED" layoutX="56.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0">
+                           <font>
+                              <Font name="Tahoma" size="11.0" />
+                           </font>
+                        </Text>
                      </children>
                   </Pane>
                   <Pane prefHeight="71.75" prefWidth="200.0">
                      <children>
                         <TextField fx:id="fxid_passField" layoutX="50.0" layoutY="20.0" prefHeight="32.0" prefWidth="313.0" promptText="PASSWORD" stylesheets="@../../src/css/LoginAndCreation.css" />
+                        <Text fx:id="fxid_passwordLoginWarning" fill="RED" layoutX="56.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0">
+                           <font>
+                              <Font name="Tahoma" size="11.0" />
+                           </font>
+                        </Text>
                      </children>
                   </Pane>
                </children>
