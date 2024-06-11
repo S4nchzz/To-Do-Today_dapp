@@ -2,6 +2,7 @@ package com.to_do_dapp.api;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,56 +27,32 @@ public class ApiConnection {
         return instance;
     }
 
-    private boolean checkAuth() {
+    private String getToken() {
+        FileReader file;
         try {
-            URI uri = new URI(apiUrl + "/auth");
-            HttpURLConnection connection = (HttpURLConnection)uri.toURL().openConnection();
-            connection.setRequestMethod("GET");
-
-            FileReader file = new FileReader(new File("C:/Users/" + System.getProperty("user.name") + "/Desktop/token_auth"));
+            file = new FileReader(new File("C:/Users/" + System.getProperty("user.name") + "/Desktop/token_auth"));
             BufferedReader reader = new BufferedReader(file);
 
             final String token = reader.readLine();
             reader.close();
 
-            connection.addRequestProperty("Authorization", "Bearer " + token);
-            if (connection.getResponseCode() != 200) {
-                // ? LOG: Auth client failed bad server response
-                return false;
-            }
-
-            BufferedReader apiResponse = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            final String apiAuthResponse = apiResponse.readLine();
-
-            System.out.println(apiAuthResponse);
-
-            if (apiAuthResponse.equalsIgnoreCase("Client authenticated")) {
-                return true;
-            } else if (apiAuthResponse.equalsIgnoreCase("Client not authenticated")){
-                return false;
-            } else {
-                //? LOG: API Auth response not compatible with default operands
-            }
-
-        } catch (URISyntaxException | IOException e) {
-            // ? LOG: Failed to check authenticated Client
+            return token;
+        } catch (IOException e) {
+            // ? LOG: Token File not founded skiping...
             e.printStackTrace();
         }
 
-        return false;
+        return "";
     }
 
     public String addUser(UserData userModelClient) {
-        if (!checkAuth()) {
-            return null;
-        }
-
         try {
             URI uri = new URI(apiUrl + "/user/addUser");
             HttpURLConnection connectionToApi = (HttpURLConnection) uri.toURL().openConnection();
             
             connectionToApi.setRequestMethod("PUT");
             connectionToApi.setDoOutput(true);
+            connectionToApi.setRequestProperty("Authorization", "Bearer " + getToken());
             
             OutputStream out = connectionToApi.getOutputStream();
             out.write(DataToJson.userDataToJson(userModelClient).getBytes());
@@ -91,16 +68,13 @@ public class ApiConnection {
     }
 
     public String login(String username, String password) {
-        if (!checkAuth()) {
-            return null;
-        }
-        
         try {
             URI uri = new URI(apiUrl + "/user/login");
             HttpURLConnection connection = (HttpURLConnection)uri.toURL().openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            connection.setRequestProperty("Authorization", "Bearer " + getToken());
 
             OutputStream out = connection.getOutputStream();
             out.write(DataToJson.loginJson(username, password).getBytes("UTF-8"));
