@@ -3,7 +3,7 @@ package com.to_do_dapp.controllers.loginAndCreation;
 import java.io.IOException;
 
 import com.to_do_dapp.api.ApiConnection;
-import com.to_do_dapp.api.request.req_AddUser.UserData;
+import com.to_do_dapp.api.requests.req_AddUser.UserData;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

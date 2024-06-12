@@ -4,14 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
 
-import com.to_do_dapp.api.request.ApiResponseReader;
-import com.to_do_dapp.api.request.req_AddUser.DataToJson;
-import com.to_do_dapp.api.request.req_AddUser.UserData;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
+
+import com.to_do_dapp.api.requests.req_AddUser.DataToJson;
+import com.to_do_dapp.api.requests.req_AddUser.UserData;
 
 public class ApiConnection {
     protected final static String apiUrl = "http://192.168.1.97:8080";
@@ -28,7 +28,7 @@ public class ApiConnection {
     private String getToken() {
         FileReader file;
         try {
-            file = new FileReader(new File("C:/Users/" + System.getProperty("user.name") + "/Desktop/token_auth"));
+            file = new FileReader(new File("C:/Users/" + System.getProperty("user.name") + "/AppData/Local/ToDoToday/authApi.tkn"));
             BufferedReader reader = new BufferedReader(file);
 
             final String token = reader.readLine();
@@ -43,46 +43,29 @@ public class ApiConnection {
         return "";
     }
 
-    public String addUser(UserData userModelClient) {
-        try {
-            URI uri = new URI(apiUrl + "/user/addUser");
-            HttpURLConnection connectionToApi = (HttpURLConnection) uri.toURL().openConnection();
-            
-            connectionToApi.setRequestMethod("PUT");
-            connectionToApi.setDoOutput(true);
-            connectionToApi.setRequestProperty("Authorization", "Bearer " + getToken());
-            
-            OutputStream out = connectionToApi.getOutputStream();
-            out.write(DataToJson.userDataToJson(userModelClient).getBytes());
-
-            // ? LOG: Save api response
-            return ApiResponseReader.getResponse(connectionToApi.getInputStream());
-        } catch (URISyntaxException | IOException e) {
-            // ? ERROR WHILE TRYING TO CONNECT CONTROLLER METHOD USING PUT
-            e.printStackTrace();
-        }
-
-        return null;
+    public boolean addUser(UserData userModelClient) {
+        RestTemplate apiCreateAcc = new RestTemplate();
+        
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        httpHeaders.add("Authorization", "Bearer " + getToken());
+     
+        HttpEntity<String> httpEntity = new HttpEntity<>(DataToJson.userDataToJson(userModelClient), httpHeaders);
+        Boolean response = apiCreateAcc.postForObject(apiUrl + "/user/addUser", httpEntity, Boolean.class);
+        
+        return response;
     }
 
-    public String login(String username, String password) {
-        try {
-            URI uri = new URI(apiUrl + "/user/login");
-            HttpURLConnection connection = (HttpURLConnection)uri.toURL().openConnection();
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            connection.setRequestProperty("Authorization", "Bearer " + getToken());
+    public boolean login(String username, String password) {
+        RestTemplate apiLogin = new RestTemplate();
+        
+        HttpHeaders header = new HttpHeaders();
+        header.add("Authorization", "Bearer " + getToken());
+        header.setContentType(MediaType.APPLICATION_JSON);
 
-            OutputStream out = connection.getOutputStream();
-            out.write(DataToJson.loginJson(username, password).getBytes("UTF-8"));
+        HttpEntity<String> httpEntity = new HttpEntity<>(DataToJson.loginJson(username, password), header);
+        Boolean response = apiLogin.postForObject(apiUrl + "/user/login", httpEntity, Boolean.class);
 
-            return ApiResponseReader.getResponse(connection.getInputStream());
-        } catch (IOException | URISyntaxException e) {
-            // ? LOG : Error while trying to connect to controller method using put
-            e.printStackTrace();
-        }
-
-        return null;
+        return response;
     }
 }

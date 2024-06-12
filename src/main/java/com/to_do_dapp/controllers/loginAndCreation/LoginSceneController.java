@@ -1,5 +1,6 @@
 package com.to_do_dapp.controllers.loginAndCreation;
 
+import java.io.File;
 import java.io.IOException;
 
 import com.to_do_dapp.api.ApiConnection;
@@ -31,6 +32,21 @@ public class LoginSceneController {
     
     public LoginSceneController(Stage stage) {
         this.stage = stage;
+        // Create localAppdata folder with files
+        File folder = new File("C:/Users/" + System.getProperty("user.name") + "/AppData/Local/ToDoToday");
+        if (folder.mkdir()) {
+            //? LOG: Folder ToDoToday on appdata/Local created correclty
+            File authServerMethodsFile = new File(folder.getAbsolutePath() + "/authApi.tkn");
+            try {
+                authServerMethodsFile.createNewFile();
+            } catch (IOException e) {
+                // LOG: Failed to create authApi.tkn file, check entire path
+                e.printStackTrace();
+            }
+        } else {
+            //? LOG: Failed to create ToDoToday folder on appdata/Local cause: Local folder exists(?) 
+        }
+        
     }
 
     @FXML
@@ -71,7 +87,7 @@ public class LoginSceneController {
         }
 
         ApiConnection api = ApiConnection.getInstance();
-        if (api.login(this.fxid_nameField.getText(), this.fxid_passField.getText()).equals("true")) {
+        if (api.login(this.fxid_nameField.getText(), this.fxid_passField.getText())) {
             FXMLLoader toDoMainScene = new FXMLLoader();
             toDoMainScene.setController(new MainControllerApp());
             toDoMainScene.setLocation(getClass().getResource("/com/to_do_dapp/fxml/mainApp/toDo_principalScene.fxml"));

@@ -1,4 +1,4 @@
-package com.to_do_dapp.api.request;
+package com.to_do_dapp.api.requests;
 
 import java.io.BufferedReader;
 import java.io.IOException;
