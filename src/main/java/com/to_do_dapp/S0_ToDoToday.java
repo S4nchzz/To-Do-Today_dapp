@@ -2,6 +2,7 @@ package com.to_do_dapp;
 
 import java.io.IOException;
 
+import com.to_do_dapp.controllers.FilesCreation;
 import com.to_do_dapp.controllers.loginAndCreation.LoginSceneController;
 
 import javafx.fxml.FXMLLoader;
@@ -14,6 +15,11 @@ public class S0_ToDoToday {
         FXMLLoader toDoLoader = new FXMLLoader();
         toDoLoader.setLocation(getClass().getResource("/com/to_do_dapp/fxml/loginAndCreation/toDo_LoginScene.fxml"));
         toDoLoader.setController(new LoginSceneController(stage));
+
+        if (!FilesCreation.createNecesaryFiles()) {
+            //? LOG: Failed to create some files
+            return;
+        }
 
         try {
             Parent toDoParent = toDoLoader.load();

@@ -1,9 +1,14 @@
 package com.to_do_dapp.controllers.loginAndCreation;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+
+import org.json.JSONObject;
 
 import com.to_do_dapp.api.ApiConnection;
+import com.to_do_dapp.controllers.FilesCreation;
 import com.to_do_dapp.controllers.mainAppController.MainControllerApp;
 
 import javafx.fxml.FXML;
@@ -31,22 +36,7 @@ public class LoginSceneController {
     private Text fxid_passwordLoginWarning;
     
     public LoginSceneController(Stage stage) {
-        this.stage = stage;
-        // Create localAppdata folder with files
-        File folder = new File("C:/Users/" + System.getProperty("user.name") + "/AppData/Local/ToDoToday");
-        if (folder.mkdir()) {
-            //? LOG: Folder ToDoToday on appdata/Local created correclty
-            File authServerMethodsFile = new File(folder.getAbsolutePath() + "/authApi.tkn");
-            try {
-                authServerMethodsFile.createNewFile();
-            } catch (IOException e) {
-                // LOG: Failed to create authApi.tkn file, check entire path
-                e.printStackTrace();
-            }
-        } else {
-            //? LOG: Failed to create ToDoToday folder on appdata/Local cause: Local folder exists(?) 
-        }
-        
+        this.stage = stage;        
     }
 
     @FXML
@@ -87,14 +77,26 @@ public class LoginSceneController {
         }
 
         ApiConnection api = ApiConnection.getInstance();
-        if (api.login(this.fxid_nameField.getText(), this.fxid_passField.getText())) {
+        Object authUser = api.login(this.fxid_nameField.getText(), this.fxid_passField.getText());
+
+        if (authUser instanceof String) {
+            try {
+                OutputStream out = new FileOutputStream(new File(FilesCreation.toDoTodayAbsolutePath + FilesCreation.authTempUserFile));
+                JSONObject json = new JSONObject((String)authUser);
+                
+                out.write(json.getString("tempUserAuthTkn").getBytes());
+                out.close();
+            } catch (IOException e) {
+                // ? LOG: File authUser.tkn not found at C:/User/user/appdata/Local/ToDoToday/ check absolute path
+                e.printStackTrace();
+            }
+        
             FXMLLoader toDoMainScene = new FXMLLoader();
             toDoMainScene.setController(new MainControllerApp());
             toDoMainScene.setLocation(getClass().getResource("/com/to_do_dapp/fxml/mainApp/toDo_principalScene.fxml"));
             
-            Parent mainAppParent;
             try {
-                mainAppParent = toDoMainScene.load();
+                Parent mainAppParent = toDoMainScene.load();
                 Scene mainAppScene = new Scene(mainAppParent);
                 Stage mainAppStage = new Stage();
 
@@ -107,8 +109,8 @@ public class LoginSceneController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+        } else if (authUser instanceof Boolean) {
+            // ?: Show message invalid credentials   
         }
-        
     }
 }

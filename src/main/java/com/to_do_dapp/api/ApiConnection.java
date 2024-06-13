@@ -5,13 +5,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.to_do_dapp.api.requests.req_AddUser.DataToJson;
 import com.to_do_dapp.api.requests.req_AddUser.UserData;
+import com.to_do_dapp.controllers.FilesCreation;
 
 public class ApiConnection {
     protected final static String apiUrl = "http://192.168.1.97:8080";
@@ -28,7 +32,7 @@ public class ApiConnection {
     private String getToken() {
         FileReader file;
         try {
-            file = new FileReader(new File("C:/Users/" + System.getProperty("user.name") + "/AppData/Local/ToDoToday/authApi.tkn"));
+            file = new FileReader(new File(FilesCreation.toDoTodayAbsolutePath + FilesCreation.authApiFile));
             BufferedReader reader = new BufferedReader(file);
 
             final String token = reader.readLine();
@@ -40,7 +44,7 @@ public class ApiConnection {
             e.printStackTrace();
         }
 
-        return "";
+        return null;
     }
 
     public boolean addUser(UserData userModelClient) {
@@ -56,7 +60,7 @@ public class ApiConnection {
         return response;
     }
 
-    public boolean login(String username, String password) {
+    public Object login(String username, String password) {
         RestTemplate apiLogin = new RestTemplate();
         
         HttpHeaders header = new HttpHeaders();
@@ -64,8 +68,19 @@ public class ApiConnection {
         header.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<String> httpEntity = new HttpEntity<>(DataToJson.loginJson(username, password), header);
-        Boolean response = apiLogin.postForObject(apiUrl + "/user/login", httpEntity, Boolean.class);
+        ResponseEntity<String> response = apiLogin.postForEntity(apiUrl + "/user/login", httpEntity, String.class);
+        
+        if (response.getBody().equals("false")) {
+            return false;
+        }
 
-        return response;
+        try {
+            new JSONObject(response.getBody().toString());      
+        } catch (JSONException jsone) {
+            // ? LOG: Bad request from server Not a JSON format
+            return false;
+        }
+
+        return response.getBody();
     }
 }
