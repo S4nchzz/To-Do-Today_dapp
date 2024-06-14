@@ -18,7 +18,7 @@ import com.to_do_dapp.api.requests.req_AddUser.UserData;
 import com.to_do_dapp.controllers.FilesCreation;
 
 public class ApiConnection {
-    protected final static String apiUrl = "http://192.168.1.97:8080";
+    protected final static String apiUrl = "http://192.168.1.98:8080";
     private static ApiConnection instance = new ApiConnection();
 
     private ApiConnection () {        
@@ -57,7 +57,7 @@ public class ApiConnection {
         HttpEntity<String> httpEntity = new HttpEntity<>(DataToJson.userDataToJson(userModelClient), httpHeaders);
         Boolean response = apiCreateAcc.postForObject(apiUrl + "/user/addUser", httpEntity, Boolean.class);
         
-        return response;
+        return response;    
     }
 
     public Object login(String username, String password) {

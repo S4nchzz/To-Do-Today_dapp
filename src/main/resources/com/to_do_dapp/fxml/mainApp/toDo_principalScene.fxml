@@ -10,7 +10,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="1134.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane prefHeight="590.0" prefWidth="160.0" style="-fx-background-color: #f6f9f9;">
+      <Pane fx:id="fxid_leftPane" layoutX="-160.0" layoutY="1.0" prefHeight="590.0" prefWidth="160.0" style="-fx-background-color: #f6f9f9;">
          <children>
             <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="14.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -99,7 +99,7 @@
             </VBox>
          </children>
       </Pane>
-      <Pane layoutX="170.0" layoutY="14.0" prefHeight="565.0" prefWidth="956.0">
+      <Pane layoutX="170.0" layoutY="14.0" prefHeight="565.0" prefWidth="956.0" visible="false">
          <children>
             <Text layoutX="87.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To-Do List">
                <font>
@@ -122,5 +122,10 @@
             </Pane>
          </children>
       </Pane>
+      <ImageView fx:id="fxid_menuImage" fitHeight="30.0" fitWidth="30.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#showLeftMenu" pickOnBounds="true" preserveRatio="true" rotate="180.0" style="-fx-cursor: hand;">
+         <image>
+            <Image url="@../../src/pictures/menu.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>
