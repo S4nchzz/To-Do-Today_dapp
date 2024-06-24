@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.to_do_dapp.api.requests.req_AddUser.DataToJson;
 import com.to_do_dapp.api.requests.req_AddUser.UserData;
-import com.to_do_dapp.controllers.FilesCreation;
+import com.to_do_dapp.controllers.ToDoFiles;
 
 public class ApiConnection {
     protected final static String apiUrl = "http://192.168.1.98:8080";
@@ -32,7 +32,7 @@ public class ApiConnection {
     private String getToken() {
         FileReader file;
         try {
-            file = new FileReader(new File(FilesCreation.toDoTodayAbsolutePath + FilesCreation.authApiFile));
+            file = new FileReader(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authApiFile));
             BufferedReader reader = new BufferedReader(file);
 
             final String token = reader.readLine();
@@ -82,5 +82,46 @@ public class ApiConnection {
         }
 
         return response.getBody();
+    }
+
+    public JSONObject getToDoS() {
+        RestTemplate getToDoS = new RestTemplate();
+        
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+    
+        JSONObject jsonUserToken;
+        try {
+            jsonUserToken = new JSONObject();
+            jsonUserToken.put("userToken", ToDoFiles.getAuthUserToken());
+            HttpEntity<String> httpEntity = new HttpEntity<>(jsonUserToken.toString(), header);
+
+            ResponseEntity<String> toDos = getToDoS.postForEntity(apiUrl + "/toDoS/getToDoS", httpEntity, String.class);
+            System.out.println(toDos.toString());
+            return new JSONObject(toDos.toString());
+        } catch (IOException e) {
+            // ? LOG: Error getting TempToken from userFile
+        }
+
+        return null;
+    }
+
+    public boolean addToDo () throws JSONException, IOException {
+        RestTemplate addToDo = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+        
+        JSONObject json = new JSONObject();
+        json.put("userToken", ToDoFiles.getAuthUserToken());
+        json.put("header", "Hacer los deberes");
+        json.put("content", "Debereeeeeeeeeeeeeeeeees");
+        json.put("fav", false);
+
+        HttpEntity<String> httpEntity = new HttpEntity<>(json.toString(), header);
+
+        ResponseEntity<Boolean> response = addToDo.postForEntity(apiUrl + "/toDos/addToDo", httpEntity, Boolean.class);
+        System.out.println(response.toString());
+        return Boolean.valueOf(response.toString());
     }
 }

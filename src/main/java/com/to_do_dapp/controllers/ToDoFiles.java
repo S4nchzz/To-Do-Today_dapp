@@ -1,9 +1,11 @@
 package com.to_do_dapp.controllers;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
-public class FilesCreation {
+public class ToDoFiles {
     public static final String toDoTodayAbsolutePath = "C:/Users/" + System.getProperty("user.name") + "/AppData/Local/ToDoToday/";
     public static final String authApiFile = "authApi.tkn";
     public static final String authTempUserFile = "authTempUser.tkn";
@@ -29,6 +31,15 @@ public class FilesCreation {
                 return false;
             }
 
-            return true;
+        return true;
+    }
+
+    public static String getAuthUserToken() throws IOException {
+        File userAuthToken = new File(toDoTodayAbsolutePath + authTempUserFile);
+        BufferedReader reader = new BufferedReader(new FileReader(userAuthToken));
+        
+        String content = reader.readLine();
+        reader.close();
+        return content;
     }
 }

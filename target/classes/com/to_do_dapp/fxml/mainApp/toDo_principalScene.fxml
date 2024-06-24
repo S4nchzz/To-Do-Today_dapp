@@ -99,29 +99,32 @@
             </VBox>
          </children>
       </Pane>
-      <Pane layoutX="170.0" layoutY="14.0" prefHeight="565.0" prefWidth="956.0" visible="false">
+      <Pane fx:id="fxid_allPanes" layoutX="157.0" layoutY="14.0" prefHeight="565.0" prefWidth="956.0">
          <children>
-            <Text layoutX="87.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To-Do List">
-               <font>
-                  <Font name="System Bold" size="35.0" />
-               </font>
-            </Text>
-            <VBox layoutX="87.0" layoutY="93.0" prefHeight="452.0" prefWidth="784.0">
+            <Pane fx:id="fxid_addToDoPane" prefHeight="565.0" prefWidth="956.0">
                <children>
-                  <AnchorPane prefHeight="462.0" prefWidth="784.0" />
-               </children>
-            </VBox>
-            <Pane fx:id="fxid_addToDo" layoutX="22.0" layoutY="500.0" prefHeight="45.0" prefWidth="45.0" style="-fx-cursor: hand;" stylesheets="@../../src/css/Scene.css">
-               <children>
-                  <Text fill="WHITE" layoutX="12.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="+" wrappingWidth="21.890625">
+                  <Text layoutX="87.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To-Do List">
                      <font>
-                        <Font size="32.0" />
+                        <Font name="System Bold" size="35.0" />
                      </font>
                   </Text>
+                  <VBox layoutX="87.0" layoutY="93.0" prefHeight="452.0" prefWidth="784.0">
+                     <children>
+                        <AnchorPane prefHeight="462.0" prefWidth="784.0" />
+                     </children>
+                  </VBox>
+                  <Pane fx:id="fxid_addToDo" layoutX="22.0" layoutY="500.0" onMouseClicked="#addToDo" prefHeight="45.0" prefWidth="45.0" style="-fx-cursor: hand;" stylesheets="@../../src/css/Scene.css">
+                     <children>
+                        <Text fill="WHITE" layoutX="12.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="+" wrappingWidth="21.890625">
+                           <font>
+                              <Font size="32.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </Pane>
                </children>
             </Pane>
-         </children>
-      </Pane>
+         </children></Pane>
       <ImageView fx:id="fxid_menuImage" fitHeight="30.0" fitWidth="30.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#showLeftMenu" pickOnBounds="true" preserveRatio="true" rotate="180.0" style="-fx-cursor: hand;">
          <image>
             <Image url="@../../src/pictures/menu.png" />

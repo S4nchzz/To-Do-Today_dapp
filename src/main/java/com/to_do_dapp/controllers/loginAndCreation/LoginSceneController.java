@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import org.json.JSONObject;
 
 import com.to_do_dapp.api.ApiConnection;
-import com.to_do_dapp.controllers.FilesCreation;
+import com.to_do_dapp.controllers.ToDoFiles;
 import com.to_do_dapp.controllers.mainAppController.MainControllerApp;
 
 import javafx.fxml.FXML;
@@ -81,7 +81,7 @@ public class LoginSceneController {
 
         if (authUser instanceof String) {
             try {
-                OutputStream out = new FileOutputStream(new File(FilesCreation.toDoTodayAbsolutePath + FilesCreation.authTempUserFile));
+                OutputStream out = new FileOutputStream(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authTempUserFile));
                 JSONObject json = new JSONObject((String)authUser);
                 
                 out.write(json.getString("tempUserAuthTkn").getBytes());

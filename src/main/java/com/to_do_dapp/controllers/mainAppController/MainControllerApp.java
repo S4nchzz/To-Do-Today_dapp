@@ -1,5 +1,11 @@
 package com.to_do_dapp.controllers.mainAppController;
 
+import java.io.IOException;
+
+import org.json.JSONException;
+
+import com.to_do_dapp.api.ApiConnection;
+
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
@@ -11,10 +17,17 @@ public class MainControllerApp {
     private Pane fxid_leftPane;
     @FXML
     private ImageView fxid_menuImage;
+
+    // Principal app panes
+    @FXML
+    private Pane fxid_allPanes;
+
     private boolean menuHidden;
+    private final ApiConnection apiConnection;
 
     public MainControllerApp() {
         this.menuHidden = true;
+        apiConnection = ApiConnection.getInstance();
     }
 
     @FXML
@@ -36,8 +49,21 @@ public class MainControllerApp {
         leftAnimationImage.setNode(fxid_menuImage);
         leftAnimationImage.setToX(imageMoveX);
         leftAnimationImage.setDuration(Duration.millis(200));
+        
         leftAnimationImage.play();
-
         menuHidden = !menuHidden;
+    }
+
+    // private void preloadToDoElements() {
+    //     // CALL API METHOD AND GET BY JSON ALL ENTRIES
+    // }
+
+    @FXML
+    private void addToDo() {
+        try {
+            apiConnection.addToDo();
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }
