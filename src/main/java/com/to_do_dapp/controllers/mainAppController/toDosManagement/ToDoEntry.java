@@ -14,6 +14,10 @@ public class ToDoEntry {
     //To Do elements
     @FXML
     private Text fxid_toDoHeader;
+    @FXML
+    private Text fxid_toDoContent;
+    @FXML
+    private Text fxid_toDoDate;
 
     public Pane createPane(JSONObject jsonObject) {
         FXMLLoader loader = new FXMLLoader();
@@ -23,6 +27,23 @@ public class ToDoEntry {
         try {
             Parent pane = loader.load();
             this.fxid_toDoHeader.setText(jsonObject.getString("Header"));
+
+            String content = jsonObject.getString("Content");
+
+            if (content.length() > 40) {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < 40; i++) {
+                    sb.append(content.charAt(i));
+                }
+    
+                this.fxid_toDoContent.setText(sb.toString() + "...");
+            } else {
+                this.fxid_toDoContent.setText(content);
+            }
+
+
+            ToDoDateFormat tddf = new ToDoDateFormat(jsonObject);
+            this.fxid_toDoDate.setText(tddf.getFormatForToDoElement());
             return (Pane)pane;
         } catch (IOException e) {
             
