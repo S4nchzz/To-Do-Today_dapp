@@ -1,15 +1,21 @@
 package com.to_do_dapp.controllers.mainAppController;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.to_do_dapp.api.ApiConnection;
+import com.to_do_dapp.controllers.mainAppController.toDosManagement.ToDoEntry;
 
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 public class MainControllerApp {
@@ -22,12 +28,21 @@ public class MainControllerApp {
     @FXML
     private Pane fxid_allPanes;
 
+    //V-Box ToDos
+    @FXML
+    private AnchorPane fxid_toDoAnchorPane;
+    @FXML
+    private VBox fxid_toDoVbox;
+
     private boolean menuHidden;
     private final ApiConnection apiConnection;
 
     public MainControllerApp() {
         this.menuHidden = true;
         apiConnection = ApiConnection.getInstance();
+        Platform.runLater(() -> {
+            preloadToDoElements();
+        });
     }
 
     @FXML
@@ -54,9 +69,21 @@ public class MainControllerApp {
         menuHidden = !menuHidden;
     }
 
-    // private void preloadToDoElements() {
-    //     // CALL API METHOD AND GET BY JSON ALL ENTRIES
-    // }
+    private void preloadToDoElements() {
+        JSONObject toDoJson = apiConnection.getToDoS();
+        java.util.Iterator<String> iterator = toDoJson.keys();
+
+        ArrayList<JSONObject> toDoList = new ArrayList<>();
+        while (iterator.hasNext()) {
+            String i = iterator.next();
+            toDoList.add(toDoJson.getJSONObject(i));
+        }
+        
+        for (int i = 0; i < toDoList.size(); i++) {
+            ToDoEntry entry = new ToDoEntry();
+            fxid_toDoVbox.getChildren().add(entry.createPane(toDoList.get(i)));
+        }
+    }
 
     @FXML
     private void addToDo() {

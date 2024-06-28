@@ -96,9 +96,8 @@ public class ApiConnection {
             jsonUserToken.put("userToken", ToDoFiles.getAuthUserToken());
             HttpEntity<String> httpEntity = new HttpEntity<>(jsonUserToken.toString(), header);
 
-            ResponseEntity<String> toDos = getToDoS.postForEntity(apiUrl + "/toDoS/getToDoS", httpEntity, String.class);
-            System.out.println(toDos.toString());
-            return new JSONObject(toDos.toString());
+            ResponseEntity<String> toDos = getToDoS.postForEntity(apiUrl + "/toDos/getToDos", httpEntity, String.class);
+            return new JSONObject(toDos.getBody());
         } catch (IOException e) {
             // ? LOG: Error getting TempToken from userFile
         }

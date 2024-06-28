@@ -108,9 +108,9 @@
                         <Font name="System Bold" size="35.0" />
                      </font>
                   </Text>
-                  <VBox layoutX="87.0" layoutY="93.0" prefHeight="452.0" prefWidth="784.0">
+                  <VBox fx:id="fxid_toDoVbox" layoutX="87.0" layoutY="93.0" prefHeight="452.0" prefWidth="784.0">
                      <children>
-                        <AnchorPane prefHeight="462.0" prefWidth="784.0" />
+                        <AnchorPane fx:id="fxid_toDoAnchorPane" prefHeight="462.0" prefWidth="784.0" />
                      </children>
                   </VBox>
                   <Pane fx:id="fxid_addToDo" layoutX="22.0" layoutY="500.0" onMouseClicked="#addToDo" prefHeight="45.0" prefWidth="45.0" style="-fx-cursor: hand;" stylesheets="@../../src/css/Scene.css">
