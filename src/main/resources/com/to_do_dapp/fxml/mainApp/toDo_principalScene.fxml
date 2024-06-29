@@ -108,9 +108,9 @@
                         <Font name="System Bold" size="35.0" />
                      </font>
                   </Text>
-                  <ScrollPane layoutX="87.0" layoutY="93.0" prefHeight="462.0" prefWidth="784.0">
+                  <ScrollPane fx:id="fxid_scrollPane" layoutX="87.0" layoutY="93.0" prefHeight="462.0" prefWidth="784.0" stylesheets="@../../src/css/MainScene.css">
                      <content>
-                        <VBox fx:id="fxid_toDoVbox" prefHeight="459.0" prefWidth="782.0" />
+                        <VBox fx:id="fxid_toDoVbox" prefHeight="457.0" prefWidth="762.0" />
                      </content>
                   </ScrollPane>
                   <Pane fx:id="fxid_addToDo" layoutX="22.0" layoutY="500.0" onMouseClicked="#addToDo" prefHeight="45.0" prefWidth="45.0" style="-fx-cursor: hand;" stylesheets="@../../src/css/Scene.css">

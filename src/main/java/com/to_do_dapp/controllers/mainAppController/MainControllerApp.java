@@ -89,6 +89,8 @@ public class MainControllerApp {
     private void addToDo() {
         try {
             apiConnection.addToDo();
+            this.fxid_toDoVbox.getChildren().clear();
+            preloadToDoElements();
         } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
