@@ -34,11 +34,15 @@ public class MainControllerApp {
     @FXML
     private VBox fxid_toDoVbox;
 
+    // To Do Menu Detail
+    @FXML
+    private Pane fxid_toDoMenu;
+
     private boolean menuHidden;
     private final ApiConnection apiConnection;
 
     public MainControllerApp() {
-        this.menuHidden = true;
+        this.menuHidden = false;
         apiConnection = ApiConnection.getInstance();
         Platform.runLater(() -> {
             preloadToDoElements();
@@ -47,12 +51,9 @@ public class MainControllerApp {
 
     @FXML
     private void showLeftMenu () {
-        int imageMoveX = 150;
-        int paneMoveX = 160;
-        if (!menuHidden) {
-            imageMoveX = 0;
-            paneMoveX = -paneMoveX;
-        }
+        int imageMoveX = !menuHidden ? -160 : 0;
+
+        int paneMoveX = !menuHidden ? paneMoveX = -160 : 0;
 
         TranslateTransition leftAnimationPane = new TranslateTransition();
         leftAnimationPane.setNode(fxid_leftPane);
@@ -80,7 +81,7 @@ public class MainControllerApp {
         }
         
         for (int i = 0; i < toDoList.size(); i++) {
-            ToDoEntry entry = new ToDoEntry();
+            ToDoEntry entry = new ToDoEntry(this);
             fxid_toDoVbox.getChildren().add(entry.createPane(toDoList.get(i)));
         }
     }
@@ -94,5 +95,18 @@ public class MainControllerApp {
         } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void closeMenuDetails() {
+        TranslateTransition toDoMenu = new TranslateTransition();
+        toDoMenu.setNode(this.fxid_toDoMenu);
+        toDoMenu.setByX(326);
+        toDoMenu.setDuration(Duration.millis(500));
+        toDoMenu.play();
+    }
+
+    public Pane getFxid_toDoMenu() {
+        return fxid_toDoMenu;
     }
 }

@@ -2,16 +2,18 @@ package com.to_do_dapp.controllers.mainAppController.toDosManagement;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.json.JSONObject;
 
+import com.to_do_dapp.controllers.mainAppController.MainControllerApp;
+
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class ToDoEntry {
     //To Do elements
@@ -27,12 +29,14 @@ public class ToDoEntry {
     private final int yy;
     private final int mm;
     private final int dd;
-    
-    public ToDoEntry () {
+
+    private final MainControllerApp main;
+    public ToDoEntry (MainControllerApp main) {
         LocalDate date = LocalDate.now();
         this.yy = date.getYear();
         this.mm = date.getMonthValue();
         this.dd = date.getDayOfMonth();
+        this.main = main;
     }
 
     public Pane createPane(JSONObject jsonObject) {
@@ -80,5 +84,26 @@ public class ToDoEntry {
         } else {
             return "black";
         }
+    }
+
+    @FXML
+    private void openMenuDetails() {
+        TranslateTransition toDoMenu = new TranslateTransition();
+        toDoMenu.setNode(main.getFxid_toDoMenu());
+        toDoMenu.setByX(-326);
+        toDoMenu.setDuration(Duration.millis(500));
+        toDoMenu.play();
+    }
+
+    public int getYy() {
+        return yy;
+    }
+
+    public int getMm() {
+        return mm;
+    }
+
+    public int getDd() {
+        return dd;
     }
 }
