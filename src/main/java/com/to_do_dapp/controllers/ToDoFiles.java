@@ -9,6 +9,7 @@ public class ToDoFiles {
     public static final String toDoTodayAbsolutePath = "C:/Users/" + System.getProperty("user.name") + "/AppData/Local/ToDoToday/";
     public static final String authApiFile = "authApi.tkn";
     public static final String authTempUserFile = "authTempUser.tkn";
+    public static final String authKeepLoggedInFile = "authKeepLoggedIn.tkn";
 
     public static boolean createNecesaryFiles() {
         File folder = new File(toDoTodayAbsolutePath);
@@ -16,9 +17,12 @@ public class ToDoFiles {
         
         File authServerMethodsFile = new File(toDoTodayAbsolutePath + authApiFile);
         File authTokenUser = new File(toDoTodayAbsolutePath + authTempUserFile);
+        File authKeepLoggedIn = new File(toDoTodayAbsolutePath + authKeepLoggedInFile);
+
         try {
             authServerMethodsFile.createNewFile();
             authTokenUser.createNewFile();
+            authKeepLoggedIn.createNewFile();
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 File deleteTempToken = new File(toDoTodayAbsolutePath + authTempUserFile);

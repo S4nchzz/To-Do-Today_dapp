@@ -1,8 +1,10 @@
 package com.to_do_dapp.api;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import org.json.JSONException;
@@ -29,10 +31,28 @@ public class ApiConnection {
         return instance;
     }
 
-    private String getToken() {
+    private String getApiAuthToken() {
         FileReader file;
         try {
             file = new FileReader(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authApiFile));
+            BufferedReader reader = new BufferedReader(file);
+
+            final String token = reader.readLine();
+            reader.close();
+
+            return token;
+        } catch (IOException e) {
+            // ? LOG: Token File not founded skiping...
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private String getUserTempToken() {
+        FileReader file;
+        try {
+            file = new FileReader(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authTempUserFile));
             BufferedReader reader = new BufferedReader(file);
 
             final String token = reader.readLine();
@@ -52,7 +72,7 @@ public class ApiConnection {
         
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.add("Authorization", "Bearer " + getToken());
+        httpHeaders.add("Authorization", "Bearer " + getApiAuthToken());
      
         HttpEntity<String> httpEntity = new HttpEntity<>(DataToJson.userDataToJson(userModelClient), httpHeaders);
         Boolean response = apiCreateAcc.postForObject(apiUrl + "/user/addUser", httpEntity, Boolean.class);
@@ -64,7 +84,7 @@ public class ApiConnection {
         RestTemplate apiLogin = new RestTemplate();
         
         HttpHeaders header = new HttpHeaders();
-        header.add("Authorization", "Bearer " + getToken());
+        header.add("Authorization", "Bearer " + getApiAuthToken());
         header.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<String> httpEntity = new HttpEntity<>(DataToJson.loginJson(username, password), header);
@@ -122,5 +142,59 @@ public class ApiConnection {
         ResponseEntity<Boolean> response = addToDo.postForEntity(apiUrl + "/toDos/addToDo", httpEntity, Boolean.class);
         System.out.println(response.toString());
         return Boolean.valueOf(response.toString());
+    }
+
+    public void generateKeepLoggedToken() {
+        RestTemplate generateKeepLoggedInToken = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+        header.add("Authorization", "Bearer " + getUserTempToken());
+        
+        HttpEntity<String> httpEntity = new HttpEntity<>(header);
+
+        ResponseEntity<String> response = generateKeepLoggedInToken.postForEntity(ApiConnection.apiUrl + "/user/generateKeepLoggedTkn", httpEntity, String.class);
+        
+        JSONObject json = new JSONObject(response.getBody());
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authKeepLoggedInFile)));
+            writer.write(json.getString("KeepLoggedToken"));
+            writer.close();
+        } catch (IOException e) {
+            // ? LOG: Unfounded file authKeepLoggedInFile
+        }
+
+        System.out.println(response);
+    }
+
+    public boolean checkKeepLoggedToken() {
+        RestTemplate checkKeepLoggedUser = new RestTemplate();
+        
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+        header.add("Authorization", "Bearer " + getApiAuthToken());
+
+        JSONObject keepLoggedUser = new JSONObject();
+
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authKeepLoggedInFile)));
+            
+            String localKeepLoggedTkn = reader.readLine();
+            localKeepLoggedTkn = localKeepLoggedTkn == null ? "" : localKeepLoggedTkn;
+
+            keepLoggedUser.put("keepLoggedToken", localKeepLoggedTkn);
+            reader.close();
+            
+            HttpEntity<String> httpEntity = new HttpEntity<>(keepLoggedUser.toString(), header);
+            
+            ResponseEntity<Boolean> response = checkKeepLoggedUser.postForEntity(
+                    apiUrl + "/user/checkKeepLoggedTkn", httpEntity, Boolean.class);
+            return response.getBody();
+
+        } catch (IOException e) {
+            // ? LOG: Unable to find or read file when calling api
+            return false;
+        }
     }
 }

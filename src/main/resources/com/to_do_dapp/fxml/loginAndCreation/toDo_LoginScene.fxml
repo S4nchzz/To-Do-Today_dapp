@@ -55,7 +55,7 @@
                   <Font name="Tahoma" size="14.0" />
                </font>
             </Button>
-            <RadioButton layoutX="50.0" layoutY="260.0" mnemonicParsing="false" text="Keep session logged in" textFill="#cccccc" />
+            <RadioButton fx:id="fxid_keepLogged" layoutX="50.0" layoutY="260.0" mnemonicParsing="false" text="Keep session logged in" textFill="#cccccc" />
          </children>
       </Pane>
    </children>
