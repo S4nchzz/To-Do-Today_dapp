@@ -90,7 +90,7 @@ public class ToDoEntry {
     private void openMenuDetails() {
         TranslateTransition toDoMenu = new TranslateTransition();
         toDoMenu.setNode(main.getFxid_toDoMenu());
-        toDoMenu.setByX(-326);
+        toDoMenu.setByX(-282);
         toDoMenu.setDuration(Duration.millis(500));
         toDoMenu.play();
     }

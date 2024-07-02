@@ -44,8 +44,8 @@ public class LoginSceneController {
             ApiConnection api = ApiConnection.getInstance();
             // Check if the users marked keepLoggedIn
             if (api.checkKeepLoggedToken()) {
+                ToDoFiles.overwriteUserTempTokenOnLogin();
                 initializeMainScene();
-                
                 stage.close();
             }
         });   

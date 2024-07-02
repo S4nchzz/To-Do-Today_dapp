@@ -147,7 +147,13 @@ public class ApiConnection {
     public void generateUserTempToken() {
         RestTemplate getUserTempToken = new RestTemplate();
 
-        ResponseEntity<String> response = getUserTempToken.postForEntity(apiUrl + "/generateUserTempToken", new HttpEntity<>(new HttpHeaders()), String.class);
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.TEXT_PLAIN);
+        header.add("Authorization", "Bearer " + ToDoFiles.getKeepLoggedTkn());
+
+        HttpEntity<String> entity = new HttpEntity<>(header);
+        
+        ResponseEntity<String> response = getUserTempToken.postForEntity(apiUrl + "/user/generateUserTempToken", entity, String.class);
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authTempUserFile)));
             writer.write(response.getBody());
