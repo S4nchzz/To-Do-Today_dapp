@@ -38,7 +38,7 @@ public class ToDoFiles {
         return true;
     }
 
-    public static String getAuthUserToken() throws IOException {
+    public static String getTempUserToken() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(new File(toDoTodayAbsolutePath + authTempUserFile)));
         
         String content = reader.readLine();

@@ -113,7 +113,7 @@ public class ApiConnection {
         JSONObject jsonUserToken;
         try {
             jsonUserToken = new JSONObject();
-            jsonUserToken.put("userToken", ToDoFiles.getAuthUserToken());
+            jsonUserToken.put("userToken", ToDoFiles.getTempUserToken());
             HttpEntity<String> httpEntity = new HttpEntity<>(jsonUserToken.toString(), header);
 
             ResponseEntity<String> toDos = getToDoS.postForEntity(apiUrl + "/toDos/getToDos", httpEntity, String.class);
@@ -132,7 +132,7 @@ public class ApiConnection {
         header.setContentType(MediaType.APPLICATION_JSON);
         
         JSONObject json = new JSONObject();
-        json.put("userToken", ToDoFiles.getAuthUserToken());
+        json.put("userToken", ToDoFiles.getTempUserToken());
         json.put("header", "Hacer los deberes");
         json.put("content", "Debereeeeeeeeeeeeeeeeees");
         json.put("fav", false);
@@ -204,16 +204,28 @@ public class ApiConnection {
             
             ResponseEntity<Boolean> response = checkKeepLoggedUser.postForEntity(
                     apiUrl + "/user/checkKeepLoggedTkn", httpEntity, Boolean.class);
-
-
-            // Generate User temp token
-            RestTemplate getTempToken = new RestTemplate();
-            
             return response.getBody();
 
         } catch (IOException e) {
             // ? LOG: Unable to find or read file when calling api
             return false;
         }
+    }
+
+    public String getUserName() {
+        RestTemplate getUserName = new RestTemplate();
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("userTempToken", ToDoFiles.getTempUserToken());
+        } catch (JSONException | IOException e) {
+            //? LOG: File tempTokenUser not found
+        }
+
+        HttpEntity<String> httpEntity = new HttpEntity<>(json.toString(), new HttpHeaders());
+
+        ResponseEntity<String> response = getUserName.postForEntity(apiUrl + "/user/getUserName", httpEntity, String.class);
+
+        return response.getBody();
     }
 }

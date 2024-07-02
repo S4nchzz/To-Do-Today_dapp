@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class MainControllerApp {
@@ -38,6 +39,10 @@ public class MainControllerApp {
     @FXML
     private Pane fxid_toDoMenu;
 
+    // Left Pane elements
+    @FXML
+    private Text fxid_userNameField;
+
     private boolean menuHidden;
     private final ApiConnection apiConnection;
 
@@ -46,6 +51,7 @@ public class MainControllerApp {
         apiConnection = ApiConnection.getInstance();
         Platform.runLater(() -> {
             preloadToDoElements();
+            this.fxid_userNameField.setText(apiConnection.getUserName());
         });
     }
 
