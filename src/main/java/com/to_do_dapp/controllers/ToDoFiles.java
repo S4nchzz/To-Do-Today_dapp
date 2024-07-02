@@ -39,8 +39,7 @@ public class ToDoFiles {
     }
 
     public static String getAuthUserToken() throws IOException {
-        File userAuthToken = new File(toDoTodayAbsolutePath + authTempUserFile);
-        BufferedReader reader = new BufferedReader(new FileReader(userAuthToken));
+        BufferedReader reader = new BufferedReader(new FileReader(new File(toDoTodayAbsolutePath + authTempUserFile)));
         
         String content = reader.readLine();
         reader.close();

@@ -6,10 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.json.JSONObject;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
 import com.to_do_dapp.api.ApiConnection;
 import com.to_do_dapp.controllers.ToDoFiles;
 import com.to_do_dapp.controllers.mainAppController.MainControllerApp;
@@ -49,6 +45,7 @@ public class LoginSceneController {
             // Check if the users marked keepLoggedIn
             if (api.checkKeepLoggedToken()) {
                 initializeMainScene();
+                
                 stage.close();
             }
         });   

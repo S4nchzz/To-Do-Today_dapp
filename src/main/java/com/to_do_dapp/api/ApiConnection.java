@@ -144,6 +144,19 @@ public class ApiConnection {
         return Boolean.valueOf(response.toString());
     }
 
+    public void generateUserTempToken() {
+        RestTemplate getUserTempToken = new RestTemplate();
+
+        ResponseEntity<String> response = getUserTempToken.postForEntity(apiUrl + "/generateUserTempToken", new HttpEntity<>(new HttpHeaders()), String.class);
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authTempUserFile)));
+            writer.write(response.getBody());
+            writer.close();
+        } catch (IOException e) {
+            //? LOG: File authTempUserFile not found
+        }
+    }
+
     public void generateKeepLoggedToken() {
         RestTemplate generateKeepLoggedInToken = new RestTemplate();
 
@@ -178,7 +191,8 @@ public class ApiConnection {
 
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new FileReader(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authKeepLoggedInFile)));
+            reader = new BufferedReader(new FileReader(new File(
+                    ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authKeepLoggedInFile)));
             
             String localKeepLoggedTkn = reader.readLine();
             localKeepLoggedTkn = localKeepLoggedTkn == null ? "" : localKeepLoggedTkn;
@@ -190,6 +204,11 @@ public class ApiConnection {
             
             ResponseEntity<Boolean> response = checkKeepLoggedUser.postForEntity(
                     apiUrl + "/user/checkKeepLoggedTkn", httpEntity, Boolean.class);
+
+
+            // Generate User temp token
+            RestTemplate getTempToken = new RestTemplate();
+            
             return response.getBody();
 
         } catch (IOException e) {
