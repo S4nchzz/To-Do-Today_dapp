@@ -89,14 +89,13 @@ public class LoginSceneController {
             return;
         }
 
-        Object authUser = api.login(this.fxid_nameField.getText(), this.fxid_passField.getText());
+        JSONObject authUser = api.login(this.fxid_nameField.getText(), this.fxid_passField.getText());
 
-        if (authUser instanceof String) {
+        if (authUser != null) {
             try {
                 OutputStream out = new FileOutputStream(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authTempUserFile));
-                JSONObject json = new JSONObject((String)authUser);
-                
-                out.write(json.getString("tempUserAuthTkn").getBytes());
+
+                out.write(authUser.getString("tempUserAuthTkn").getBytes());
 
                 if (fxid_keepLogged.isSelected()) {
                     api.generateKeepLoggedToken();
@@ -109,8 +108,6 @@ public class LoginSceneController {
             }
         
             initializeMainScene();
-        } else if (authUser instanceof Boolean) {
-            // ?: Show message invalid credentials   
         }
     }
 

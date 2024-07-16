@@ -80,7 +80,7 @@ public class ApiConnection {
         return response;    
     }
 
-    public Object login(String username, String password) {
+    public JSONObject login(String username, String password) {
         RestTemplate apiLogin = new RestTemplate();
         
         HttpHeaders header = new HttpHeaders();
@@ -90,18 +90,14 @@ public class ApiConnection {
         HttpEntity<String> httpEntity = new HttpEntity<>(DataToJson.loginJson(username, password), header);
         ResponseEntity<String> response = apiLogin.postForEntity(apiUrl + "/user/login", httpEntity, String.class);
         
-        if (response.getBody().equals("false")) {
-            return false;
+        JSONObject jsonResponse = new JSONObject(response.getBody());
+        if (jsonResponse.getString("succed").equals("true")) {
+            System.out.println(jsonResponse.toString());
+            return jsonResponse;
+        } else {
+            // ? LOG : User or password incorrect
+            return null;
         }
-
-        try {
-            new JSONObject(response.getBody().toString());      
-        } catch (JSONException jsone) {
-            // ? LOG: Bad request from server Not a JSON format
-            return false;
-        }
-
-        return response.getBody();
     }
 
     public JSONObject getToDoS() {

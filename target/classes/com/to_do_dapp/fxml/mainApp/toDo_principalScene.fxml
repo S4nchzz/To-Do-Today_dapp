@@ -133,7 +133,7 @@
             <Image url="@../../src/pictures/menu.png" />
          </image>
       </ImageView>
-      <Pane fx:id="fxid_toDoMenu" layoutX="1134.0" layoutY="1.0" prefHeight="590.0" prefWidth="282.0" style="-fx-background-color: red;">
+      <Pane fx:id="fxid_toDoMenu" layoutX="1134.0" layoutY="1.0" prefHeight="590.0" prefWidth="282.0" style="-fx-background-color: #F4F4F4;">
          <children>
             <TextArea fx:id="fxid_toDoMenuContent" layoutX="12.0" layoutY="104.0" prefHeight="132.0" prefWidth="256.0" promptText="ToDoContent" />
             <Button layoutX="199.0" layoutY="551.0" mnemonicParsing="false" text="Actualizar" />

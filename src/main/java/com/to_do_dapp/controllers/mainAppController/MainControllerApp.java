@@ -12,6 +12,8 @@ import com.to_do_dapp.controllers.mainAppController.toDosManagement.ToDoEntry;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -42,6 +44,14 @@ public class MainControllerApp {
     // Left Pane elements
     @FXML
     private Text fxid_userNameField;
+
+    //Right menu swipeable entry
+    @FXML
+    private TextField fxid_toDoMenuHeader;
+    @FXML
+    private TextArea fxid_toDoMenuContent;
+    @FXML
+    private Text fxid_toDoMenuDate;
 
     private boolean menuHidden;
     private final ApiConnection apiConnection;
@@ -105,11 +115,29 @@ public class MainControllerApp {
 
     @FXML
     private void closeMenuDetails() {
+        if (!ToDoEntry.getHasBeenOpened()) {
+            return;
+        }
+
         TranslateTransition toDoMenu = new TranslateTransition();
         toDoMenu.setNode(this.fxid_toDoMenu);
-        toDoMenu.setByX(326);
+        toDoMenu.setByX(282);
         toDoMenu.setDuration(Duration.millis(500));
         toDoMenu.play();
+
+        ToDoEntry.setHasBeenOpened(false);
+    }
+
+    public void setTextAreaHeader(String text) {
+        this.fxid_toDoMenuHeader.setText(text);
+    }
+
+    public void setTextAreaContent(String text) {
+        this.fxid_toDoMenuContent.setText(text);
+    }
+
+    public void setTextDate(String text) {
+        this.fxid_toDoMenuDate.setText(text);
     }
 
     public Pane getFxid_toDoMenu() {

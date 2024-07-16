@@ -16,6 +16,8 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class ToDoEntry {
+    private JSONObject json;
+
     //To Do elements
     @FXML
     private Text fxid_toDoHeader;
@@ -30,7 +32,10 @@ public class ToDoEntry {
     private final int mm;
     private final int dd;
 
+    private static boolean hasBeenOpened = false;
+
     private final MainControllerApp main;
+
     public ToDoEntry (MainControllerApp main) {
         LocalDate date = LocalDate.now();
         this.yy = date.getYear();
@@ -40,6 +45,7 @@ public class ToDoEntry {
     }
 
     public Pane createPane(JSONObject jsonObject) {
+        this.json = jsonObject;
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/com/to_do_dapp/fxml/mainApp/toDoTemplates/toDoEntryTemplate.fxml"));
         loader.setController(this);
@@ -88,11 +94,21 @@ public class ToDoEntry {
 
     @FXML
     private void openMenuDetails() {
+        if (ToDoEntry.hasBeenOpened) {
+            return;
+        }
+
+        main.setTextAreaHeader(json.getString("Header"));
+        main.setTextAreaContent(json.getString("Content"));
+        main.setTextDate(json.getString("Date"));
+
         TranslateTransition toDoMenu = new TranslateTransition();
         toDoMenu.setNode(main.getFxid_toDoMenu());
         toDoMenu.setByX(-282);
         toDoMenu.setDuration(Duration.millis(500));
         toDoMenu.play();
+
+        ToDoEntry.hasBeenOpened = true;
     }
 
     public int getYy() {
@@ -105,5 +121,13 @@ public class ToDoEntry {
 
     public int getDd() {
         return dd;
+    }
+
+    public static boolean getHasBeenOpened() {
+        return hasBeenOpened;
+    }
+
+    public static void setHasBeenOpened(boolean newStatus) {
+        hasBeenOpened = newStatus;
     }
 }
