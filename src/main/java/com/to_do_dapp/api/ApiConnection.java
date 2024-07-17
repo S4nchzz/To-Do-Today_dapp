@@ -230,4 +230,23 @@ public class ApiConnection {
 
         return response.getBody();
     }
+
+    public boolean updateToDo(JSONObject updatedData) {
+        RestTemplate connection = new RestTemplate();
+        
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+        
+        HttpEntity<String> entity = new HttpEntity<>(updatedData.toString(), header);
+        
+        ResponseEntity<String> response = connection.postForEntity(apiUrl + "/toDos/updateToDo", entity, String.class);
+
+        JSONObject responseOnJson = new JSONObject(response.getBody());
+
+        if (responseOnJson.getBoolean("updated")) {
+            return true;
+        }
+
+        return false;
+    }
 }

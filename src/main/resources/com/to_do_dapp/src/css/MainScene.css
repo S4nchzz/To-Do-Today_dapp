@@ -1,3 +1,15 @@
 #fxid_scrollPane {
     -fx-border-color: white;
 }
+
+#fxid_updateButton {
+    -fx-background-color: #6bd744;
+    -fx-text-color: white;
+    -fx-cursor: hand;
+}
+
+#fxid_updateButton:hover {
+    -fx-background-color: #5ca541;
+    -fx-text-color: white;
+    -fx-cursor: hand;
+}

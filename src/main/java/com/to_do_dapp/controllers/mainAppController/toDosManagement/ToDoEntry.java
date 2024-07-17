@@ -98,6 +98,13 @@ public class ToDoEntry {
             return;
         }
 
+        ToDoCurrentDetailedData toDoCurrentDetailedData = ToDoCurrentDetailedData.getInstance();
+        toDoCurrentDetailedData.setId(json.getInt("Id"));
+        toDoCurrentDetailedData.setHeader(json.getString("Header"));
+        toDoCurrentDetailedData.setContent(json.getString("Content"));
+        toDoCurrentDetailedData.setDate(json.getString("Date"));
+        toDoCurrentDetailedData.setFav(json.getBoolean("Fav"));
+
         main.setTextAreaHeader(json.getString("Header"));
         main.setTextAreaContent(json.getString("Content"));
         main.setTextDate(json.getString("Date"));

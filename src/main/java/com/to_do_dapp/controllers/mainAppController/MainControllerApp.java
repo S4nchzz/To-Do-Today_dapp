@@ -7,11 +7,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.to_do_dapp.api.ApiConnection;
+import com.to_do_dapp.controllers.ToDoFiles;
+import com.to_do_dapp.controllers.mainAppController.toDosManagement.ToDoCurrentDetailedData;
+import com.to_do_dapp.controllers.mainAppController.toDosManagement.ToDoData;
 import com.to_do_dapp.controllers.mainAppController.toDosManagement.ToDoEntry;
 
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -52,6 +56,8 @@ public class MainControllerApp {
     private TextArea fxid_toDoMenuContent;
     @FXML
     private Text fxid_toDoMenuDate;
+    @FXML
+    private Button fxid_updateButton;
 
     private boolean menuHidden;
     private final ApiConnection apiConnection;
@@ -126,6 +132,30 @@ public class MainControllerApp {
         toDoMenu.play();
 
         ToDoEntry.setHasBeenOpened(false);
+    }
+
+    @FXML
+    private void updateToDoData() {
+        JSONObject updatedData = new JSONObject();
+        try {
+            updatedData.put("userToken", ToDoFiles.getTempUserToken());
+        } catch (JSONException | IOException e) {
+            //? LOG: UserToken not found or JSON error
+        }
+
+        ToDoCurrentDetailedData toDoCurrentDetailedData = ToDoCurrentDetailedData.getInstance();
+
+        updatedData.put("id", toDoCurrentDetailedData.getId());
+        updatedData.put("header", this.fxid_toDoMenuHeader.getText());
+        updatedData.put("content", this.fxid_toDoMenuContent.getText());
+        updatedData.put("date", this.fxid_toDoMenuDate.getText());
+        updatedData.put("fav", toDoCurrentDetailedData.isFav());
+
+        this.fxid_toDoVbox.getChildren().clear();
+        preloadToDoElements();
+        if (!apiConnection.updateToDo(updatedData)) {
+            //? LOG: Datos introducidos incorrectos
+        }
     }
 
     public void setTextAreaHeader(String text) {
