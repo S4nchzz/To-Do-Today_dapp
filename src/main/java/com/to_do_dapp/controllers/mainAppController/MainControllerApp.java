@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import com.to_do_dapp.api.ApiConnection;
 import com.to_do_dapp.controllers.ToDoFiles;
 import com.to_do_dapp.controllers.mainAppController.toDosManagement.ToDoCurrentDetailedData;
-import com.to_do_dapp.controllers.mainAppController.toDosManagement.ToDoData;
 import com.to_do_dapp.controllers.mainAppController.toDosManagement.ToDoEntry;
 
 import javafx.animation.TranslateTransition;
@@ -134,6 +133,7 @@ public class MainControllerApp {
         ToDoEntry.setHasBeenOpened(false);
     }
 
+    // ! CUANDO SE ACTUALIZA NO SE VE AL INSTANTE Y AL SPAMEAR EL BOTON SE AÑADEN MUCHAS ENTRADAS, COMPROBR IDS
     @FXML
     private void updateToDoData() {
         JSONObject updatedData = new JSONObject();
@@ -151,11 +151,23 @@ public class MainControllerApp {
         updatedData.put("date", this.fxid_toDoMenuDate.getText());
         updatedData.put("fav", toDoCurrentDetailedData.isFav());
 
+        boolean hasBeenUpdated = apiConnection.updateToDo(updatedData);
+        
+        if (!hasBeenUpdated) {
+            // ? LOG: Unnable to update ToDo
+            return;
+        }
+
+        this.fxid_updateButton.setDisable(true);
+        
         this.fxid_toDoVbox.getChildren().clear();
         preloadToDoElements();
-        if (!apiConnection.updateToDo(updatedData)) {
-            //? LOG: Datos introducidos incorrectos
-        }
+        closeMenuDetails();
+
+    }
+
+    public void setUpdateButtonDisableParam(boolean status) {
+        this.fxid_updateButton.setDisable(status);
     }
 
     public void setTextAreaHeader(String text) {

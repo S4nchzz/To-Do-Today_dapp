@@ -109,6 +109,8 @@ public class ToDoEntry {
         main.setTextAreaContent(json.getString("Content"));
         main.setTextDate(json.getString("Date"));
 
+        main.setUpdateButtonDisableParam(false);
+
         TranslateTransition toDoMenu = new TranslateTransition();
         toDoMenu.setNode(main.getFxid_toDoMenu());
         toDoMenu.setByX(-282);
