@@ -19,6 +19,7 @@ import javafx.util.Duration;
 public class ToDoEntry {
     private JSONObject jsonToDoData;
     private final ApiConnection apiConnection;
+    private ToDoCurrentEditMenuData detailMenuInstance;
 
     //To Do elements
     @FXML
@@ -36,8 +37,6 @@ public class ToDoEntry {
     private final int mm;
     private final int dd;
 
-    private static boolean hasBeenOpened = false;
-
     private final MainControllerApp main;
 
     public ToDoEntry (MainControllerApp main, JSONObject json) {
@@ -49,6 +48,8 @@ public class ToDoEntry {
         
         this.apiConnection = ApiConnection.getInstance();
         this.jsonToDoData = json;
+
+        this.detailMenuInstance = ToDoCurrentEditMenuData.getInstance();
     }
 
     public Pane createPane() {
@@ -95,7 +96,7 @@ public class ToDoEntry {
 
     @FXML
     private void openMenuDetails() {
-        if (ToDoEntry.hasBeenOpened) {
+        if (detailMenuInstance.isOpened()) {
             return;
         }
 
@@ -112,13 +113,25 @@ public class ToDoEntry {
 
         main.setUpdateButtonDisableParam(false);
 
+        main.setDetailMenuTitle("Task Manager");
+
         TranslateTransition toDoMenu = new TranslateTransition();
         toDoMenu.setNode(main.getFxid_toDoMenu());
         toDoMenu.setByX(-282);
         toDoMenu.setDuration(Duration.millis(500));
+        
+        moveScrollPaneLeft();
         toDoMenu.play();
 
-        ToDoEntry.hasBeenOpened = true;
+        detailMenuInstance.setOpened(true);
+    }
+
+    private void moveScrollPaneLeft() {
+        TranslateTransition toDoGoDownAnimation = new TranslateTransition();
+        toDoGoDownAnimation.setNode(main.getScrollPane());
+
+        toDoGoDownAnimation.setByX(-100);
+        toDoGoDownAnimation.play();
     }
 
     @FXML
@@ -163,13 +176,5 @@ public class ToDoEntry {
 
     public int getDd() {
         return dd;
-    }
-
-    public static boolean getHasBeenOpened() {
-        return hasBeenOpened;
-    }
-
-    public static void setHasBeenOpened(boolean newStatus) {
-        hasBeenOpened = newStatus;
     }
 }

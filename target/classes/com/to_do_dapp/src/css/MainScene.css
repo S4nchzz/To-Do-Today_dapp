@@ -32,3 +32,18 @@
     -fx-text-color: white;
     -fx-cursor: hand;
 }
+
+#fxid_detailMenuTitlePane {
+    -fx-background-radius: 10 10 0 0;
+    -fx-background-color: black;
+    -fx-cursor: hand;
+}
+
+#fxid_candelButton {
+    -fx-border-color: rgb(100, 100, 100);
+    -fx-border-radius: 3 3 3 3;
+}
+
+#fxid_toDoMenu {
+    -fx-border-color: #f4f4f4f4;
+}

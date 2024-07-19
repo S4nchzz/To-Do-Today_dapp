@@ -10,6 +10,8 @@ public class ToDoCurrentEditMenuData{
     private String date;
     private boolean fav;
 
+    private boolean opened = false;
+
     private ToDoCurrentEditMenuData() {
     }
 
@@ -63,5 +65,13 @@ public class ToDoCurrentEditMenuData{
 
     public void setFav(boolean fav) {
         this.fav = fav;
+    }
+
+    public void setOpened(boolean opened) {
+        this.opened = opened;
+    }
+
+    public boolean isOpened() {
+        return this.opened;
     }
 }

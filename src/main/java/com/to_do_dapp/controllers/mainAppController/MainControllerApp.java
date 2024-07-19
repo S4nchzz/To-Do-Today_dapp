@@ -2,7 +2,6 @@ package com.to_do_dapp.controllers.mainAppController;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +14,9 @@ import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoEntry;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -26,24 +27,29 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class MainControllerApp {
+    private final ApiConnection apiConnection;
+    private ToDoCurrentEditMenuData detailMenuInstance;
+    
     @FXML
     private Pane fxid_leftPane;
-    @FXML
+    @FXML   
     private ImageView fxid_menuImage;
 
     // Principal app panes
     @FXML
     private Pane fxid_allPanes;
 
-    //V-Box ToDos
+    //V-Box & SctrollPane from ToDos
     @FXML
-    private AnchorPane fxid_toDoAnchorPane;
+    private ScrollPane fxid_scrollPane;
     @FXML
     private VBox fxid_toDoVbox;
 
     // To Do Menu Detail
     @FXML
     private Pane fxid_toDoMenu;
+    @FXML
+    private Text fxid_detailMenuTitleText;
 
     // Left Pane elements
     @FXML
@@ -60,7 +66,7 @@ public class MainControllerApp {
     private Button fxid_updateButton;
 
     private boolean menuHidden;
-    private final ApiConnection apiConnection;
+
 
     public MainControllerApp() {
         this.menuHidden = false;
@@ -69,6 +75,8 @@ public class MainControllerApp {
             preloadToDoElements();
             this.fxid_userNameField.setText(apiConnection.getUserName());
         });
+
+        this.detailMenuInstance = ToDoCurrentEditMenuData.getInstance();
     }
 
     @FXML
@@ -114,7 +122,7 @@ public class MainControllerApp {
 
     @FXML
     private void closeMenuDetails() {
-        if (!ToDoEntry.getHasBeenOpened()) {
+        if (!detailMenuInstance.isOpened()) {
             return;
         }
 
@@ -122,9 +130,19 @@ public class MainControllerApp {
         toDoMenu.setNode(this.fxid_toDoMenu);
         toDoMenu.setByX(282);
         toDoMenu.setDuration(Duration.millis(500));
+
+        moveScrollPaneRight();
         toDoMenu.play();
 
-        ToDoEntry.setHasBeenOpened(false);
+        detailMenuInstance.setOpened(false);
+    }
+
+    private void moveScrollPaneRight() {
+        TranslateTransition toDoGoDownAnimation = new TranslateTransition();
+        toDoGoDownAnimation.setNode(this.fxid_scrollPane);
+
+        toDoGoDownAnimation.setByX(100);
+        toDoGoDownAnimation.play();
     }
 
     @FXML
@@ -159,6 +177,10 @@ public class MainControllerApp {
 
     }
 
+    public void setDetailMenuTitle(String title) {
+        this.fxid_detailMenuTitleText.setText(title);
+    }
+
     public void clearVbox() {
         this.fxid_toDoVbox.getChildren().clear();
     }
@@ -181,5 +203,9 @@ public class MainControllerApp {
 
     public Pane getFxid_toDoMenu() {
         return fxid_toDoMenu;
+    }
+
+    public Node getScrollPane() {
+        return this.fxid_scrollPane;
     }
 }
