@@ -1,7 +1,7 @@
-package com.to_do_dapp.controllers.mainAppController.toDosManagement;
+package com.to_do_dapp.controllers.mainAppController.toDoManagement;
 
-public class ToDoCurrentDetailedData{
-    private final static ToDoCurrentDetailedData instance = new ToDoCurrentDetailedData();
+public class ToDoCurrentEditMenuData{
+    private final static ToDoCurrentEditMenuData instance = new ToDoCurrentEditMenuData();
 
     private int id;
     private int userid;
@@ -10,10 +10,10 @@ public class ToDoCurrentDetailedData{
     private String date;
     private boolean fav;
 
-    private ToDoCurrentDetailedData() {
+    private ToDoCurrentEditMenuData() {
     }
 
-    public static ToDoCurrentDetailedData getInstance() {
+    public static ToDoCurrentEditMenuData getInstance() {
         return instance;
     }
 

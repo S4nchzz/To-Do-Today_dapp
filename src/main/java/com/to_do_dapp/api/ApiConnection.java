@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +20,9 @@ import org.springframework.web.client.RestTemplate;
 import com.to_do_dapp.api.requests.req_AddUser.DataToJson;
 import com.to_do_dapp.api.requests.req_AddUser.UserData;
 import com.to_do_dapp.controllers.ToDoFiles;
+import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoData;
+import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoEntry;
+import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoEntryList;
 
 public class ApiConnection {
     protected final static String apiUrl = "http://192.168.1.98:8080";
@@ -100,7 +105,7 @@ public class ApiConnection {
         }
     }
 
-    public JSONObject getToDoS() {
+    public ArrayList<JSONObject> getToDoS() {
         RestTemplate getToDoS = new RestTemplate();
         
         HttpHeaders header = new HttpHeaders();
@@ -113,7 +118,17 @@ public class ApiConnection {
             HttpEntity<String> httpEntity = new HttpEntity<>(jsonUserToken.toString(), header);
 
             ResponseEntity<String> toDos = getToDoS.postForEntity(apiUrl + "/toDos/getToDos", httpEntity, String.class);
-            return new JSONObject(toDos.getBody());
+            
+            JSONObject jsonResponse = new JSONObject(toDos.getBody());
+            java.util.Iterator<String> iterator = jsonResponse.keys();
+
+            ArrayList<JSONObject> toDoList = new ArrayList<>();
+            while (iterator.hasNext()) {
+                String i = iterator.next();
+                toDoList.add(jsonResponse.getJSONObject(i));
+            }
+
+            return toDoList;
         } catch (IOException e) {
             // ? LOG: Error getting TempToken from userFile
         }
@@ -121,6 +136,10 @@ public class ApiConnection {
         return null;
     }
 
+    // ! Este metodo puede no funcionar, hay que cerciorarse de que cuando se añada por completo
+    // ! el codigo real y se quite este temporal se añada correctamente con comprobaciones
+    // ! una nueva entrada a la lista de los ToDos.
+    // * Por defecto este codigo funcionara con este arreglo temporal
     public boolean addToDo () throws JSONException, IOException {
         RestTemplate addToDo = new RestTemplate();
 
@@ -135,9 +154,17 @@ public class ApiConnection {
 
         HttpEntity<String> httpEntity = new HttpEntity<>(json.toString(), header);
 
-        ResponseEntity<Boolean> response = addToDo.postForEntity(apiUrl + "/toDos/addToDo", httpEntity, Boolean.class);
-        System.out.println(response.toString());
-        return Boolean.valueOf(response.toString());
+        ResponseEntity<String> response = addToDo.postForEntity(apiUrl + "/toDos/addToDo", httpEntity, String.class);
+
+        // ! Cada vez que se llama a addToDo se vuelcan TODOS los toDos en la lista del singelton, OPTIMIZAR
+
+        ToDoEntryList toDoEntryList = ToDoEntryList.getInstance();
+        for (JSONObject jsonDataToDo : getToDoS()) {
+            toDoEntryList.addToDoAtList(new ToDoData(jsonDataToDo.getInt("id"), jsonDataToDo.getInt("userId"), jsonDataToDo.getString("header"), 
+                jsonDataToDo.getString("content"), jsonDataToDo.getString("date"), jsonDataToDo.getBoolean("fav"), jsonDataToDo.getBoolean("ended")));
+        }
+
+        return new JSONObject(response.getBody()).getBoolean("addToDoSucced");
     }
 
     public void generateUserTempToken() {
@@ -245,6 +272,42 @@ public class ApiConnection {
 
         if (responseOnJson.getBoolean("updated")) {
             return true;
+        }
+
+        return false;
+    }
+
+    public boolean completeToDo(ToDoEntry toDoEntry) {
+        RestTemplate connection = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+
+        JSONObject jsonWithToDoData = new JSONObject();
+        try {
+            jsonWithToDoData.put("userToken", ToDoFiles.getTempUserToken());
+        } catch (JSONException | IOException e) {
+            //? LOG: User token not found or json error
+        }
+
+        jsonWithToDoData.put("id", toDoEntry.getId());
+        jsonWithToDoData.put("header", toDoEntry.getHeader());
+        jsonWithToDoData.put("content", toDoEntry.getContent());
+        jsonWithToDoData.put("fav", toDoEntry.isFav());
+
+        HttpEntity<String> entity = new HttpEntity<>(jsonWithToDoData.toString(), header);
+
+        ResponseEntity<String> response = connection.postForEntity(apiUrl + "/toDos/completeToDo", entity, String.class);
+
+        try {
+            JSONObject jsonResponse = new JSONObject(response.getBody());
+            if (jsonResponse.getBoolean("toDoCompletedUpdateResult")) {
+                return true;
+            } else {
+                // ? LOG: Uncorrectly updated ToDo
+            }
+        } catch (JSONException je) {
+            // ? LOG: json response from server invalid
         }
 
         return false;

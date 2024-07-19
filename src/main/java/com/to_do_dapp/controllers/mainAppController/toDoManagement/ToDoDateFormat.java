@@ -1,4 +1,4 @@
-package com.to_do_dapp.controllers.mainAppController.toDosManagement;
+package com.to_do_dapp.controllers.mainAppController.toDoManagement;
 
 import org.json.JSONObject;
 
@@ -25,7 +25,7 @@ public class ToDoDateFormat {
     }
 
     private void splitDate() {
-        this.entireDate = jsonObject.getString("Date");
+        this.entireDate = jsonObject.getString("date");
         
         StringBuilder sb = new StringBuilder();
         int i = 0;

@@ -1,4 +1,4 @@
-package com.to_do_dapp.controllers.mainAppController.toDosManagement;
+package com.to_do_dapp.controllers.mainAppController.toDoManagement;
 
 public class ToDoData {
     private final int id;
@@ -7,14 +7,16 @@ public class ToDoData {
     private final String content;
     private final String date;
     private final boolean fav;
+    private final boolean ended;
 
-    public ToDoData(int id, int userId, String header, String content, String date, boolean fav) {
+    public ToDoData(int id, int userId, String header, String content, String date, boolean fav, boolean ended) {
         this.id = id;
         this.userId = userId;
         this.header = header;
         this.content = content;
         this.date = date;
         this.fav = fav;
+        this.ended = ended;
     }
 
     public int getId() {
@@ -39,5 +41,9 @@ public class ToDoData {
 
     public boolean isFav() {
         return fav;
+    }
+
+    public boolean isEnded() {
+        return this.ended;
     }
 }

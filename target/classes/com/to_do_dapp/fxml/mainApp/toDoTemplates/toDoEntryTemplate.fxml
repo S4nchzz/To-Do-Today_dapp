@@ -1,40 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="fxid_toDoEntryPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="90.0" prefWidth="578.0" stylesheets="@../../../src/css/Scene.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="fxid_toDoEntryPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="91.4" prefWidth="578.0" style="-fx-background-color: white;" stylesheets="@../../../src/css/MainScene.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Text fx:id="fxid_toDoDate" layoutX="471.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mar 22">
-         <font>
-            <Font name="Helvetica" size="16.0" />
-         </font></Text>
-      <ImageView fx:id="fxid_favElement" fitHeight="25.0" fitWidth="25.0" layoutX="483.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+      <Region fx:id="fxid_regionBorder" layoutX="15.0" layoutY="10.0" prefHeight="71.0" prefWidth="549.0" stylesheets="@../../../src/css/ToDoEntry.css" />
+      <Text fx:id="fxid_toDoDate" fill="#aeaeae" layoutX="269.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Due: ??" />
+      <ImageView fx:id="fxid_favElement" fitHeight="25.0" fitWidth="20.0" layoutX="436.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
          <image>
-            <Image url="@../../../src/pictures/favorito.png" />
+            <Image url="@../../../src/pictures/star.png" />
          </image>
       </ImageView>
-      <VBox layoutX="374.0" layoutY="-1.0" prefHeight="90.0" prefWidth="74.0" />
-      <Text fx:id="fxid_toDoHeader" layoutX="65.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{ToDoElementHeader:}">
+      <Text fx:id="fxid_toDoHeader" layoutX="71.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{ToDoElementHeader:}">
          <font>
             <Font name="Helvetica" size="16.0" />
          </font>
       </Text>
-      <ImageView fitHeight="27.0" fitWidth="27.0" layoutX="20.0" layoutY="31.0" pickOnBounds="true" preserveRatio="true">
+      <Text fx:id="fxid_toDoContent" fill="#aeaeae" layoutX="71.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{ToDoElementContent}" />
+      <Pane fx:id="fxid_endedColorPane" layoutX="448.0" layoutY="22.0" prefHeight="25.0" prefWidth="88.0" stylesheets="@../../../src/css/ToDoEntry.css">
+         <children>
+            <Text fx:id="fxid_hasBeenEnded" fill="WHITE" layoutX="3.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{Ended?}" textAlignment="CENTER" wrappingWidth="81.82049560546875">
+               <font>
+                  <Font name="System Bold" size="11.0" />
+               </font>
+            </Text>
+         </children></Pane>
+      <ImageView fitHeight="84.0" fitWidth="20.0" layoutX="467.0" layoutY="54.0" onMouseClicked="#openMenuDetails" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
          <image>
-            <Image url="@../../../src/pictures/yes.png" />
+            <Image url="@../../../src/pictures/edit.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="fxid_openToDoMenu" fitHeight="25.0" fitWidth="27.0" layoutX="538.0" layoutY="32.0" onMouseClicked="#openMenuDetails" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+      <ImageView fitHeight="150.0" fitWidth="22.0" layoutX="528.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../src/pictures/menu.png" />
+            <Image url="@../../../src/pictures/trash.png" />
          </image>
       </ImageView>
-      <Text fx:id="fxid_toDoContent" fill="#aeaeae" layoutX="65.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{ToDoElementContent" />
-      <Pane fx:id="fxid_timePaneColor" layoutY="-2.0" prefHeight="37.0" prefWidth="5.0" />
+      <ImageView fitHeight="84.0" fitWidth="25.0" layoutX="496.0" layoutY="51.0" onMouseClicked="#completeToDo" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+         <image>
+            <Image url="@../../../src/pictures/check.png" />
+         </image>
+      </ImageView>
+      <CheckBox layoutX="26.0" layoutY="38.0" mnemonicParsing="false" />
    </children>
 </Pane>

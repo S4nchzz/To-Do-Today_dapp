@@ -25,7 +25,7 @@
                <children>
                   <Pane prefHeight="61.6" prefWidth="200.0">
                      <children>
-                        <Pane fx:id="fxid_hoverPaneA" layoutX="11.0" layoutY="9.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/Scene.css" />
+                        <Pane fx:id="fxid_hoverPaneA" layoutX="11.0" layoutY="9.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/MainScene.css" />
                         <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../src/pictures/tick.png" />
@@ -40,7 +40,7 @@
                   </Pane>
                   <Pane prefHeight="61.6" prefWidth="200.0">
                      <children>
-                        <Pane fx:id="fxid_hoverPaneB" layoutX="11.0" layoutY="10.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/Scene.css" />
+                        <Pane fx:id="fxid_hoverPaneB" layoutX="11.0" layoutY="10.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/MainScene.css" />
                         <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../src/pictures/checklist.png" />
@@ -55,10 +55,10 @@
                   </Pane>
                   <Pane prefHeight="61.6" prefWidth="200.0">
                      <children>
-                        <Pane fx:id="fxid_hoverPaneC" layoutX="11.0" layoutY="11.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/Scene.css" />
+                        <Pane fx:id="fxid_hoverPaneC" layoutX="11.0" layoutY="11.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/MainScene.css" />
                         <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../src/pictures/estrella.png" />
+                              <Image url="@../../src/pictures/bright_star.png" />
                            </image>
                         </ImageView>
                         <Text layoutX="71.0" layoutY="36.0" mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Favourites">
@@ -70,7 +70,7 @@
                   </Pane>
                   <Pane prefHeight="61.6" prefWidth="200.0">
                      <children>
-                        <Pane fx:id="fxid_hoverPaneD" layoutX="11.0" layoutY="10.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/Scene.css" />
+                        <Pane fx:id="fxid_hoverPaneD" layoutX="11.0" layoutY="10.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/MainScene.css" />
                         <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../src/pictures/post-it.png" />
@@ -85,7 +85,7 @@
                   </Pane>
                   <Pane prefHeight="61.6" prefWidth="200.0">
                      <children>
-                        <Pane fx:id="fxid_hoverPaneE" layoutX="11.0" layoutY="9.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/Scene.css" />
+                        <Pane fx:id="fxid_hoverPaneE" layoutX="11.0" layoutY="9.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/MainScene.css" />
                         <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../src/pictures/cogwheel.png" />
@@ -111,12 +111,12 @@
                         <Font name="System Bold" size="35.0" />
                      </font>
                   </Text>
-                  <ScrollPane fx:id="fxid_scrollPane" layoutX="87.0" layoutY="93.0" prefHeight="462.0" prefWidth="600.0" stylesheets="@../../src/css/MainScene.css">
+                  <ScrollPane fx:id="fxid_scrollPane" layoutX="87.0" layoutY="93.0" prefHeight="462.0" prefWidth="600.0" style="-fx-background-color: white;" stylesheets="@../../src/css/MainScene.css">
                      <content>
-                        <VBox fx:id="fxid_toDoVbox" prefHeight="457.0" prefWidth="578.0" />
+                        <VBox fx:id="fxid_toDoVbox" prefHeight="457.0" prefWidth="578.0" style="-fx-background-color: white;" />
                      </content>
                   </ScrollPane>
-                  <Pane fx:id="fxid_addToDo" layoutX="22.0" layoutY="500.0" onMouseClicked="#addToDo" prefHeight="45.0" prefWidth="45.0" style="-fx-cursor: hand;" stylesheets="@../../src/css/Scene.css">
+                  <Pane fx:id="fxid_addToDo" layoutX="22.0" layoutY="500.0" onMouseClicked="#addToDo" prefHeight="45.0" prefWidth="45.0" style="-fx-cursor: hand;" stylesheets="@../../src/css/MainScene.css">
                      <children>
                         <Text fill="WHITE" layoutX="12.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="+" wrappingWidth="21.890625">
                            <font>

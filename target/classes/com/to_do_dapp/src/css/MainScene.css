@@ -1,3 +1,22 @@
+#fxid_addToDo {
+    -fx-background-color: #6bd744;
+    -fx-background-radius: 50px;
+    -fx-border-radius: 100px;
+}
+
+#fxid_addToDo:hover {
+    -fx-background-color: #37961a;
+    -fx-background-radius: 50px;
+    -fx-border-radius: 100px;
+}
+
+#fxid_hoverPaneA:hover, #fxid_hoverPaneB:hover, #fxid_hoverPaneC:hover, #fxid_hoverPaneD:hover, #fxid_hoverPaneE:hover {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-cursor: hand;
+}
+
 #fxid_scrollPane {
     -fx-border-color: white;
 }

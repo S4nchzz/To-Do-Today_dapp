@@ -2,14 +2,15 @@ package com.to_do_dapp.controllers.mainAppController;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.to_do_dapp.api.ApiConnection;
 import com.to_do_dapp.controllers.ToDoFiles;
-import com.to_do_dapp.controllers.mainAppController.toDosManagement.ToDoCurrentDetailedData;
-import com.to_do_dapp.controllers.mainAppController.toDosManagement.ToDoEntry;
+import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoCurrentEditMenuData;
+import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoEntry;
 
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -91,19 +92,12 @@ public class MainControllerApp {
         menuHidden = !menuHidden;
     }
 
-    private void preloadToDoElements() {
-        JSONObject toDoJson = apiConnection.getToDoS();
-        java.util.Iterator<String> iterator = toDoJson.keys();
-
-        ArrayList<JSONObject> toDoList = new ArrayList<>();
-        while (iterator.hasNext()) {
-            String i = iterator.next();
-            toDoList.add(toDoJson.getJSONObject(i));
-        }
+    public void preloadToDoElements() {
+        ArrayList<JSONObject> toDoList = apiConnection.getToDoS();
         
         for (int i = 0; i < toDoList.size(); i++) {
-            ToDoEntry entry = new ToDoEntry(this);
-            fxid_toDoVbox.getChildren().add(entry.createPane(toDoList.get(i)));
+            ToDoEntry entry = new ToDoEntry(this, toDoList.get(i));
+            fxid_toDoVbox.getChildren().add(entry.createPane());
         }
     }
 
@@ -111,7 +105,7 @@ public class MainControllerApp {
     private void addToDo() {
         try {
             apiConnection.addToDo();
-            this.fxid_toDoVbox.getChildren().clear();
+            clearVbox();
             preloadToDoElements();
         } catch (JSONException | IOException e) {
             e.printStackTrace();
@@ -133,7 +127,6 @@ public class MainControllerApp {
         ToDoEntry.setHasBeenOpened(false);
     }
 
-    // ! CUANDO SE ACTUALIZA NO SE VE AL INSTANTE Y AL SPAMEAR EL BOTON SE AÑADEN MUCHAS ENTRADAS, COMPROBR IDS
     @FXML
     private void updateToDoData() {
         JSONObject updatedData = new JSONObject();
@@ -143,7 +136,7 @@ public class MainControllerApp {
             //? LOG: UserToken not found or JSON error
         }
 
-        ToDoCurrentDetailedData toDoCurrentDetailedData = ToDoCurrentDetailedData.getInstance();
+        ToDoCurrentEditMenuData toDoCurrentDetailedData = ToDoCurrentEditMenuData.getInstance();
 
         updatedData.put("id", toDoCurrentDetailedData.getId());
         updatedData.put("header", this.fxid_toDoMenuHeader.getText());
@@ -160,10 +153,14 @@ public class MainControllerApp {
 
         this.fxid_updateButton.setDisable(true);
         
-        this.fxid_toDoVbox.getChildren().clear();
+        clearVbox();
         preloadToDoElements();
         closeMenuDetails();
 
+    }
+
+    public void clearVbox() {
+        this.fxid_toDoVbox.getChildren().clear();
     }
 
     public void setUpdateButtonDisableParam(boolean status) {
