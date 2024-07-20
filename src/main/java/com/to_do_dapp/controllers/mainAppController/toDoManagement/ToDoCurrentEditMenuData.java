@@ -9,6 +9,7 @@ public class ToDoCurrentEditMenuData{
     private String content;
     private String date;
     private boolean fav;
+    private boolean ended;
 
     private boolean opened = false;
 
@@ -73,5 +74,13 @@ public class ToDoCurrentEditMenuData{
 
     public boolean isOpened() {
         return this.opened;
+    }
+
+    public boolean isEnded() {
+        return this.ended;
+    }
+
+    public void setEnded(boolean ended) {
+        this.ended = ended;
     }
 }

@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -136,34 +135,26 @@ public class ApiConnection {
         return null;
     }
 
-    // ! Este metodo puede no funcionar, hay que cerciorarse de que cuando se añada por completo
-    // ! el codigo real y se quite este temporal se añada correctamente con comprobaciones
-    // ! una nueva entrada a la lista de los ToDos.
-    // * Por defecto este codigo funcionara con este arreglo temporal
-    public boolean addToDo () throws JSONException, IOException {
+    public boolean addToDo (JSONObject toDoData) {
         RestTemplate addToDo = new RestTemplate();
 
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_JSON);
-        
-        JSONObject json = new JSONObject();
-        json.put("userToken", ToDoFiles.getTempUserToken());
-        json.put("header", "Hacer los deberes");
-        json.put("content", "Debereeeeeeeeeeeeeeeeees");
-        json.put("fav", false);
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(json.toString(), header);
+        HttpEntity<String> httpEntity = new HttpEntity<>(toDoData.toString(), header);
 
         ResponseEntity<String> response = addToDo.postForEntity(apiUrl + "/toDos/addToDo", httpEntity, String.class);
 
-        // ! Cada vez que se llama a addToDo se vuelcan TODOS los toDos en la lista del singelton, OPTIMIZAR
+        JSONObject responseOnJson = new JSONObject(response.getBody());
 
-        ToDoEntryList toDoEntryList = ToDoEntryList.getInstance();
-        for (JSONObject jsonDataToDo : getToDoS()) {
-            toDoEntryList.addToDoAtList(new ToDoData(jsonDataToDo.getInt("id"), jsonDataToDo.getInt("userId"), jsonDataToDo.getString("header"), 
-                jsonDataToDo.getString("content"), jsonDataToDo.getString("date"), jsonDataToDo.getBoolean("fav"), jsonDataToDo.getBoolean("ended")));
+        boolean createdStatus = responseOnJson.getBoolean("addToDoSucced"); 
+        
+        if (!createdStatus) {
+            return createdStatus;
         }
 
+        ToDoEntryList toDoEntryList = ToDoEntryList.getInstance();
+        toDoEntryList.addToDoAtList(new ToDoData(responseOnJson.getInt("id"), responseOnJson.getInt("userId"), responseOnJson.getString("header"), responseOnJson.getString("content"), responseOnJson.getString("date"), responseOnJson.getBoolean("fav"), responseOnJson.getBoolean("ended")));
         return new JSONObject(response.getBody()).getBoolean("addToDoSucced");
     }
 
@@ -293,6 +284,7 @@ public class ApiConnection {
         jsonWithToDoData.put("id", toDoEntry.getId());
         jsonWithToDoData.put("header", toDoEntry.getHeader());
         jsonWithToDoData.put("content", toDoEntry.getContent());
+        jsonWithToDoData.put("date", toDoEntry.getDate().getEntireDateJSONFormat());
         jsonWithToDoData.put("fav", toDoEntry.isFav());
 
         HttpEntity<String> entity = new HttpEntity<>(jsonWithToDoData.toString(), header);

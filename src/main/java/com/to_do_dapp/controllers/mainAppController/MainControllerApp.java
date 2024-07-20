@@ -20,7 +20,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -61,12 +60,15 @@ public class MainControllerApp {
     @FXML
     private TextArea fxid_toDoMenuContent;
     @FXML
-    private Text fxid_toDoMenuDate;
+    private TextField fxid_toDoMenuDate;
+    @FXML
+    private TextField fxid_toDoMenuTime;
     @FXML
     private Button fxid_updateButton;
 
     private boolean menuHidden;
-
+    private boolean toDoCreation = false; // If the user press the add ToDo button this value will go true
+    
 
     public MainControllerApp() {
         this.menuHidden = false;
@@ -109,15 +111,41 @@ public class MainControllerApp {
         }
     }
 
+    public void setDetailedMenuInfo(String detailMenuText) {
+        this.fxid_toDoMenuHeader.setText(detailMenuInstance.getHeader());
+        this.fxid_toDoMenuContent.setText(detailMenuInstance.getContent());
+
+        JSONObject dateJson = new JSONObject(detailMenuInstance.getDate());
+
+        this.fxid_toDoMenuDate.setText(dateJson.getString("date"));
+        this.fxid_toDoMenuTime.setText(dateJson.getString("time"));
+        this.fxid_detailMenuTitleText.setText(detailMenuText);
+    }
+
     @FXML
     private void addToDo() {
-        try {
-            apiConnection.addToDo();
-            clearVbox();
-            preloadToDoElements();
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
+        this.fxid_detailMenuTitleText.setText("New To-Do");
+        this.fxid_toDoMenuHeader.setPromptText("Titulo"); // * This can be changed by an IA analyzing all ToDos
+        this.fxid_toDoMenuContent.setPromptText("Contenido");
+        this.fxid_toDoMenuDate.setPromptText("mm/dd/yy");
+        openDetailMenu();
+        this.toDoCreation = true;
+    }
+
+    public void openDetailMenu() {
+        if (detailMenuInstance.isOpened()) {
+            return;
         }
+
+        TranslateTransition toDoMenu = new TranslateTransition();
+        toDoMenu.setNode(this.fxid_toDoMenu);
+        toDoMenu.setByX(-282);
+        toDoMenu.setDuration(Duration.millis(500));
+
+        moveScrollPane(-100);
+        toDoMenu.play();
+
+        detailMenuInstance.setOpened(true);
     }
 
     @FXML
@@ -131,42 +159,58 @@ public class MainControllerApp {
         toDoMenu.setByX(282);
         toDoMenu.setDuration(Duration.millis(500));
 
-        moveScrollPaneRight();
+        moveScrollPane(100);
         toDoMenu.play();
 
         detailMenuInstance.setOpened(false);
     }
 
-    private void moveScrollPaneRight() {
+    public void moveScrollPane(int coords) {
         TranslateTransition toDoGoDownAnimation = new TranslateTransition();
         toDoGoDownAnimation.setNode(this.fxid_scrollPane);
 
-        toDoGoDownAnimation.setByX(100);
+        toDoGoDownAnimation.setByX(coords);
         toDoGoDownAnimation.play();
     }
 
     @FXML
-    private void updateToDoData() {
-        JSONObject updatedData = new JSONObject();
+    private void sendToDoData() {
+        JSONObject toDo = new JSONObject();
         try {
-            updatedData.put("userToken", ToDoFiles.getTempUserToken());
+            toDo.put("userToken", ToDoFiles.getTempUserToken());
         } catch (JSONException | IOException e) {
             //? LOG: UserToken not found or JSON error
         }
-
+        
         ToDoCurrentEditMenuData toDoCurrentDetailedData = ToDoCurrentEditMenuData.getInstance();
 
-        updatedData.put("id", toDoCurrentDetailedData.getId());
-        updatedData.put("header", this.fxid_toDoMenuHeader.getText());
-        updatedData.put("content", this.fxid_toDoMenuContent.getText());
-        updatedData.put("date", this.fxid_toDoMenuDate.getText());
-        updatedData.put("fav", toDoCurrentDetailedData.isFav());
+        toDo.put("id", toDoCurrentDetailedData.getId());
+        toDo.put("header", this.fxid_toDoMenuHeader.getText());
+        toDo.put("content", this.fxid_toDoMenuContent.getText());
 
-        boolean hasBeenUpdated = apiConnection.updateToDo(updatedData);
-        
-        if (!hasBeenUpdated) {
-            // ? LOG: Unnable to update ToDo
-            return;
+        JSONObject dateOnJson = new JSONObject();
+        dateOnJson.put("date", this.fxid_toDoMenuDate.getText());
+        dateOnJson.put("time", this.fxid_toDoMenuTime.getText());
+
+        toDo.put("date", dateOnJson.toString());
+        toDo.put("fav", toDoCurrentDetailedData.isFav());
+        toDo.put("ended", toDoCurrentDetailedData.isEnded());
+
+        if (toDoCreation) {
+            boolean hasBeenCreated = apiConnection.addToDo(toDo);
+            toDoCreation = false;
+
+            if (!hasBeenCreated) {
+                // ? LOG: Unnable to create ToDo
+                return;
+            }
+        } else {
+            boolean hasBeenUpdated = apiConnection.updateToDo(toDo);
+
+            if (!hasBeenUpdated) {
+                // ? LOG: Unnable to update ToDo
+                return;
+            }
         }
 
         this.fxid_updateButton.setDisable(true);
@@ -174,7 +218,6 @@ public class MainControllerApp {
         clearVbox();
         preloadToDoElements();
         closeMenuDetails();
-
     }
 
     public void setDetailMenuTitle(String title) {
@@ -187,18 +230,6 @@ public class MainControllerApp {
 
     public void setUpdateButtonDisableParam(boolean status) {
         this.fxid_updateButton.setDisable(status);
-    }
-
-    public void setTextAreaHeader(String text) {
-        this.fxid_toDoMenuHeader.setText(text);
-    }
-
-    public void setTextAreaContent(String text) {
-        this.fxid_toDoMenuContent.setText(text);
-    }
-
-    public void setTextDate(String text) {
-        this.fxid_toDoMenuDate.setText(text);
     }
 
     public Pane getFxid_toDoMenu() {

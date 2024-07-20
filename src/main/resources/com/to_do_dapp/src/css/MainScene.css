@@ -45,5 +45,6 @@
 }
 
 #fxid_toDoMenu {
+    -fx-border-width: 3px;
     -fx-border-color: #f4f4f4f4;
 }

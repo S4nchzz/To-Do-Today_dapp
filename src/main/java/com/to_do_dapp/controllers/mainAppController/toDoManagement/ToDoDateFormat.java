@@ -8,7 +8,7 @@ public class ToDoDateFormat {
     // Date spplited elements
     private String entireDate;
     
-    private String yymmdd;
+    private String ddmmyyy;
     private int yy;
     private int mm;
     private int dd;
@@ -25,41 +25,29 @@ public class ToDoDateFormat {
     }
 
     private void splitDate() {
-        this.entireDate = jsonObject.getString("date");
+        JSONObject jsonDate = new JSONObject(jsonObject.getString("date"));
         
+        this.ddmmyyy = jsonDate.getString("date");
+        this.hhmmss = jsonDate.getString("time");
+
         StringBuilder sb = new StringBuilder();
-        int i = 0;
-        while (entireDate.charAt(i) != ' ' && i < entireDate.length()) { 
-            sb.append(entireDate.charAt(i));
-            i++;
-        }
-
-        this.yymmdd = sb.toString();
-        sb.delete(0, sb.length());
-        
-        i++; // Next position after the space ' '
-        for (; i < entireDate.length(); i++) {
-            sb.append(entireDate.charAt(i));
-        }
-
-        this.hhmmss = sb.toString();
 
         sb.delete(0, sb.length());
 
         int delimiterYMDCount = 0;
-        for (int k = 0; k < yymmdd.length(); k++) {
-            sb.append(yymmdd.charAt(k));
-            if (delimiterYMDCount == 0 && yymmdd.charAt(k + 1) == '-') {
+        for (int k = 0; k < ddmmyyy.length(); k++) {
+            sb.append(ddmmyyy.charAt(k));
+            if (delimiterYMDCount == 0 && ddmmyyy.charAt(k + 1) == '-') {
                 this.yy = Integer.valueOf(sb.toString());
                 sb.delete(0, sb.length());
                 delimiterYMDCount++;
                 k++;
-            } else if (delimiterYMDCount == 1 && yymmdd.charAt(k + 1) == '-') {
+            } else if (delimiterYMDCount == 1 && ddmmyyy.charAt(k + 1) == '-') {
                 this.mm = Integer.valueOf(sb.toString());
                 sb.delete(0, sb.length());
                 delimiterYMDCount++;
                 k++;
-            } else if (delimiterYMDCount == 2 && yymmdd.length() - 1 == k) {
+            } else if (delimiterYMDCount == 2 && ddmmyyy.length() - 1 == k) {
                 this.dd = Integer.valueOf(sb.toString());
                 sb.delete(0, sb.length());
                 delimiterYMDCount++;
@@ -91,44 +79,20 @@ public class ToDoDateFormat {
 
     }
 
-    public String getFormatForToDoElement() {
-        switch (mm) {
-            case 1:
-                return dd + " JAN";
-            case 2:
-                return dd + " FEB";
-            case 3:
-                return dd + " MAR";
-            case 4:
-                return dd + " APR";
-            case 5:
-                return dd + " MAY";
-            case 6:
-                return dd + " JUN";
-            case 7:
-                return dd + " JUL";
-            case 8:
-                return dd + " AUG";
-            case 9:
-                return dd + " SEP";
-            case 10:
-                return dd + " OCT";
-            case 11:
-                return dd + " NOV";
-            case 12:
-                return dd + " DEC";
-
-            default:
-                return "...";
-        }
-    }
-
     public String getEntireDate() {
         return entireDate;
     }
 
+    public String getEntireDateJSONFormat() {
+        JSONObject dateOnJson = new JSONObject();
+        dateOnJson.put("date", ddmmyyy);
+        dateOnJson.put("time", hhmmss);
+        
+        return dateOnJson.toString();
+    }
+
     public String getYymmdd() {
-        return yymmdd;
+        return ddmmyyy;
     }
 
     public int getYy() {
