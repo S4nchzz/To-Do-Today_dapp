@@ -11,6 +11,7 @@ import com.to_do_dapp.controllers.mainAppController.MainControllerApp;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -29,9 +30,13 @@ public class ToDoEntry {
     @FXML
     private Text fxid_toDoDate;
     @FXML
+    private Text fxid_toDoDueData;
+    @FXML
     private Pane fxid_endedColorPane;
     @FXML
     private Text fxid_hasBeenEnded;
+    @FXML
+    private CheckBox fxid_checkBoxEntry;
 
     private final int systemYy;
     private final int systemMm;
@@ -76,6 +81,7 @@ public class ToDoEntry {
             }
 
             this.toDoDateFormat = new ToDoDateFormat(jsonToDoData);
+            this.fxid_toDoDueData.setText("Due: " + toDoDateFormat.getYymmdd());
 
             if (jsonToDoData.getBoolean("ended")) {
                 this.fxid_endedColorPane.setStyle("-fx-background-color: #6bd744");
@@ -88,7 +94,7 @@ public class ToDoEntry {
 
             return (Pane)pane;
         } catch (IOException e) {
-            
+            System.out.println(e.getMessage());
         }
         
         return null;
@@ -114,7 +120,7 @@ public class ToDoEntry {
     }
 
     @FXML
-    private void completeToDo () {
+    private void completeToDo() {
         if (apiConnection.completeToDo(this)) {
             toDoCurrentDetailedData.setEnded(true);
             main.clearVbox();
@@ -123,6 +129,15 @@ public class ToDoEntry {
         }
 
         //? LOG: Failed to complete to do
+    }
+
+    @FXML
+    private void checkBoxHandler() {
+        
+    }
+
+    public boolean isCheckBoxSelected() {
+        return this.fxid_checkBoxEntry.isSelected();
     }
 
     public int getId() {

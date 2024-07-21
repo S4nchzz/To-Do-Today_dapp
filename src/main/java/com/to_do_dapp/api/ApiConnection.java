@@ -19,16 +19,13 @@ import org.springframework.web.client.RestTemplate;
 import com.to_do_dapp.api.requests.req_AddUser.DataToJson;
 import com.to_do_dapp.api.requests.req_AddUser.UserData;
 import com.to_do_dapp.controllers.ToDoFiles;
-import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoData;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoEntry;
-import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoEntryList;
 
 public class ApiConnection {
     protected final static String apiUrl = "http://192.168.1.98:8080";
     private static ApiConnection instance = new ApiConnection();
 
-    private ApiConnection () {        
-    
+    private ApiConnection () {
     }
 
     public static ApiConnection getInstance() {
@@ -145,16 +142,6 @@ public class ApiConnection {
 
         ResponseEntity<String> response = addToDo.postForEntity(apiUrl + "/toDos/addToDo", httpEntity, String.class);
 
-        JSONObject responseOnJson = new JSONObject(response.getBody());
-
-        boolean createdStatus = responseOnJson.getBoolean("addToDoSucced"); 
-        
-        if (!createdStatus) {
-            return createdStatus;
-        }
-
-        ToDoEntryList toDoEntryList = ToDoEntryList.getInstance();
-        toDoEntryList.addToDoAtList(new ToDoData(responseOnJson.getInt("id"), responseOnJson.getInt("userId"), responseOnJson.getString("header"), responseOnJson.getString("content"), responseOnJson.getString("date"), responseOnJson.getBoolean("fav"), responseOnJson.getBoolean("ended")));
         return new JSONObject(response.getBody()).getBoolean("addToDoSucced");
     }
 
@@ -259,13 +246,7 @@ public class ApiConnection {
         
         ResponseEntity<String> response = connection.postForEntity(apiUrl + "/toDos/updateToDo", entity, String.class);
 
-        JSONObject responseOnJson = new JSONObject(response.getBody());
-
-        if (responseOnJson.getBoolean("updated")) {
-            return true;
-        }
-
-        return false;
+        return new JSONObject(response.getBody()).getBoolean("updated");
     }
 
     public boolean completeToDo(ToDoEntry toDoEntry) {

@@ -21,13 +21,13 @@
     -fx-border-color: white;
 }
 
-#fxid_updateButton {
+#fxid_sendInfoButton {
     -fx-background-color: #6bd744;
     -fx-text-color: white;
     -fx-cursor: hand;
 }
 
-#fxid_updateButton:hover {
+#fxid_sendInfoButton:hover {
     -fx-background-color: #5ca541;
     -fx-text-color: white;
     -fx-cursor: hand;
@@ -39,9 +39,10 @@
     -fx-cursor: hand;
 }
 
-#fxid_candelButton {
+#fxid_cancelButton {
     -fx-border-color: rgb(100, 100, 100);
     -fx-border-radius: 3 3 3 3;
+    -fx-background-color: white;
 }
 
 #fxid_toDoMenu {

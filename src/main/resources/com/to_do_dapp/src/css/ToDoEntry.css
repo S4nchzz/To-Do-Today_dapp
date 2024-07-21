@@ -6,3 +6,13 @@
 #fxid_endedColorPane {
     -fx-background-radius: 7 7 7 7;
 }
+
+#fxid_checkBoxEntry .box{
+    -fx-border-color: black;
+    -fx-background-color: white;
+    -fx-border-radius: 10 10 10 10;
+}
+
+#fxid_checkBoxEntry:selected .mark{
+    -fx-background-color: rgb(0, 129, 188);
+}

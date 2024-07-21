@@ -10,6 +10,7 @@ import com.to_do_dapp.api.ApiConnection;
 import com.to_do_dapp.controllers.ToDoFiles;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoCurrentEditMenuData;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoEntry;
+import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoEntryList;
 
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -64,7 +65,7 @@ public class MainControllerApp {
     @FXML
     private TextField fxid_toDoMenuTime;
     @FXML
-    private Button fxid_updateButton;
+    private Button fxid_sendInfoButton;
 
     private boolean menuHidden;
     private boolean toDoCreation = false; // If the user press the add ToDo button this value will go true
@@ -105,8 +106,12 @@ public class MainControllerApp {
     public void preloadToDoElements() {
         ArrayList<JSONObject> toDoList = apiConnection.getToDoS();
         
+        ToDoEntryList toDoEntryList = ToDoEntryList.getInstance();
+        toDoEntryList.clearList(); // This might cause some lag if the user have a lot of to-do's
+
         for (int i = 0; i < toDoList.size(); i++) {
             ToDoEntry entry = new ToDoEntry(this, toDoList.get(i));
+            toDoEntryList.addToDoAtList(entry);
             fxid_toDoVbox.getChildren().add(entry.createPane());
         }
     }
@@ -128,8 +133,8 @@ public class MainControllerApp {
         this.fxid_toDoMenuHeader.setPromptText("Titulo"); // * This can be changed by an IA analyzing all ToDos
         this.fxid_toDoMenuContent.setPromptText("Contenido");
         this.fxid_toDoMenuDate.setPromptText("mm/dd/yy");
-        openDetailMenu();
         this.toDoCreation = true;
+        openDetailMenu();
     }
 
     public void openDetailMenu() {
@@ -137,6 +142,7 @@ public class MainControllerApp {
             return;
         }
 
+        this.fxid_sendInfoButton.setDisable(false);
         TranslateTransition toDoMenu = new TranslateTransition();
         toDoMenu.setNode(this.fxid_toDoMenu);
         toDoMenu.setByX(-282);
@@ -153,6 +159,8 @@ public class MainControllerApp {
         if (!detailMenuInstance.isOpened()) {
             return;
         }
+
+        clearCurrentDetailMenuInfo();
 
         TranslateTransition toDoMenu = new TranslateTransition();
         toDoMenu.setNode(this.fxid_toDoMenu);
@@ -171,6 +179,13 @@ public class MainControllerApp {
 
         toDoGoDownAnimation.setByX(coords);
         toDoGoDownAnimation.play();
+    }
+
+    public void clearCurrentDetailMenuInfo() {
+        this.fxid_toDoMenuHeader.setText("");
+        this.fxid_toDoMenuContent.setText("");
+        this.fxid_toDoMenuDate.setText("");
+        this.fxid_toDoMenuTime.setText("");
     }
 
     @FXML
@@ -213,7 +228,7 @@ public class MainControllerApp {
             }
         }
 
-        this.fxid_updateButton.setDisable(true);
+        this.fxid_sendInfoButton.setDisable(true);
         
         clearVbox();
         preloadToDoElements();
@@ -229,7 +244,7 @@ public class MainControllerApp {
     }
 
     public void setUpdateButtonDisableParam(boolean status) {
-        this.fxid_updateButton.setDisable(status);
+        this.fxid_sendInfoButton.setDisable(status);
     }
 
     public Pane getFxid_toDoMenu() {
