@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import com.to_do_dapp.api.requests.req_AddUser.DataToJson;
 import com.to_do_dapp.api.requests.req_AddUser.UserData;
 import com.to_do_dapp.controllers.ToDoFiles;
-import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoEntry;
+import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 
 public class ApiConnection {
     protected final static String apiUrl = "http://192.168.1.98:8080";
@@ -249,7 +249,7 @@ public class ApiConnection {
         return new JSONObject(response.getBody()).getBoolean("updated");
     }
 
-    public boolean completeToDo(ToDoEntry toDoEntry) {
+    public boolean completeToDo(ToDoController toDoEntry) {
         RestTemplate connection = new RestTemplate();
 
         HttpHeaders header = new HttpHeaders();
@@ -281,6 +281,34 @@ public class ApiConnection {
             }
         } catch (JSONException je) {
             // ? LOG: json response from server invalid
+        }
+
+        return false;
+    }
+
+    public boolean deleteToDo(int id) {
+        RestTemplate connection = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+        
+        JSONObject jsonWithId;
+        try {
+            jsonWithId = new JSONObject()
+            .put("userToken", ToDoFiles.getTempUserToken())
+            .put("deleteID", id);
+
+            HttpEntity<String> entity = new HttpEntity<>(jsonWithId.toString(), header);
+
+            ResponseEntity<String> response = connection.postForEntity(apiUrl + "/toDos/deleteToDo", entity,
+                    String.class);
+
+            if (new JSONObject(response.getBody()).getBoolean("deleted")) {
+                return true;
+            }
+
+        } catch (JSONException | IOException e) {
+            // ? LOG: UserToken not found
         }
 
         return false;

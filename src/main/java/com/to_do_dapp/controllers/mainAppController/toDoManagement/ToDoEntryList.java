@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class ToDoEntryList {
     private static final ToDoEntryList instance = new ToDoEntryList();
 
-    private final ArrayList<ToDoEntry> toDoList = new ArrayList<>();
+    private final ArrayList<ToDoController> toDoList = new ArrayList<>();
 
     private ToDoEntryList() {
     }
@@ -14,13 +14,13 @@ public class ToDoEntryList {
         return instance;
     }
 
-    public void addToDoAtList(ToDoEntry toDoData) {
+    public void addToDoAtList(ToDoController toDoData) {
         toDoList.add(toDoData);
     }
 
     public void removeToDoAtList(final int id) {
         int listPos = 0;
-        for (ToDoEntry todo : toDoList) {
+        for (ToDoController todo : toDoList) {
             if (todo.getId() == id) {
                 toDoList.remove(listPos);
                 return;
@@ -34,7 +34,7 @@ public class ToDoEntryList {
         toDoList.clear();
     }
 
-    public ArrayList<ToDoEntry> getToDoList() {
+    public ArrayList<ToDoController> getToDoList() {
         return this.toDoList;
     }
 

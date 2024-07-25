@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import com.to_do_dapp.api.ApiConnection;
 import com.to_do_dapp.controllers.ToDoFiles;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoCurrentEditMenuData;
-import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoEntry;
+import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoEntryList;
 
 import javafx.animation.TranslateTransition;
@@ -109,8 +109,9 @@ public class MainControllerApp {
         ToDoEntryList toDoEntryList = ToDoEntryList.getInstance();
         toDoEntryList.clearList(); // This might cause some lag if the user have a lot of to-do's
 
+        clearVbox();
         for (int i = 0; i < toDoList.size(); i++) {
-            ToDoEntry entry = new ToDoEntry(this, toDoList.get(i));
+            ToDoController entry = new ToDoController(this, toDoList.get(i));
             toDoEntryList.addToDoAtList(entry);
             fxid_toDoVbox.getChildren().add(entry.createPane());
         }
@@ -134,7 +135,10 @@ public class MainControllerApp {
         this.fxid_toDoMenuContent.setPromptText("Contenido");
         this.fxid_toDoMenuDate.setPromptText("mm/dd/yy");
         this.toDoCreation = true;
-        openDetailMenu();
+        
+        if (!detailMenuInstance.isOpened()) {
+            openDetailMenu();
+        }
     }
 
     public void openDetailMenu() {
@@ -196,7 +200,11 @@ public class MainControllerApp {
         } catch (JSONException | IOException e) {
             //? LOG: UserToken not found or JSON error
         }
-        
+
+        if (this.fxid_toDoMenuDate.getText().isBlank() || this.fxid_toDoMenuTime.getText().isBlank()) {
+            return;
+        }
+
         ToDoCurrentEditMenuData toDoCurrentDetailedData = ToDoCurrentEditMenuData.getInstance();
 
         toDo.put("id", toDoCurrentDetailedData.getId());

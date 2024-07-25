@@ -15,12 +15,20 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
-public class ToDoEntry {
+public class ToDoController {
     private JSONObject jsonToDoData;
     private final ApiConnection apiConnection;
     private ToDoCurrentEditMenuData detailMenuInstance;
-    private ToDoDateFormat toDoDateFormat;
     private ToDoCurrentEditMenuData toDoCurrentDetailedData;
+
+    // ? ToDo values
+    private final int id;
+    private final int userId;
+    private final String header;
+    private final String content;
+    private final ToDoDateFormat toDoDateFormat;
+    private final boolean fav;
+    private final boolean ended;
 
     //To Do elements
     @FXML
@@ -44,15 +52,23 @@ public class ToDoEntry {
 
     private final MainControllerApp main;
 
-    public ToDoEntry (MainControllerApp main, JSONObject json) {
-        LocalDate date = LocalDate.now();
-        this.systemYy = date.getYear();
-        this.systemMm = date.getMonthValue();
-        this.systemDd = date.getDayOfMonth();
+    public ToDoController (MainControllerApp main, JSONObject json) {
+        LocalDate localDate = LocalDate.now();
+        this.systemYy = localDate.getYear();
+        this.systemMm = localDate.getMonthValue();
+        this.systemDd = localDate.getDayOfMonth();
         this.main = main;
         
         this.apiConnection = ApiConnection.getInstance();
         this.jsonToDoData = json;
+
+        this.id = jsonToDoData.getInt("id");
+        this.userId = jsonToDoData.getInt("userId");
+        this.header = jsonToDoData.getString("header");
+        this.content = jsonToDoData.getString("content");
+        this.toDoDateFormat = new ToDoDateFormat(jsonToDoData);
+        this.fav = jsonToDoData.getBoolean("fav");
+        this.ended = jsonToDoData.getBoolean("ended");
 
         this.detailMenuInstance = ToDoCurrentEditMenuData.getInstance();
         this.toDoCurrentDetailedData = ToDoCurrentEditMenuData.getInstance();
@@ -80,7 +96,6 @@ public class ToDoEntry {
                 this.fxid_toDoContent.setText(content);
             }
 
-            this.toDoDateFormat = new ToDoDateFormat(jsonToDoData);
             this.fxid_toDoDueData.setText("Due: " + toDoDateFormat.getYymmdd());
 
             if (jsonToDoData.getBoolean("ended")) {
@@ -133,7 +148,14 @@ public class ToDoEntry {
 
     @FXML
     private void checkBoxHandler() {
-        
+        // check if this to do has been selected using checkBox
+    }
+
+    @FXML
+    private void deleteToDoEvent() {
+        if (apiConnection.deleteToDo(this.id)) {
+            main.preloadToDoElements();
+        }
     }
 
     public boolean isCheckBoxSelected() {

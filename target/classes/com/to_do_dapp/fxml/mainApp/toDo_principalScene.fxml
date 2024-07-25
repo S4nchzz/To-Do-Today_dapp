@@ -172,7 +172,7 @@
                   <Font size="15.0" />
                </font>
             </Text>
-            <TextField fx:id="fxid_toDoMenuDate" layoutX="28.0" layoutY="325.0" prefHeight="25.0" prefWidth="95.0" promptText="mm/dd/yyyy" />
+            <TextField fx:id="fxid_toDoMenuDate" layoutX="28.0" layoutY="325.0" prefHeight="25.0" prefWidth="95.0" promptText="dd/mm/yyyy" />
             <TextField fx:id="fxid_toDoMenuTime" layoutX="152.0" layoutY="327.0" prefHeight="25.0" prefWidth="95.0" promptText="--:--:--" />
             <Button fx:id="fxid_cancelButton" layoutX="121.0" layoutY="402.0" mnemonicParsing="false" onMouseClicked="#closeMenuDetails" style="-fx-cursor: hand;" stylesheets="@../../src/css/MainScene.css" text="Cancel" />
          </children>
