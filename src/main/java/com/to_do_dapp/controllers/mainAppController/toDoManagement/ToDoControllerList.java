@@ -2,15 +2,15 @@ package com.to_do_dapp.controllers.mainAppController.toDoManagement;
 
 import java.util.ArrayList;
 
-public class ToDoEntryList {
-    private static final ToDoEntryList instance = new ToDoEntryList();
+public class ToDoControllerList {
+    private static final ToDoControllerList instance = new ToDoControllerList();
 
     private final ArrayList<ToDoController> toDoList = new ArrayList<>();
 
-    private ToDoEntryList() {
+    private ToDoControllerList() {
     }
 
-    public static ToDoEntryList getInstance() {
+    public static ToDoControllerList getInstance() {
         return instance;
     }
 

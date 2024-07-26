@@ -10,7 +10,7 @@ import com.to_do_dapp.api.ApiConnection;
 import com.to_do_dapp.controllers.ToDoFiles;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoCurrentEditMenuData;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
-import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoEntryList;
+import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoControllerList;
 
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -106,7 +106,7 @@ public class MainControllerApp {
     public void preloadToDoElements() {
         ArrayList<JSONObject> toDoList = apiConnection.getToDoS();
         
-        ToDoEntryList toDoEntryList = ToDoEntryList.getInstance();
+        ToDoControllerList toDoEntryList = ToDoControllerList.getInstance();
         toDoEntryList.clearList(); // This might cause some lag if the user have a lot of to-do's
 
         clearVbox();
@@ -207,7 +207,6 @@ public class MainControllerApp {
 
         ToDoCurrentEditMenuData toDoCurrentDetailedData = ToDoCurrentEditMenuData.getInstance();
 
-        toDo.put("id", toDoCurrentDetailedData.getId());
         toDo.put("header", this.fxid_toDoMenuHeader.getText());
         toDo.put("content", this.fxid_toDoMenuContent.getText());
 
@@ -216,10 +215,10 @@ public class MainControllerApp {
         dateOnJson.put("time", this.fxid_toDoMenuTime.getText());
 
         toDo.put("date", dateOnJson.toString());
-        toDo.put("fav", toDoCurrentDetailedData.isFav());
-        toDo.put("ended", toDoCurrentDetailedData.isEnded());
+        toDo.put("fav", toDoCurrentDetailedData.isFav()); // On a new ToDo this should be marked as isSleected 
 
         if (toDoCreation) {
+            toDo.put("ended", false);
             boolean hasBeenCreated = apiConnection.addToDo(toDo);
             toDoCreation = false;
 
@@ -228,6 +227,7 @@ public class MainControllerApp {
                 return;
             }
         } else {
+            toDo.put("ended", toDoCurrentDetailedData.isEnded());
             boolean hasBeenUpdated = apiConnection.updateToDo(toDo);
 
             if (!hasBeenUpdated) {

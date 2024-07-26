@@ -111,7 +111,7 @@
                         <Font name="System Bold" size="35.0" />
                      </font>
                   </Text>
-                  <ScrollPane fx:id="fxid_scrollPane" layoutX="178.0" layoutY="97.0" prefHeight="370.6" prefWidth="600.0" style="-fx-background-color: red;" stylesheets="@../../src/css/MainScene.css">
+                  <ScrollPane fx:id="fxid_scrollPane" layoutX="178.0" layoutY="97.0" prefHeight="370.6" prefWidth="600.0" stylesheets="@../../src/css/MainScene.css">
                      <content>
                         <VBox fx:id="fxid_toDoVbox" prefHeight="366.0" prefWidth="578.0" style="-fx-background-color: white;" />
                      </content>
