@@ -1,6 +1,6 @@
 <h1 align="center"> To-Do Today </h1> <br>
 <p align="center">
-  <img alt="To-Do Today" title="GitPoint" src="https://i.imgur.com/ffeKA5f.jpeg" width="450">
+  <img alt="To-Do Today" title="To-Do Today" src="https://i.imgur.com/VSpOOxo.png" width="450">
 </p>
 
 <p align="center">
@@ -12,7 +12,7 @@
 - [Introduction](#introduction)
 - [Features](#features)
 - [Instalation](#Instalation)
-- [Technologies](#Technoloigies)
+- [Technologies](#Technologies)
 
 ## Introduction
 To-Do Today is an application that helps you organize and prepare events with many features
