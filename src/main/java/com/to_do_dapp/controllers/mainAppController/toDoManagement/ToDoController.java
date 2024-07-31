@@ -1,5 +1,8 @@
 package com.to_do_dapp.controllers.mainAppController.toDoManagement;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 
@@ -12,6 +15,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -36,6 +41,8 @@ public class ToDoController {
     @FXML
     private Text fxid_toDoContent;
     @FXML
+    private ImageView fxid_favElement;
+    @FXML
     private Text fxid_toDoDate;
     @FXML
     private Text fxid_toDoDueData;
@@ -45,6 +52,9 @@ public class ToDoController {
     private Text fxid_hasBeenEnded;
     @FXML
     private CheckBox fxid_checkBoxEntry;
+
+    private boolean isFavSelected;
+    private boolean completed;
 
     private final int systemYy;
     private final int systemMm;
@@ -72,6 +82,9 @@ public class ToDoController {
 
         this.detailMenuInstance = ToDoCurrentEditMenuData.getInstance();
         this.toDoCurrentDetailedData = ToDoCurrentEditMenuData.getInstance();
+
+        this.isFavSelected = this.fav;
+        this.completed = this.ended;
     }
 
     public Pane createPane() {
@@ -104,7 +117,12 @@ public class ToDoController {
             } else {
                 this.fxid_endedColorPane.setStyle("-fx-background-color: orange");
                 this.fxid_hasBeenEnded.setText("In-progress");
+            }
 
+            if (this.fav) {
+                // ! This might cause problems on a diferent enviroment
+                this.fxid_favElement.setImage(new Image(new FileInputStream(
+                    new File("C:/Users/" + System.getProperty("user.name") + "/OneDrive/Informática/Programacion/Visual Studio/Proyects/Java/To_Do_Today/todo_today_dapp/src/main/resources/com/to_do_dapp/src/pictures/bright_star.png"))));
             }
 
             return (Pane)pane;
@@ -136,7 +154,8 @@ public class ToDoController {
 
     @FXML
     private void completeToDo() {
-        if (apiConnection.completeToDo(this)) {
+        completed = !completed;
+        if (apiConnection.completeToDo(this, completed)) {
             toDoCurrentDetailedData.setEnded(true);
             main.clearVbox();
             main.preloadToDoElements();
@@ -144,6 +163,26 @@ public class ToDoController {
         }
 
         //? LOG: Failed to complete to do
+    }
+
+    @FXML
+    private void addToFavFunction() {
+        isFavSelected = !isFavSelected;
+        if (apiConnection.setFav(this, isFavSelected) && isFavSelected) {
+            try {
+                this.fxid_favElement.setImage(new Image(new FileInputStream(
+                        new File("C:/Users/" + System.getProperty("user.name") + "/OneDrive/Informática/Programacion/Visual Studio/Proyects/Java/To_Do_Today/todo_today_dapp/src/main/resources/com/to_do_dapp/src/pictures/bright_star.png"))));
+            } catch (FileNotFoundException e) {
+                // ? LOG: Image not found
+            }
+        } else {
+            try {
+                this.fxid_favElement.setImage(new Image(new FileInputStream(
+                        new File("C:/Users/" + System.getProperty("user.name") + "/OneDrive/Informática/Programacion/Visual Studio/Proyects/Java/To_Do_Today/todo_today_dapp/src/main/resources/com/to_do_dapp/src/pictures/star.png"))));
+            } catch (FileNotFoundException e) {
+                // ? LOG: Image not found
+            }
+        }
     }
 
     @FXML

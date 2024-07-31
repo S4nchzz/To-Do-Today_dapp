@@ -12,7 +12,7 @@
    <children>
       <Region fx:id="fxid_regionBorder" layoutX="15.0" layoutY="10.0" prefHeight="71.0" prefWidth="549.0" stylesheets="@../../../src/css/ToDoEntry.css" />
       <Text fx:id="fxid_toDoDueData" fill="#aeaeae" layoutX="327.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-      <ImageView fx:id="fxid_favElement" fitHeight="25.0" fitWidth="20.0" layoutX="436.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+      <ImageView fx:id="fxid_favElement" fitHeight="25.0" fitWidth="20.0" layoutX="436.0" layoutY="54.0" onMouseClicked="#addToFavFunction" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
          <image>
             <Image url="@../../../src/pictures/star.png" />
          </image>

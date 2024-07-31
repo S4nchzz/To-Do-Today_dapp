@@ -41,6 +41,8 @@ public class MainControllerApp {
 
     //V-Box & SctrollPane from ToDos
     @FXML
+    private Text fxid_toDoListText;
+    @FXML
     private ScrollPane fxid_scrollPane;
     @FXML
     private VBox fxid_toDoVbox;
@@ -146,6 +148,7 @@ public class MainControllerApp {
             return;
         }
 
+
         this.fxid_sendInfoButton.setDisable(false);
         TranslateTransition toDoMenu = new TranslateTransition();
         toDoMenu.setNode(this.fxid_toDoMenu);
@@ -178,10 +181,16 @@ public class MainControllerApp {
     }
 
     public void moveScrollPane(int coords) {
+        TranslateTransition toDoText = new TranslateTransition();
+        toDoText.setNode(this.fxid_toDoListText);
+        toDoText.setByX(coords);
+
         TranslateTransition toDoGoDownAnimation = new TranslateTransition();
         toDoGoDownAnimation.setNode(this.fxid_scrollPane);
 
         toDoGoDownAnimation.setByX(coords);
+
+        toDoText.play();
         toDoGoDownAnimation.play();
     }
 

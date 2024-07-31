@@ -249,7 +249,7 @@ public class ApiConnection {
         return new JSONObject(response.getBody()).getBoolean("updated");
     }
 
-    public boolean completeToDo(ToDoController toDoEntry) {
+    public boolean completeToDo(ToDoController toDoEntry, boolean completed) {
         RestTemplate connection = new RestTemplate();
 
         HttpHeaders header = new HttpHeaders();
@@ -263,10 +263,7 @@ public class ApiConnection {
         }
 
         jsonWithToDoData.put("id", toDoEntry.getId());
-        jsonWithToDoData.put("header", toDoEntry.getHeader());
-        jsonWithToDoData.put("content", toDoEntry.getContent());
-        jsonWithToDoData.put("date", toDoEntry.getDate().getEntireDateJSONFormat());
-        jsonWithToDoData.put("fav", toDoEntry.isFav());
+        jsonWithToDoData.put("completed", completed);
 
         HttpEntity<String> entity = new HttpEntity<>(jsonWithToDoData.toString(), header);
 
@@ -309,6 +306,34 @@ public class ApiConnection {
 
         } catch (JSONException | IOException e) {
             // ? LOG: UserToken not found
+        }
+
+        return false;
+    }
+
+    public boolean setFav(ToDoController toDoController, boolean isFavSelected) {
+        RestTemplate conn = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+
+        JSONObject toDoJson;
+        try {
+            toDoJson = new JSONObject()
+            .put("userToken", ToDoFiles.getTempUserToken())
+            .put("id", toDoController.getId())
+            .put("fav", isFavSelected);
+
+            HttpEntity<String> entity = new HttpEntity<>(toDoJson.toString(), header);
+
+            ResponseEntity<String> response = conn.postForEntity(apiUrl + "/toDos/addFav", entity, String.class);
+
+            JSONObject responseOnJson = new JSONObject(response.getBody());
+            if (responseOnJson.getBoolean("updated")) {
+                return true;
+            }
+        } catch (JSONException | IOException e) {
+            // ? LOG: Unnable to find temp token
         }
 
         return false;

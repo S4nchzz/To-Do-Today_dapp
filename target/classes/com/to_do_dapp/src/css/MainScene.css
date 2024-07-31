@@ -49,3 +49,7 @@
     -fx-border-width: 3px;
     -fx-border-color: #f4f4f4f4;
 }
+
+#fxid_scrollPane, scroll-bar:vertical .thumb{
+    -fx-background-color: white;
+}
