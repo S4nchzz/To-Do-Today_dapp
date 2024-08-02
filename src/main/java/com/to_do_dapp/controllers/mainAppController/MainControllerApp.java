@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.json.JSONObject;
 
 import com.to_do_dapp.api.ApiConnection;
-import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoCurrentEditedData;
 import com.to_do_dapp.controllers.notification_system.NotificationController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoControllerList;
@@ -26,7 +25,6 @@ import javafx.util.Duration;
 
 public class MainControllerApp {
     private final ApiConnection apiConnection;
-    private ToDoCurrentEditedData detailMenuInstance;
     
     @FXML
     private Pane fxid_leftPane;
@@ -42,6 +40,8 @@ public class MainControllerApp {
     private Pane fxid_toDoManagementPane;
     @FXML
     private Pane fxid_teamManagementPane;
+    @FXML
+    private Pane fxid_teamSearchAndCreate;
 
     //V-Box & SctrollPane from ToDos
     @FXML
@@ -72,6 +72,8 @@ public class MainControllerApp {
     private TextField fxid_toDoMenuTime;
     @FXML
     private Button fxid_sendInfoButton;
+    private boolean isOpened;
+    private ToDoController currentToDoControllerBeignEdited;
 
     private boolean menuHidden;
     private boolean toDoCreation = false; // If the user press the add ToDo button this value will go true
@@ -89,8 +91,9 @@ public class MainControllerApp {
             this.fxid_userNameField.setText(apiConnection.getUserName());
         });
 
-        this.detailMenuInstance = ToDoCurrentEditedData.getInstance();
         this.notificationController = NotificationController.getInstance();
+        this.isOpened = false;
+        
     }
 
     @FXML
@@ -140,14 +143,12 @@ public class MainControllerApp {
         this.fxid_toDoMenuTime.setDisable(disable);
     }
 
-    public void setDetailedMenuInfo(String detailMenuText, boolean isaNewToDo) {
-        this.fxid_toDoMenuHeader.setText(detailMenuInstance.getHeader());
-        this.fxid_toDoMenuContent.setText(detailMenuInstance.getContent());
+    public void setDetailedMenuInfo(String detailMenuText, ToDoController toDoController) {
+        this.fxid_toDoMenuHeader.setText(toDoController.getHeader());
+        this.fxid_toDoMenuContent.setText(toDoController.getContent());
 
-        JSONObject dateJson = new JSONObject(detailMenuInstance.getDate());
-
-        this.fxid_toDoMenuDate.setText(dateJson.getString("date"));
-        this.fxid_toDoMenuTime.setText(dateJson.getString("time"));
+        this.fxid_toDoMenuDate.setText(toDoController.getDate().getYymmdd());
+        this.fxid_toDoMenuTime.setText(toDoController.getDate().getHhmmss());
         this.fxid_detailMenuTitleText.setText(detailMenuText);
     }
 
@@ -160,16 +161,20 @@ public class MainControllerApp {
         this.fxid_toDoMenuTime.setPromptText("ss:mm:hh");
         this.toDoCreation = true;
         
-        if (!detailMenuInstance.isOpened()) {
-            openDetailMenu();
+        if (!isOpened) {
+            openDetailMenuAnimation();
         }
     }
 
-    public void openDetailMenu() {
-        if (detailMenuInstance.isOpened()) {
+    public void openDetailMenuAnimation() {
+        if (isOpened) {
             return;
         }
 
+        if (currentToDoControllerBeignEdited != null) {
+            setDetailedMenuInfo("Task Manager", currentToDoControllerBeignEdited);
+        }
+        
         enableOrDisableMenuElements(false);
 
         this.fxid_sendInfoButton.setDisable(false);
@@ -181,12 +186,12 @@ public class MainControllerApp {
         moveScrollPane(-100);
         toDoMenu.play();
 
-        detailMenuInstance.setOpened(true);
+        this.isOpened = true;
     }
 
     @FXML
     private void closeMenuDetails() {
-        if (!detailMenuInstance.isOpened()) {
+        if (!isOpened) {
             return;
         }
 
@@ -201,7 +206,7 @@ public class MainControllerApp {
         moveScrollPane(100);
         toDoMenu.play();
 
-        detailMenuInstance.setOpened(false);
+        this.isOpened = false;
     }
 
     public void moveScrollPane(int coords) {
@@ -223,8 +228,6 @@ public class MainControllerApp {
         this.fxid_toDoMenuContent.setText("");
         this.fxid_toDoMenuDate.setText("");
         this.fxid_toDoMenuTime.setText("");
-
-        detailMenuInstance.clear();
     }
 
     @FXML
@@ -235,19 +238,22 @@ public class MainControllerApp {
             return;
         }
 
-        ToDoCurrentEditedData toDoCurrentDetailedData = ToDoCurrentEditedData.getInstance();
-
-        toDo.put("id", toDoCurrentDetailedData.getId());
+        if (currentToDoControllerBeignEdited != null) {
+            toDo.put("id", currentToDoControllerBeignEdited.getId());
+            toDo.put("fav", currentToDoControllerBeignEdited.isFavSelected());
+        } else {
+            toDo.put("fav", false);
+        }
+        
         toDo.put("header", this.fxid_toDoMenuHeader.getText());
         toDo.put("content", this.fxid_toDoMenuContent.getText());
-
+        
         JSONObject dateOnJson = new JSONObject();
         dateOnJson.put("date", this.fxid_toDoMenuDate.getText());
         dateOnJson.put("time", this.fxid_toDoMenuTime.getText());
-
+        
         toDo.put("date", dateOnJson.toString());
-        toDo.put("fav", toDoCurrentDetailedData.isFav()); // On a new ToDo this should be marked as isSleected 
-
+        
         if (toDoCreation) {
             toDo.put("ended", false);
             boolean hasBeenCreated = apiConnection.addToDo(toDo);
@@ -262,7 +268,7 @@ public class MainControllerApp {
                     "You just created a new To-Do", "Now");
 
         } else {
-            toDo.put("ended", toDoCurrentDetailedData.isEnded());
+            toDo.put("ended", currentToDoControllerBeignEdited.isCompleted());
             boolean hasBeenUpdated = apiConnection.updateToDo(toDo);
 
             if (!hasBeenUpdated) {
@@ -313,13 +319,25 @@ public class MainControllerApp {
     @FXML
     private void openTeams() {
         setVisibleMainControllerPanes(false);
-        this.fxid_teamManagementPane.setVisible(true);
+        if (apiConnection.userIsInGroup()) {
+            this.fxid_teamManagementPane.setVisible(true);
+        } else {
+            this.fxid_teamSearchAndCreate.setVisible(true);
+        }
     }
 
     private void setVisibleMainControllerPanes(boolean property) {
         for (Node node : this.fxid_allPanes.getChildren()) {
             node.setVisible(property);
         }
+    }
+
+    public ToDoController getCurrentToDoControllerBeignEdited() {
+        return this.currentToDoControllerBeignEdited;
+    }
+
+    public void setCurrentToDoControllerBeignEdited(ToDoController toDoController) {
+        this.currentToDoControllerBeignEdited = toDoController;
     }
 
     public VBox getNotificationVbox() {
@@ -344,5 +362,9 @@ public class MainControllerApp {
 
     public Node getScrollPane() {
         return this.fxid_scrollPane;
+    }
+
+    public boolean isOpened() {
+        return this.isOpened;
     }
 }

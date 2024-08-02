@@ -30,6 +30,16 @@ public class ToDoControllerList {
         }
     }
 
+    public ToDoController getToDoById(int id) {
+        for (ToDoController todo : toDoList) {
+            if (todo.getId() == id) {
+                return todo;
+            }
+        }
+
+        return null;
+    }
+
     public void clearList() {
         toDoList.clear();
     }

@@ -24,8 +24,6 @@ import javafx.scene.text.Text;
 public class ToDoController {
     private JSONObject jsonToDoData;
     private final ApiConnection apiConnection;
-    private ToDoCurrentEditedData detailMenuInstance;
-    private ToDoCurrentEditedData toDoCurrentDetailedData;
     private NotificationController notificationController;
 
     // ? ToDo values
@@ -82,9 +80,6 @@ public class ToDoController {
         this.fav = jsonToDoData.getBoolean("fav");
         this.ended = jsonToDoData.getBoolean("ended");
 
-        this.detailMenuInstance = ToDoCurrentEditedData.getInstance();
-        this.toDoCurrentDetailedData = ToDoCurrentEditedData.getInstance();
-
         this.isFavSelected = this.fav;
         this.completed = this.ended;
 
@@ -139,32 +134,25 @@ public class ToDoController {
 
     @FXML
     private void openMenuDetails() {
-        if (detailMenuInstance.isOpened()) {
+        if (main.isOpened()) {
             return;
         }
-
-        toDoCurrentDetailedData.setId(jsonToDoData.getInt("id"));
-        toDoCurrentDetailedData.setHeader(jsonToDoData.getString("header"));
-        toDoCurrentDetailedData.setContent(jsonToDoData.getString("content"));
-        toDoCurrentDetailedData.setDate(jsonToDoData.getString("date"));
-        toDoCurrentDetailedData.setFav(jsonToDoData.getBoolean("fav"));
-        toDoCurrentDetailedData.setEnded(jsonToDoData.getBoolean("ended"));
-        
         main.setUpdateButtonDisableParam(false);
-
-        main.setDetailedMenuInfo("Task Manager", false);
-        main.openDetailMenu();
+        main.setCurrentToDoControllerBeignEdited(this);
+        main.openDetailMenuAnimation();
     }
 
     @FXML
     private void completeToDo() {
         completed = !completed;
         if (apiConnection.completeToDo(this, completed)) {
-            main.clearVbox();
-            main.preloadToDoElements();
 
-            if (toDoCurrentDetailedData.getId() == this.id) {
-                toDoCurrentDetailedData.setEnded(completed);
+            if (completed) {
+                this.fxid_endedColorPane.setStyle("-fx-background-color: #6bd744");
+                this.fxid_hasBeenEnded.setText("Completed");
+            } else {
+                this.fxid_endedColorPane.setStyle("-fx-background-color: orange");
+                this.fxid_hasBeenEnded.setText("In-progress");
             }
             return;
         }
@@ -182,11 +170,6 @@ public class ToDoController {
 
                         notificationController.show(main, "To-Dos",
                         "You just fav a To-Do", "Now");
-
-                // If the user is editting the to-do and he selects this option the current edit menu singelton fav value will change
-                if (toDoCurrentDetailedData.getId() == this.id) {
-                    toDoCurrentDetailedData.setFav(isFavSelected);
-                }
             } catch (FileNotFoundException e) {
                 // ? LOG: Image not found
             }
@@ -198,13 +181,10 @@ public class ToDoController {
                         notificationController.show(main, "To-Dos",
                         "You just un-fav a To-Do", "Now");
 
-                        if (toDoCurrentDetailedData.getId() == this.id) {
-                            toDoCurrentDetailedData.setFav(isFavSelected);
-                        }
             } catch (FileNotFoundException e) {
                 // ? LOG: Image not found
             }
-        }   
+        }
     }
 
     @FXML
@@ -240,8 +220,16 @@ public class ToDoController {
         return jsonToDoData.getBoolean("fav");
     }
 
+    public boolean isFavSelected() {
+        return this.isFavSelected;
+    }
+
     public boolean isEnded() {
         return jsonToDoData.getBoolean("ended");
+    }
+
+    public boolean isCompleted() {
+        return this.completed;
     }
 
     public String getCompleteToDoDate() {

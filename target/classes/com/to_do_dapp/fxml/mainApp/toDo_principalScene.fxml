@@ -104,7 +104,7 @@
       </Pane>
       <Pane fx:id="fxid_allPanes" layoutX="157.0" layoutY="14.0" prefHeight="565.0" prefWidth="956.0">
          <children>
-            <Pane fx:id="fxid_toDoManagementPane" prefHeight="565.0" prefWidth="956.0" visible="false">
+            <Pane fx:id="fxid_toDoManagementPane" prefHeight="565.0" prefWidth="956.0">
                <children>
                   <Text fx:id="fxid_toDoListText" layoutX="178.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To-Do List">
                      <font>
@@ -132,7 +132,8 @@
                   </ImageView>
                </children>
             </Pane>
-            <Pane fx:id="fxid_teamManagementPane" prefHeight="565.0" prefWidth="956.0" />
+            <Pane fx:id="fxid_teamManagementPane" prefHeight="565.0" prefWidth="956.0" style="-fx-background-color: red;" visible="false" />
+            <Pane fx:id="fxid_teamSearchAndCreate" prefHeight="565.0" prefWidth="956.0" style="-fx-background-color: green;" visible="false" />
          </children></Pane>
       <ImageView fx:id="fxid_menuImage" fitHeight="30.0" fitWidth="30.0" layoutX="174.0" layoutY="15.0" onMouseClicked="#showLeftMenu" pickOnBounds="true" preserveRatio="true" rotate="180.0" style="-fx-cursor: hand;">
          <image>

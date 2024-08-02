@@ -235,19 +235,19 @@ public class ApiConnection {
 
     public String getUserName() {
         RestTemplate getUserName = new RestTemplate();
-
-        JSONObject json = new JSONObject();
+        
+        HttpHeaders header = new HttpHeaders();
         try {
-            json.put("userTempToken", ToDoFiles.getTempUserToken());
-        } catch (JSONException | IOException e) {
-            //? LOG: File tempTokenUser not found
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+            HttpEntity<String> httpEntity = new HttpEntity<>(header);
+            ResponseEntity<String> response = getUserName.postForEntity(apiUrl + "/user/getUserName", httpEntity, String.class);
+    
+            return new JSONObject(response.getBody()).getString("username");
+        } catch (IOException e) {
+            //? LOG: Unnable to find user temp token
         }
 
-        HttpEntity<String> httpEntity = new HttpEntity<>(json.toString(), new HttpHeaders());
-
-        ResponseEntity<String> response = getUserName.postForEntity(apiUrl + "/user/getUserName", httpEntity, String.class);
-
-        return response.getBody();
+        return "";
     }
 
     public boolean updateToDo(JSONObject updatedData) {
@@ -365,5 +365,23 @@ public class ApiConnection {
         }
 
         return false;
+    }
+
+    public boolean userIsInGroup() {
+        RestTemplate conn = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            //? LOG: User temp token not found
+        }
+
+        ResponseEntity<String> responseEntity = conn.postForEntity(apiUrl + "/user/isInGroup", header, String.class);
+        
+        JSONObject responseOnJson = new JSONObject(responseEntity.getBody());
+
+        return responseOnJson.getBoolean("hasGroup");
     }
 }

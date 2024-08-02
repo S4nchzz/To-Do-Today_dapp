@@ -16,3 +16,7 @@
 #fxid_checkBoxEntry:selected .mark{
     -fx-background-color: rgb(0, 129, 188);
 }
+
+#fxid_disableAllToDoModifications {
+    -fx-background-color: rgb(231, 231, 231);
+}
