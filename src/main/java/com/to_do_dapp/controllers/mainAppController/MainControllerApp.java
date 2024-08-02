@@ -1,13 +1,10 @@
 package com.to_do_dapp.controllers.mainAppController;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.to_do_dapp.api.ApiConnection;
-import com.to_do_dapp.controllers.ToDoFiles;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoCurrentEditedData;
 import com.to_do_dapp.controllers.notification_system.NotificationController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
@@ -39,6 +36,12 @@ public class MainControllerApp {
     // Principal app panes
     @FXML
     private Pane fxid_allPanes;
+
+    // Each function with his pane
+    @FXML
+    private Pane fxid_toDoManagementPane;
+    @FXML
+    private Pane fxid_teamManagementPane;
 
     //V-Box & SctrollPane from ToDos
     @FXML
@@ -114,6 +117,10 @@ public class MainControllerApp {
     public void preloadToDoElements() {
         ArrayList<JSONObject> toDoList = apiConnection.getToDoS();
         
+        if (toDoList == null) {
+            return;
+        }
+
         ToDoControllerList toDoEntryList = ToDoControllerList.getInstance();
         toDoEntryList.clearList(); // This might cause some lag if the user have a lot of to-do's
 
@@ -223,11 +230,6 @@ public class MainControllerApp {
     @FXML
     private void sendToDoData() {
         JSONObject toDo = new JSONObject();
-        try {
-            toDo.put("userToken", ToDoFiles.getTempUserToken());
-        } catch (JSONException | IOException e) {
-            //? LOG: UserToken not found or JSON error
-        }
 
         if (this.fxid_toDoMenuDate.getText().isBlank() || this.fxid_toDoMenuTime.getText().isBlank()) {
             return;
@@ -300,6 +302,24 @@ public class MainControllerApp {
         notificationController.show(this, "To-Dos", "You just deleted " + toDosToBeDeletedFromList.size() + " To-Dos", "Now");
 
         preloadToDoElements();
+    }
+
+    @FXML
+    private void openToDos() {
+        setVisibleMainControllerPanes(false);
+        this.fxid_toDoManagementPane.setVisible(true);
+    }
+
+    @FXML
+    private void openTeams() {
+        setVisibleMainControllerPanes(false);
+        this.fxid_teamManagementPane.setVisible(true);
+    }
+
+    private void setVisibleMainControllerPanes(boolean property) {
+        for (Node node : this.fxid_allPanes.getChildren()) {
+            node.setVisible(property);
+        }
     }
 
     public VBox getNotificationVbox() {

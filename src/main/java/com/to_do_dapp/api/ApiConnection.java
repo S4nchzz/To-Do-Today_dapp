@@ -108,28 +108,37 @@ public class ApiConnection {
         header.setContentType(MediaType.APPLICATION_JSON);
     
         JSONObject jsonUserToken;
+        jsonUserToken = new JSONObject();
+        
         try {
-            jsonUserToken = new JSONObject();
-            jsonUserToken.put("userToken", ToDoFiles.getTempUserToken());
-            HttpEntity<String> httpEntity = new HttpEntity<>(jsonUserToken.toString(), header);
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            // ? LOG: Cannot find user temp token
+        }
 
-            ResponseEntity<String> toDos = getToDoS.postForEntity(apiUrl + "/toDos/getToDos", httpEntity, String.class);
-            
+        HttpEntity<String> httpEntity = new HttpEntity<>(jsonUserToken.toString(), header);
+
+        ResponseEntity<String> toDos = getToDoS.postForEntity(apiUrl + "/toDos/getToDos", httpEntity, String.class);
+        
+        if (toDos.getBody() != null) {
             JSONObject jsonResponse = new JSONObject(toDos.getBody());
             java.util.Iterator<String> iterator = jsonResponse.keys();
 
             ArrayList<JSONObject> toDoList = new ArrayList<>();
             while (iterator.hasNext()) {
                 String i = iterator.next();
-                toDoList.add(jsonResponse.getJSONObject(i));
+
+                try {
+                    toDoList.add(jsonResponse.getJSONObject(i));
+                } catch (JSONException e) {
+
+                }
             }
-
             return toDoList;
-        } catch (IOException e) {
-            // ? LOG: Error getting TempToken from userFile
         }
-
+        
         return null;
+        
     }
 
     public boolean addToDo (JSONObject toDoData) {
@@ -137,6 +146,11 @@ public class ApiConnection {
 
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            //? LOG: Cannot find user temp token
+        }
 
         HttpEntity<String> httpEntity = new HttpEntity<>(toDoData.toString(), header);
 
@@ -241,6 +255,11 @@ public class ApiConnection {
         
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            //? log: Unnable to find user temp token
+        }
         
         HttpEntity<String> entity = new HttpEntity<>(updatedData.toString(), header);
         
@@ -254,13 +273,15 @@ public class ApiConnection {
 
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_JSON);
+        
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            //? LOG: User temp token not found
+        }
 
         JSONObject jsonWithToDoData = new JSONObject();
-        try {
-            jsonWithToDoData.put("userToken", ToDoFiles.getTempUserToken());
-        } catch (JSONException | IOException e) {
-            //? LOG: User token not found or json error
-        }
+        
 
         jsonWithToDoData.put("id", toDoEntry.getId());
         jsonWithToDoData.put("completed", completed);
@@ -286,13 +307,14 @@ public class ApiConnection {
     public boolean deleteToDo(int id) {
         RestTemplate connection = new RestTemplate();
 
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_JSON);
-        
         JSONObject jsonWithId;
         try {
+
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(MediaType.APPLICATION_JSON);
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+
             jsonWithId = new JSONObject()
-            .put("userToken", ToDoFiles.getTempUserToken())
             .put("deleteID", id);
 
             HttpEntity<String> entity = new HttpEntity<>(jsonWithId.toString(), header);
@@ -304,7 +326,7 @@ public class ApiConnection {
                 return true;
             }
 
-        } catch (JSONException | IOException e) {
+        } catch (JSONException |IOException e) {
             // ? LOG: UserToken not found
         }
 
@@ -317,10 +339,16 @@ public class ApiConnection {
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_JSON);
 
+        header.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            // ? log: Unnable to find user temp token
+        }
+
         JSONObject toDoJson;
         try {
             toDoJson = new JSONObject()
-            .put("userToken", ToDoFiles.getTempUserToken())
             .put("id", toDoController.getId())
             .put("fav", isFavSelected);
 
@@ -332,7 +360,7 @@ public class ApiConnection {
             if (responseOnJson.getBoolean("updated")) {
                 return true;
             }
-        } catch (JSONException | IOException e) {
+        } catch (JSONException e) {
             // ? LOG: Unnable to find temp token
         }
 

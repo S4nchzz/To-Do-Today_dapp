@@ -23,22 +23,7 @@
             <Text fx:id="fxid_userNameField" layoutX="58.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{user.name}" />
             <VBox layoutY="91.0" prefHeight="370.0" prefWidth="160.0">
                <children>
-                  <Pane prefHeight="61.6" prefWidth="200.0">
-                     <children>
-                        <Pane fx:id="fxid_hoverPaneA" layoutX="11.0" layoutY="9.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/MainScene.css" />
-                        <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../src/pictures/tick.png" />
-                           </image>
-                        </ImageView>
-                        <Text layoutX="71.0" layoutY="36.0" mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Today">
-                           <font>
-                              <Font name="Calibri" size="15.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </Pane>
-                  <Pane prefHeight="61.6" prefWidth="200.0">
+                  <Pane onMouseClicked="#openToDos" prefHeight="61.6" prefWidth="200.0">
                      <children>
                         <Pane fx:id="fxid_hoverPaneB" layoutX="11.0" layoutY="10.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/MainScene.css" />
                         <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
@@ -47,6 +32,21 @@
                            </image>
                         </ImageView>
                         <Text layoutX="71.0" layoutY="36.0" mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="To-Do List">
+                           <font>
+                              <Font name="Calibri" size="15.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </Pane>
+                  <Pane onMouseClicked="#openTeams" prefHeight="61.6" prefWidth="200.0">
+                     <children>
+                        <Pane fx:id="fxid_hoverPaneA" layoutX="11.0" layoutY="9.0" prefHeight="43.0" prefWidth="139.0" stylesheets="@../../src/css/MainScene.css" />
+                        <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="27.0" layoutY="16.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../src/pictures/grupo.png" />
+                           </image>
+                        </ImageView>
+                        <Text layoutX="71.0" layoutY="36.0" mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="Teams">
                            <font>
                               <Font name="Calibri" size="15.0" />
                            </font>
@@ -104,7 +104,7 @@
       </Pane>
       <Pane fx:id="fxid_allPanes" layoutX="157.0" layoutY="14.0" prefHeight="565.0" prefWidth="956.0">
          <children>
-            <Pane fx:id="fxid_addToDoPane" prefHeight="565.0" prefWidth="956.0">
+            <Pane fx:id="fxid_toDoManagementPane" prefHeight="565.0" prefWidth="956.0" visible="false">
                <children>
                   <Text fx:id="fxid_toDoListText" layoutX="178.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To-Do List">
                      <font>
@@ -132,6 +132,7 @@
                   </ImageView>
                </children>
             </Pane>
+            <Pane fx:id="fxid_teamManagementPane" prefHeight="565.0" prefWidth="956.0" />
          </children></Pane>
       <ImageView fx:id="fxid_menuImage" fitHeight="30.0" fitWidth="30.0" layoutX="174.0" layoutY="15.0" onMouseClicked="#showLeftMenu" pickOnBounds="true" preserveRatio="true" rotate="180.0" style="-fx-cursor: hand;">
          <image>
