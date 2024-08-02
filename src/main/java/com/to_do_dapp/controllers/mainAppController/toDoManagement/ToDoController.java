@@ -23,8 +23,8 @@ import javafx.scene.text.Text;
 public class ToDoController {
     private JSONObject jsonToDoData;
     private final ApiConnection apiConnection;
-    private ToDoCurrentEditMenuData detailMenuInstance;
-    private ToDoCurrentEditMenuData toDoCurrentDetailedData;
+    private ToDoCurrentEditedData detailMenuInstance;
+    private ToDoCurrentEditedData toDoCurrentDetailedData;
 
     // ? ToDo values
     private final int id;
@@ -80,8 +80,8 @@ public class ToDoController {
         this.fav = jsonToDoData.getBoolean("fav");
         this.ended = jsonToDoData.getBoolean("ended");
 
-        this.detailMenuInstance = ToDoCurrentEditMenuData.getInstance();
-        this.toDoCurrentDetailedData = ToDoCurrentEditMenuData.getInstance();
+        this.detailMenuInstance = ToDoCurrentEditedData.getInstance();
+        this.toDoCurrentDetailedData = ToDoCurrentEditedData.getInstance();
 
         this.isFavSelected = this.fav;
         this.completed = this.ended;
@@ -148,7 +148,7 @@ public class ToDoController {
         
         main.setUpdateButtonDisableParam(false);
 
-        main.setDetailedMenuInfo("Task Manager");
+        main.setDetailedMenuInfo("Task Manager", false);
         main.openDetailMenu();
     }
 
@@ -156,9 +156,12 @@ public class ToDoController {
     private void completeToDo() {
         completed = !completed;
         if (apiConnection.completeToDo(this, completed)) {
-            toDoCurrentDetailedData.setEnded(true);
             main.clearVbox();
             main.preloadToDoElements();
+
+            if (toDoCurrentDetailedData.getId() == this.id) {
+                toDoCurrentDetailedData.setEnded(completed);
+            }
             return;
         }
 
@@ -182,12 +185,7 @@ public class ToDoController {
             } catch (FileNotFoundException e) {
                 // ? LOG: Image not found
             }
-        }
-    }
-
-    @FXML
-    private void checkBoxHandler() {
-        // check if this to do has been selected using checkBox
+        }   
     }
 
     @FXML

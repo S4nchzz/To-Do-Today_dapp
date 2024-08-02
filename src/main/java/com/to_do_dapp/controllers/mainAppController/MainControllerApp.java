@@ -8,7 +8,8 @@ import org.json.JSONObject;
 
 import com.to_do_dapp.api.ApiConnection;
 import com.to_do_dapp.controllers.ToDoFiles;
-import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoCurrentEditMenuData;
+import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoCurrentEditedData;
+import com.to_do_dapp.controllers.notification_system.NotificationController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoControllerList;
 
@@ -16,6 +17,7 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -28,7 +30,7 @@ import javafx.util.Duration;
 
 public class MainControllerApp {
     private final ApiConnection apiConnection;
-    private ToDoCurrentEditMenuData detailMenuInstance;
+    private ToDoCurrentEditedData detailMenuInstance;
     
     @FXML
     private Pane fxid_leftPane;
@@ -71,7 +73,11 @@ public class MainControllerApp {
 
     private boolean menuHidden;
     private boolean toDoCreation = false; // If the user press the add ToDo button this value will go true
-    
+
+    // Notification elements + mainController requirements
+    private final NotificationController notificationController;
+    @FXML
+    private VBox fxid_notificationVbox;
 
     public MainControllerApp() {
         this.menuHidden = false;
@@ -81,7 +87,8 @@ public class MainControllerApp {
             this.fxid_userNameField.setText(apiConnection.getUserName());
         });
 
-        this.detailMenuInstance = ToDoCurrentEditMenuData.getInstance();
+        this.detailMenuInstance = ToDoCurrentEditedData.getInstance();
+        this.notificationController = NotificationController.getInstance();
     }
 
     @FXML
@@ -119,7 +126,15 @@ public class MainControllerApp {
         }
     }
 
-    public void setDetailedMenuInfo(String detailMenuText) {
+    private void enableOrDisableMenuElements(boolean disable) {
+        this.fxid_detailMenuTitleText.setDisable(disable);
+        this.fxid_toDoMenuHeader.setDisable(disable);
+        this.fxid_toDoMenuContent.setDisable(disable);
+        this.fxid_toDoMenuDate.setDisable(disable);
+        this.fxid_toDoMenuTime.setDisable(disable);
+    }
+
+    public void setDetailedMenuInfo(String detailMenuText, boolean isaNewToDo) {
         this.fxid_toDoMenuHeader.setText(detailMenuInstance.getHeader());
         this.fxid_toDoMenuContent.setText(detailMenuInstance.getContent());
 
@@ -135,7 +150,8 @@ public class MainControllerApp {
         this.fxid_detailMenuTitleText.setText("New To-Do");
         this.fxid_toDoMenuHeader.setPromptText("Titulo"); // * This can be changed by an IA analyzing all ToDos
         this.fxid_toDoMenuContent.setPromptText("Contenido");
-        this.fxid_toDoMenuDate.setPromptText("mm/dd/yy");
+        this.fxid_toDoMenuDate.setPromptText("mm-dd-yyyy");
+        this.fxid_toDoMenuTime.setPromptText("ss:mm:hh");
         this.toDoCreation = true;
         
         if (!detailMenuInstance.isOpened()) {
@@ -148,6 +164,7 @@ public class MainControllerApp {
             return;
         }
 
+        enableOrDisableMenuElements(false);
 
         this.fxid_sendInfoButton.setDisable(false);
         TranslateTransition toDoMenu = new TranslateTransition();
@@ -167,6 +184,7 @@ public class MainControllerApp {
             return;
         }
 
+        enableOrDisableMenuElements(false);
         clearCurrentDetailMenuInfo();
 
         TranslateTransition toDoMenu = new TranslateTransition();
@@ -199,6 +217,8 @@ public class MainControllerApp {
         this.fxid_toDoMenuContent.setText("");
         this.fxid_toDoMenuDate.setText("");
         this.fxid_toDoMenuTime.setText("");
+
+        detailMenuInstance.clear();
     }
 
     @FXML
@@ -214,8 +234,9 @@ public class MainControllerApp {
             return;
         }
 
-        ToDoCurrentEditMenuData toDoCurrentDetailedData = ToDoCurrentEditMenuData.getInstance();
+        ToDoCurrentEditedData toDoCurrentDetailedData = ToDoCurrentEditedData.getInstance();
 
+        toDo.put("id", toDoCurrentDetailedData.getId());
         toDo.put("header", this.fxid_toDoMenuHeader.getText());
         toDo.put("content", this.fxid_toDoMenuContent.getText());
 
@@ -235,6 +256,10 @@ public class MainControllerApp {
                 // ? LOG: Unnable to create ToDo
                 return;
             }
+
+            notificationController.show(this, "To-Dos",
+                    "You just created a new To-Do", "Now");
+
         } else {
             toDo.put("ended", toDoCurrentDetailedData.isEnded());
             boolean hasBeenUpdated = apiConnection.updateToDo(toDo);
@@ -243,6 +268,10 @@ public class MainControllerApp {
                 // ? LOG: Unnable to update ToDo
                 return;
             }
+
+            notificationController.show(this, "To-Dos",
+                    "You just updated 1 To-Dos", "Now");
+
         }
 
         this.fxid_sendInfoButton.setDisable(true);
@@ -250,6 +279,32 @@ public class MainControllerApp {
         clearVbox();
         preloadToDoElements();
         closeMenuDetails();
+    }
+
+    @FXML
+    private void deleteSelectedToDos() {
+        ToDoControllerList toDoList = ToDoControllerList.getInstance();
+        ArrayList<Integer> toDosToBeDeletedFromList = new ArrayList<>();
+
+        for (ToDoController toDo : toDoList.getToDoList()) {
+            if (toDo.isCheckBoxSelected()) {
+                apiConnection.deleteToDo(toDo.getId());
+
+                toDosToBeDeletedFromList.add(toDo.getId());
+            }
+        }
+
+        for (Integer i : toDosToBeDeletedFromList) {
+            toDoList.removeToDoAtList(i);
+        }
+
+        notificationController.show(this, "To-Dos", "You just deleted " + toDosToBeDeletedFromList.size() + " To-Dos", "Now");
+
+        preloadToDoElements();
+    }
+
+    public VBox getNotificationVbox() {
+        return this.fxid_notificationVbox;
     }
 
     public void setDetailMenuTitle(String title) {

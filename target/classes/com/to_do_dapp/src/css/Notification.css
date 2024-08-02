@@ -1,0 +1,5 @@
+#fxid_notificationParentPane {
+    -fx-border-radius: 10 10 10 10;
+    -fx-background-color: #f3f3f3;
+    -fx-background-radius: 0 0 0 25;
+}

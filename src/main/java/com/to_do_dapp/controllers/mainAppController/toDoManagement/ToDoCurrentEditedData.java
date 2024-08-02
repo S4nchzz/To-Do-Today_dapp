@@ -1,7 +1,7 @@
 package com.to_do_dapp.controllers.mainAppController.toDoManagement;
 
-public class ToDoCurrentEditMenuData{
-    private final static ToDoCurrentEditMenuData instance = new ToDoCurrentEditMenuData();
+public class ToDoCurrentEditedData{
+    private final static ToDoCurrentEditedData instance = new ToDoCurrentEditedData();
 
     private int id;
     private int userid;
@@ -13,10 +13,10 @@ public class ToDoCurrentEditMenuData{
 
     private boolean opened = false;
 
-    private ToDoCurrentEditMenuData() {
+    private ToDoCurrentEditedData() {
     }
 
-    public static ToDoCurrentEditMenuData getInstance() {
+    public static ToDoCurrentEditedData getInstance() {
         return instance;
     }
 
@@ -82,5 +82,16 @@ public class ToDoCurrentEditMenuData{
 
     public void setEnded(boolean ended) {
         this.ended = ended;
+    }
+
+    public void clear() {
+        id = 0;
+        userid = 0;
+        header = null;
+        content = null;
+        date = null;
+        fav = false;
+        opened = false;
+        ended = false;
     }
 }

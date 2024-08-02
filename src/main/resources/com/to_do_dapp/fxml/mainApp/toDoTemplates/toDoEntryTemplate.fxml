@@ -46,6 +46,6 @@
             <Image url="@../../../src/pictures/check.png" />
          </image>
       </ImageView>
-      <CheckBox fx:id="fxid_checkBoxEntry" layoutX="34.0" layoutY="36.0" mnemonicParsing="false" onMouseClicked="#checkBoxHandler" stylesheets="@../../../src/css/ToDoEntry.css" />
+      <CheckBox fx:id="fxid_checkBoxEntry" layoutX="34.0" layoutY="36.0" mnemonicParsing="false" stylesheets="@../../../src/css/ToDoEntry.css" />
    </children>
 </Pane>
