@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import com.to_do_dapp.api.ApiConnection;
 import com.to_do_dapp.controllers.mainAppController.MainControllerApp;
+import com.to_do_dapp.controllers.notification_system.NotificationController;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,7 @@ public class ToDoController {
     private final ApiConnection apiConnection;
     private ToDoCurrentEditedData detailMenuInstance;
     private ToDoCurrentEditedData toDoCurrentDetailedData;
+    private NotificationController notificationController;
 
     // ? ToDo values
     private final int id;
@@ -85,6 +87,8 @@ public class ToDoController {
 
         this.isFavSelected = this.fav;
         this.completed = this.ended;
+
+        this.notificationController = NotificationController.getInstance();
     }
 
     public Pane createPane() {
@@ -175,6 +179,14 @@ public class ToDoController {
             try {
                 this.fxid_favElement.setImage(new Image(new FileInputStream(
                         new File("C:/Users/" + System.getProperty("user.name") + "/OneDrive/Informática/Programacion/Visual Studio/Proyects/Java/To_Do_Today/todo_today_dapp/src/main/resources/com/to_do_dapp/src/pictures/bright_star.png"))));
+
+                        notificationController.show(main, "To-Dos",
+                        "You just fav a To-Do", "Now");
+
+                // If the user is editting the to-do and he selects this option the current edit menu singelton fav value will change
+                if (toDoCurrentDetailedData.getId() == this.id) {
+                    toDoCurrentDetailedData.setFav(isFavSelected);
+                }
             } catch (FileNotFoundException e) {
                 // ? LOG: Image not found
             }
@@ -182,6 +194,13 @@ public class ToDoController {
             try {
                 this.fxid_favElement.setImage(new Image(new FileInputStream(
                         new File("C:/Users/" + System.getProperty("user.name") + "/OneDrive/Informática/Programacion/Visual Studio/Proyects/Java/To_Do_Today/todo_today_dapp/src/main/resources/com/to_do_dapp/src/pictures/star.png"))));
+
+                        notificationController.show(main, "To-Dos",
+                        "You just un-fav a To-Do", "Now");
+
+                        if (toDoCurrentDetailedData.getId() == this.id) {
+                            toDoCurrentDetailedData.setFav(isFavSelected);
+                        }
             } catch (FileNotFoundException e) {
                 // ? LOG: Image not found
             }
@@ -192,6 +211,8 @@ public class ToDoController {
     private void deleteToDoEvent() {
         if (apiConnection.deleteToDo(this.id)) {
             main.preloadToDoElements();
+            notificationController.show(main, "To-Dos",
+                    "You just deleted a To-Do", "Now");
         }
     }
 
