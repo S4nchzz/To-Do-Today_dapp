@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import com.to_do_dapp.api.requests.req_AddUser.DataToJson;
 import com.to_do_dapp.api.requests.req_AddUser.UserData;
 import com.to_do_dapp.controllers.ToDoFiles;
+import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupElementController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 
 public class ApiConnection {
@@ -374,14 +375,53 @@ public class ApiConnection {
         header.setContentType(MediaType.APPLICATION_JSON);
         try {
             header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+
+            HttpEntity<String> entity = new HttpEntity<>(header);
+            ResponseEntity<String> responseEntity = conn.postForEntity(apiUrl + "/user/isInGroup", entity, String.class);
+            
+            JSONObject responseOnJson = new JSONObject(responseEntity.getBody());
+    
+            return responseOnJson.getBoolean("hasGroup");
         } catch (IOException e) {
             //? LOG: User temp token not found
         }
 
-        ResponseEntity<String> responseEntity = conn.postForEntity(apiUrl + "/user/isInGroup", header, String.class);
-        
-        JSONObject responseOnJson = new JSONObject(responseEntity.getBody());
+        return false;
+    }
 
-        return responseOnJson.getBoolean("hasGroup");
+    public ArrayList<GroupElementController> getTeams() {
+        RestTemplate conn = new RestTemplate();
+        HttpHeaders header = new HttpHeaders();
+
+        header.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+            
+            HttpEntity<String> entity = new HttpEntity<>(header);
+
+            ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teams/getGroups", entity, String.class);
+            
+            JSONObject responseOnJson = new JSONObject(response.getBody());
+            if (!responseOnJson.getBoolean("responseStatus")) {
+                return null;
+            }
+
+            responseOnJson.remove("responseStatus");
+
+            java.util.Iterator<String> iterator = responseOnJson.keys();
+
+            ArrayList<GroupElementController> groupElementList = new ArrayList<>();
+            while (iterator.hasNext()) {
+                String i = iterator.next();
+
+                JSONObject group = new JSONObject(responseOnJson.getJSONObject(i).toString());
+                groupElementList.add(new GroupElementController(group));
+            }
+            return groupElementList;
+
+        } catch (IOException e) {
+            //? LOG: Unnable to find user temp token
+        }
+        return null;
     }
 }

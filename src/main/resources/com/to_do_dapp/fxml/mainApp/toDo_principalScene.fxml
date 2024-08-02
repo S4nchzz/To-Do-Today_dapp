@@ -104,7 +104,7 @@
       </Pane>
       <Pane fx:id="fxid_allPanes" layoutX="157.0" layoutY="14.0" prefHeight="565.0" prefWidth="956.0">
          <children>
-            <Pane fx:id="fxid_toDoManagementPane" prefHeight="565.0" prefWidth="956.0">
+            <Pane fx:id="fxid_toDoManagementPane" prefHeight="565.0" prefWidth="956.0" visible="false">
                <children>
                   <Text fx:id="fxid_toDoListText" layoutX="178.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To-Do List">
                      <font>
@@ -133,7 +133,19 @@
                </children>
             </Pane>
             <Pane fx:id="fxid_teamManagementPane" prefHeight="565.0" prefWidth="956.0" style="-fx-background-color: red;" visible="false" />
-            <Pane fx:id="fxid_teamSearchAndCreate" prefHeight="565.0" prefWidth="956.0" style="-fx-background-color: green;" visible="false" />
+            <Pane fx:id="fxid_teamSearchAndCreate" prefHeight="565.0" prefWidth="956.0" visible="false">
+               <children>
+                  <ScrollPane fx:id="fxid_groupScrollPane" layoutX="229.0" layoutY="49.0" prefHeight="371.0" prefWidth="499.0">
+                     <content>
+                        <VBox fx:id="fxid_groupVBox" prefHeight="370.0" prefWidth="499.0" />
+                     </content>
+                  </ScrollPane>
+                  <Pane layoutX="229.0" layoutY="426.0" prefHeight="80.0" prefWidth="499.0" style="-fx-background-color: #c4c4c4;">
+                     <children>
+                        <Button layoutX="224.0" layoutY="27.0" mnemonicParsing="false" text="CREATE" />
+                     </children>
+                  </Pane>
+               </children></Pane>
          </children></Pane>
       <ImageView fx:id="fxid_menuImage" fitHeight="30.0" fitWidth="30.0" layoutX="174.0" layoutY="15.0" onMouseClicked="#showLeftMenu" pickOnBounds="true" preserveRatio="true" rotate="180.0" style="-fx-cursor: hand;">
          <image>

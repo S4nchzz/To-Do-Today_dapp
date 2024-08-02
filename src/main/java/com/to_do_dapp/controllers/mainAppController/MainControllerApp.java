@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import com.to_do_dapp.api.ApiConnection;
 import com.to_do_dapp.controllers.notification_system.NotificationController;
+import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupElementController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoControllerList;
 
@@ -77,6 +78,15 @@ public class MainControllerApp {
 
     private boolean menuHidden;
     private boolean toDoCreation = false; // If the user press the add ToDo button this value will go true
+
+    // Group Enviroment
+    //-------------------
+    // Group search elements
+
+    @FXML
+    private VBox fxid_groupVBox;
+    @FXML
+    private ScrollPane fxid_groupScrollPane;
 
     // Notification elements + mainController requirements
     private final NotificationController notificationController;
@@ -154,6 +164,7 @@ public class MainControllerApp {
 
     @FXML
     private void addToDo() {
+        clearCurrentDetailMenuInfo();
         this.fxid_detailMenuTitleText.setText("New To-Do");
         this.fxid_toDoMenuHeader.setPromptText("Titulo"); // * This can be changed by an IA analyzing all ToDos
         this.fxid_toDoMenuContent.setPromptText("Contenido");
@@ -206,6 +217,11 @@ public class MainControllerApp {
         moveScrollPane(100);
         toDoMenu.play();
 
+        if (toDoCreation) {
+            toDoCreation = false;
+        }
+
+        this.currentToDoControllerBeignEdited = null;
         this.isOpened = false;
     }
 
@@ -316,6 +332,7 @@ public class MainControllerApp {
         this.fxid_toDoManagementPane.setVisible(true);
     }
 
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     @FXML
     private void openTeams() {
         setVisibleMainControllerPanes(false);
@@ -323,6 +340,15 @@ public class MainControllerApp {
             this.fxid_teamManagementPane.setVisible(true);
         } else {
             this.fxid_teamSearchAndCreate.setVisible(true);
+            preloadTeamsPanes();
+        }
+    }
+
+    private void preloadTeamsPanes() {
+        this.fxid_groupVBox.getChildren().clear();
+        ArrayList<GroupElementController> teamEntyList = apiConnection.getTeams();
+        for (GroupElementController groupElementController : teamEntyList) {
+            this.fxid_groupVBox.getChildren().add(groupElementController.getPane());
         }
     }
 
