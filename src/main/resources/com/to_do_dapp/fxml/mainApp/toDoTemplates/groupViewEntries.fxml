@@ -21,7 +21,7 @@
       <Text fx:id="fxid_members" layoutX="416.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{Members}" />
       <Text fx:id="fxid_creationDate" fill="#aeaeae" layoutX="14.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{Creation date}" />
       <Button fx:id="fxid_joinButton" layoutX="426.0" layoutY="41.0" mnemonicParsing="false" onMouseClicked="#joinActionHandler" text="Join" />
-      <TextField fx:id="fxid_passwordPlacement" layoutX="416.0" layoutY="41.0" onKeyPressed="#sendPassword" prefHeight="25.0" prefWidth="57.0" promptText="password">
+      <TextField fx:id="fxid_passwordPlacement" layoutX="416.0" layoutY="41.0" onKeyPressed="#sendPassword" prefHeight="25.0" prefWidth="57.0" promptText="password" visible="false">
          <font>
             <Font size="10.0" />
          </font>

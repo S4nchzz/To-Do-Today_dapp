@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import com.to_do_dapp.api.requests.req_AddUser.DataToJson;
 import com.to_do_dapp.api.requests.req_AddUser.UserData;
 import com.to_do_dapp.controllers.ToDoFiles;
+import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupData;
 import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupElementController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 
@@ -440,12 +441,52 @@ public class ApiConnection {
             
             ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teams/associateUser", entity, String.class);
 
-            JSONObject responseOnJSON = new JSONObject(response.getBody());            
-            return responseOnJSON.getBoolean("association");
+            JSONObject responseOnJSON = new JSONObject(response.getBody());
+
+            if (!responseOnJSON.getBoolean("joined") && !getGroupData()) {
+                return false;
+            }
+            
+            getGroupData();
+            return responseOnJSON.getBoolean("joined");
+        
         } catch (IOException e) {
             //? LOG: User temp token not found
         }
 
         return false;
+    }
+
+    public boolean getGroupData() {
+        RestTemplate conn = new RestTemplate();
+        
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            // ? LOG: Failed to get user temp token
+        }
+
+        HttpEntity<String> entity;
+        entity = new HttpEntity<>(header);
+        ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teams/getGroupData", entity, String.class);
+
+        JSONObject responseOnJSON = new JSONObject(response.getBody());
+
+        if (!responseOnJSON.getBoolean("dataExist")) {
+            return false;
+        }
+
+        GroupData groupData = GroupData.getInstance();
+        groupData.setTeamKey(responseOnJSON.getString("teamKey"));
+        groupData.setTitle(responseOnJSON.getString("title"));
+        groupData.setDescription(responseOnJSON.getString("description"));
+        groupData.setAdministrator(responseOnJSON.getInt("administrator"));
+        groupData.setPublicgroup(responseOnJSON.getBoolean("publicGroup"));
+        groupData.setPassword(responseOnJSON.getString("password"));
+        groupData.setDate(responseOnJSON.getString("date"));
+
+        return true;
     }
 }

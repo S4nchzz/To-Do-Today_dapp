@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import com.to_do_dapp.api.ApiConnection;
 import com.to_do_dapp.controllers.notification_system.NotificationController;
+import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupData;
 import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupElementController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoControllerList;
@@ -102,8 +103,9 @@ public class MainControllerApp {
     private MainControllerApp() {
         apiConnection = ApiConnection.getInstance();
         this.menuHidden = false;
-
         this.isOpened = false;
+
+        apiConnection.getGroupData();
     }
 
     public static MainControllerApp getInstance() {

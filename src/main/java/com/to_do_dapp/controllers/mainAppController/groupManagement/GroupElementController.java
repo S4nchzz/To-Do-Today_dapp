@@ -44,7 +44,6 @@ public class GroupElementController {
     private String password;
     private String date;
 
-
     public GroupElementController(JSONObject group) {
         apiConnection = ApiConnection.getInstance();
 
@@ -84,8 +83,10 @@ public class GroupElementController {
 
     @FXML
     private void joinActionHandler() {
-        if (!this.password.equals("")) {
+        if (!this.password.isEmpty()) {
             placePasswordAnimation(true);
+        } else if (apiConnection.associateUserToGroup(this)) {
+            mainControllerApp.openTeams();
         }
     }
 
