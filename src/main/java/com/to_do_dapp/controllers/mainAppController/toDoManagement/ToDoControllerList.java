@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class ToDoControllerList {
     private static final ToDoControllerList instance = new ToDoControllerList();
-
     private final ArrayList<ToDoController> toDoList = new ArrayList<>();
 
     private ToDoControllerList() {
@@ -47,5 +46,4 @@ public class ToDoControllerList {
     public ArrayList<ToDoController> getToDoList() {
         return this.toDoList;
     }
-
 }

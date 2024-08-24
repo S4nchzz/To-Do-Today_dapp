@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 
 public class NotificationController {
     private static NotificationController instance;
+    private MainControllerApp main;
     private Pane notification;
 
     @FXML
@@ -26,9 +27,9 @@ public class NotificationController {
     private NotificationController () {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/com/to_do_dapp/fxml/mainApp/app_notification.fxml"));
-
         loader.setController(this);
 
+        this.main = MainControllerApp.getInstance();
         try {
             this.notification = loader.load();
         } catch (IOException e) {
@@ -44,7 +45,7 @@ public class NotificationController {
         return instance;
     }
 
-    public void show(MainControllerApp main, String title, String message, String time) {
+    public void show(String title, String message, String time) {
         VBox notificationVbox = main.getNotificationVbox();
         if (notificationVbox.getChildren().size() == 0) {
             notificationVbox.getChildren().add(this.notification);

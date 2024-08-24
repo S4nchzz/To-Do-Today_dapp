@@ -45,8 +45,8 @@ public class LoginSceneController {
             // Check if the users marked keepLoggedIn
             if (api.checkKeepLoggedToken()) {
                 ToDoFiles.overwriteUserTempTokenOnLogin();
-                initializeMainScene();
                 stage.close();
+                initializeMainScene();
             }
         });   
     }
@@ -113,7 +113,8 @@ public class LoginSceneController {
 
     public void initializeMainScene() {
         FXMLLoader toDoMainScene = new FXMLLoader();
-        toDoMainScene.setController(new MainControllerApp());
+
+        toDoMainScene.setController(MainControllerApp.getInstance());
         toDoMainScene.setLocation(getClass().getResource("/com/to_do_dapp/fxml/mainApp/toDo_principalScene.fxml"));
 
         try {
@@ -128,7 +129,7 @@ public class LoginSceneController {
             mainAppStage.show();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }

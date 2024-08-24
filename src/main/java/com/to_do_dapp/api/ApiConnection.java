@@ -23,7 +23,7 @@ import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupElement
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 
 public class ApiConnection {
-    protected final static String apiUrl = "http://192.168.1.98:8080";
+    protected final static String apiUrl = "http://127.0.0.1:8080";
     private static ApiConnection instance = new ApiConnection();
 
     private ApiConnection () {
@@ -415,7 +415,10 @@ public class ApiConnection {
                 String i = iterator.next();
 
                 JSONObject group = new JSONObject(responseOnJson.getJSONObject(i).toString());
-                groupElementList.add(new GroupElementController(group));
+
+                if (group.getBoolean("publicgroup")) {
+                    groupElementList.add(new GroupElementController(group));
+                }
             }
             return groupElementList;
 
@@ -423,5 +426,26 @@ public class ApiConnection {
             //? LOG: Unnable to find user temp token
         }
         return null;
+    }
+
+    public boolean associateUserToGroup(GroupElementController group) {
+        RestTemplate conn = new RestTemplate();
+        
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            header.add("Authorization" ,"Bearer " + ToDoFiles.getTempUserToken());
+
+            HttpEntity<String> entity = new HttpEntity<>(new JSONObject().put("groupId", group.getTeamkey()).toString(), header);
+            
+            ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teams/associateUser", entity, String.class);
+
+            JSONObject responseOnJSON = new JSONObject(response.getBody());            
+            return responseOnJSON.getBoolean("association");
+        } catch (IOException e) {
+            //? LOG: User temp token not found
+        }
+
+        return false;
     }
 }

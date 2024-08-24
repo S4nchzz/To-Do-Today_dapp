@@ -11,7 +11,6 @@ import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoControlle
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoControllerList;
 
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
@@ -26,7 +25,7 @@ import javafx.util.Duration;
 
 public class MainControllerApp {
     private final ApiConnection apiConnection;
-    
+    private static MainControllerApp instance;
     @FXML
     private Pane fxid_leftPane;
     @FXML   
@@ -89,21 +88,30 @@ public class MainControllerApp {
     private ScrollPane fxid_groupScrollPane;
 
     // Notification elements + mainController requirements
-    private final NotificationController notificationController;
+    private NotificationController notificationController;
     @FXML
     private VBox fxid_notificationVbox;
 
-    public MainControllerApp() {
-        this.menuHidden = false;
-        apiConnection = ApiConnection.getInstance();
-        Platform.runLater(() -> {
-            preloadToDoElements();
-            this.fxid_userNameField.setText(apiConnection.getUserName());
-        });
-
+    @FXML
+    public void initialize() {
+        this.fxid_userNameField.setText(apiConnection.getUserName());
+        preloadToDoElements();
         this.notificationController = NotificationController.getInstance();
+    }
+
+    private MainControllerApp() {
+        apiConnection = ApiConnection.getInstance();
+        this.menuHidden = false;
+
         this.isOpened = false;
-        
+    }
+
+    public static MainControllerApp getInstance() {
+        if (instance == null) {
+            instance = new MainControllerApp();
+        }
+
+        return instance;
     }
 
     @FXML
@@ -139,7 +147,7 @@ public class MainControllerApp {
 
         clearVbox();
         for (int i = 0; i < toDoList.size(); i++) {
-            ToDoController entry = new ToDoController(this, toDoList.get(i));
+            ToDoController entry = new ToDoController(toDoList.get(i));
             toDoEntryList.addToDoAtList(entry);
             fxid_toDoVbox.getChildren().add(entry.createPane());
         }
@@ -280,7 +288,7 @@ public class MainControllerApp {
                 return;
             }
 
-            notificationController.show(this, "To-Dos",
+            notificationController.show("To-Dos",
                     "You just created a new To-Do", "Now");
 
         } else {
@@ -292,7 +300,7 @@ public class MainControllerApp {
                 return;
             }
 
-            notificationController.show(this, "To-Dos",
+            notificationController.show("To-Dos",
                     "You just updated 1 To-Dos", "Now");
 
         }
@@ -321,7 +329,7 @@ public class MainControllerApp {
             toDoList.removeToDoAtList(i);
         }
 
-        notificationController.show(this, "To-Dos", "You just deleted " + toDosToBeDeletedFromList.size() + " To-Dos", "Now");
+        notificationController.show("To-Dos", "You just deleted " + toDosToBeDeletedFromList.size() + " To-Dos", "Now");
 
         preloadToDoElements();
     }
@@ -334,7 +342,7 @@ public class MainControllerApp {
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     @FXML
-    private void openTeams() {
+    public void openTeams() {
         setVisibleMainControllerPanes(false);
         if (apiConnection.userIsInGroup()) {
             this.fxid_teamManagementPane.setVisible(true);
@@ -357,7 +365,7 @@ public class MainControllerApp {
             node.setVisible(property);
         }
     }
-
+    
     public ToDoController getCurrentToDoControllerBeignEdited() {
         return this.currentToDoControllerBeignEdited;
     }

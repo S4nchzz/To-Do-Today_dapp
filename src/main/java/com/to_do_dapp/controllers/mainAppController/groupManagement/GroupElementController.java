@@ -2,19 +2,32 @@ package com.to_do_dapp.controllers.mainAppController.groupManagement;
 
 import java.io.IOException;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.to_do_dapp.api.ApiConnection;
+import com.to_do_dapp.controllers.mainAppController.MainControllerApp;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 public class GroupElementController {
+    private final MainControllerApp mainControllerApp;
     private Pane groupPane;
     // Pane elements
     @FXML
     private Text fxid_title;
+    @FXML
+    private Button fxid_joinButton;
+    @FXML
+    private TextField fxid_passwordPlacement;
     @FXML
     private Text fxid_description;
     @FXML
@@ -22,6 +35,7 @@ public class GroupElementController {
     @FXML
     private Text fxid_members;
 
+    private final ApiConnection apiConnection;
     private String teamkey;
     private String title;
     private String description;
@@ -32,13 +46,23 @@ public class GroupElementController {
 
 
     public GroupElementController(JSONObject group) {
+        apiConnection = ApiConnection.getInstance();
+
         this.teamkey = group.getString("teamkey");
         this.title = group.getString("title");
         this.description = group.getString("description");
         this.administrator = group.getInt("administrator");
         this.publicgroup = group.getBoolean("publicgroup");
-        this.password = group.getString("password");
         this.date = group.getString("date");
+
+        try {
+            this.password = group.getString("password");
+        } catch (JSONException jsone) {
+            this.password = "";
+            //? LOG : The group doesnt have password
+        }
+
+        mainControllerApp = MainControllerApp.getInstance();
 
         Platform.runLater(() -> {
             this.fxid_title.setText(this.title);
@@ -58,6 +82,25 @@ public class GroupElementController {
         }
     }
 
+    @FXML
+    private void joinActionHandler() {
+        if (!this.password.equals("")) {
+            placePasswordAnimation(true);
+        }
+    }
+
+    private void placePasswordAnimation(boolean flip) {
+        this.fxid_joinButton.setVisible(!flip);
+        this.fxid_passwordPlacement.setVisible(flip);
+    }
+
+    @FXML
+    private void sendPassword (KeyEvent key) {
+        if (key.getCode() == KeyCode.ENTER && this.fxid_passwordPlacement.getText().equals(this.password) && apiConnection.associateUserToGroup(this)) {
+            mainControllerApp.openTeams();
+        }
+    }
+    
     public Pane getPane() {
         return this.groupPane;
     }

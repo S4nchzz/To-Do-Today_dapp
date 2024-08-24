@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.LocalDate;
 
 import org.json.JSONObject;
 
@@ -56,18 +55,10 @@ public class ToDoController {
     private boolean isFavSelected;
     private boolean completed;
 
-    private final int systemYy;
-    private final int systemMm;
-    private final int systemDd;
-
     private final MainControllerApp main;
 
-    public ToDoController (MainControllerApp main, JSONObject json) {
-        LocalDate localDate = LocalDate.now();
-        this.systemYy = localDate.getYear();
-        this.systemMm = localDate.getMonthValue();
-        this.systemDd = localDate.getDayOfMonth();
-        this.main = main;
+    public ToDoController (JSONObject json) {
+        this.main = MainControllerApp.getInstance();
         
         this.apiConnection = ApiConnection.getInstance();
         this.jsonToDoData = json;
@@ -168,7 +159,7 @@ public class ToDoController {
                 this.fxid_favElement.setImage(new Image(new FileInputStream(
                         new File("C:/Users/" + System.getProperty("user.name") + "/OneDrive/Informática/Programacion/Visual Studio/Proyects/Java/To_Do_Today/todo_today_dapp/src/main/resources/com/to_do_dapp/src/pictures/bright_star.png"))));
 
-                        notificationController.show(main, "To-Dos",
+                        notificationController.show("To-Dos",
                         "You just fav a To-Do", "Now");
             } catch (FileNotFoundException e) {
                 // ? LOG: Image not found
@@ -178,7 +169,7 @@ public class ToDoController {
                 this.fxid_favElement.setImage(new Image(new FileInputStream(
                         new File("C:/Users/" + System.getProperty("user.name") + "/OneDrive/Informática/Programacion/Visual Studio/Proyects/Java/To_Do_Today/todo_today_dapp/src/main/resources/com/to_do_dapp/src/pictures/star.png"))));
 
-                        notificationController.show(main, "To-Dos",
+                        notificationController.show("To-Dos",
                         "You just un-fav a To-Do", "Now");
 
             } catch (FileNotFoundException e) {
@@ -191,7 +182,7 @@ public class ToDoController {
     private void deleteToDoEvent() {
         if (apiConnection.deleteToDo(this.id)) {
             main.preloadToDoElements();
-            notificationController.show(main, "To-Dos",
+            notificationController.show("To-Dos",
                     "You just deleted a To-Do", "Now");
         }
     }
@@ -234,17 +225,5 @@ public class ToDoController {
 
     public String getCompleteToDoDate() {
         return toDoDateFormat.getEntireDate();
-    }
-
-    public int getYy() {
-        return systemYy;
-    }
-
-    public int getMm() {
-        return systemMm;
-    }
-
-    public int getDd() {
-        return systemDd;
     }
 }
