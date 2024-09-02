@@ -6,7 +6,6 @@ import org.json.JSONObject;
 
 import com.to_do_dapp.api.ApiConnection;
 import com.to_do_dapp.controllers.notification_system.NotificationController;
-import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupData;
 import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupElementController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoControllerList;
@@ -16,6 +15,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -77,17 +78,30 @@ public class MainControllerApp {
     private ToDoController currentToDoControllerBeignEdited;
 
     private boolean menuHidden;
-    private boolean toDoCreation = false; // If the user press the add ToDo button this value will go true
+    private boolean toDoCreation = false; // If the user press the add ToDo button, this value will go true
 
-    // Group Enviroment
-    //-------------------
-    // Group search elements
-
+    // Team search elements
+    
     @FXML
     private VBox fxid_groupVBox;
     @FXML
     private ScrollPane fxid_groupScrollPane;
+    @FXML
+    private Pane fxid_createTeamPane;
 
+    @FXML
+    private TextField fxid_createTeamNameField;
+    @FXML
+    private TextField fxid_createTeamDescriptionField;
+    @FXML
+    private PasswordField fxid_createTeamPasswordField;
+    @FXML
+    private CheckBox fxid_createTeamPrivateCheck;
+    @FXML
+    private Button fxid_createTeamSendTeam;
+
+    private boolean createTeamMenuRevealed;
+    
     // Notification elements + mainController requirements
     private NotificationController notificationController;
     @FXML
@@ -104,6 +118,7 @@ public class MainControllerApp {
         apiConnection = ApiConnection.getInstance();
         this.menuHidden = false;
         this.isOpened = false;
+        this.createTeamMenuRevealed = false;
 
         apiConnection.getGroupData();
     }
@@ -354,11 +369,53 @@ public class MainControllerApp {
         }
     }
 
+    @FXML
+    private void createTeamAction() {
+        if (createTeamMenuRevealed) {
+            hideCreateTeamMenu();
+            return;
+        }
+
+        showCreateTeamMenu();
+
+    }
+
+    private void showCreateTeamMenu() {
+        this.createTeamMenuRevealed = true;
+        TranslateTransition show = new TranslateTransition();
+        show.setNode(this.fxid_createTeamPane);
+        show.setByY(this.fxid_createTeamPane.getHeight());
+        show.setDuration(Duration.millis(700));
+        show.play();
+    }
+
+    private void hideCreateTeamMenu() {
+        this.createTeamMenuRevealed = false;
+        TranslateTransition show = new TranslateTransition();
+        show.setNode(this.fxid_createTeamPane);
+        show.setByY(-this.fxid_createTeamPane.getHeight());
+        show.setDuration(Duration.millis(700));
+        show.play();
+    }
+
     private void preloadTeamsPanes() {
         this.fxid_groupVBox.getChildren().clear();
         ArrayList<GroupElementController> teamEntyList = apiConnection.getTeams();
         for (GroupElementController groupElementController : teamEntyList) {
             this.fxid_groupVBox.getChildren().add(groupElementController.getPane());
+        }
+    }
+
+    @FXML
+    private void createNewTeam() {
+        if (this.fxid_createTeamNameField.getText().isEmpty() || this.fxid_createTeamDescriptionField.getText().isEmpty()) {
+            // ! Show error message
+            return;
+        }
+
+        if (apiConnection.createTeam(new JSONObject().put("name", this.fxid_createTeamNameField.getText()).put("description", this.fxid_createTeamDescriptionField.getText()).put("password", this.fxid_createTeamPasswordField.getText()).put("private", this.fxid_createTeamPrivateCheck.isSelected()))) {
+            // Group has been created correctly
+            preloadTeamsPanes();
         }
     }
 
