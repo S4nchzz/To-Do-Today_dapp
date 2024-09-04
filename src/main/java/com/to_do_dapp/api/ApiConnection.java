@@ -511,4 +511,95 @@ public class ApiConnection {
 
         return false;
     }
+
+    public boolean isEmailVerified() {
+        RestTemplate conn = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+
+            HttpEntity<String> entity = new HttpEntity<>(header);
+            ResponseEntity<String> response = conn.postForEntity(apiUrl + "/user/isEmailVerified", entity,
+                    String.class);
+
+            JSONObject responseOJsonObject = new JSONObject(response.getBody());
+
+            return responseOJsonObject.getBoolean("isEmailVerified");
+
+        } catch (IOException e) {
+            // ? LOG: User temp token not found
+        }
+
+        return false;
+    }
+
+    public boolean requestVerification() {
+        RestTemplate conn = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+
+            HttpEntity<String> entity = new HttpEntity<>(header);
+            ResponseEntity<String> response = conn.postForEntity(apiUrl + "/verifyEmail/requestVerification", entity, String.class);
+
+            JSONObject responseOJsonObject = new JSONObject(response.getBody());
+
+            return responseOJsonObject.getBoolean("requestVerificationStatus");
+
+        } catch (IOException e) {
+            // ? LOG: User temp token not found
+        }
+
+        return false;
+    }
+
+    public boolean sendVerificationCode(String code) {
+        int parseCode = Integer.valueOf(code);
+        RestTemplate conn = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+
+            HttpEntity<String> entity = new HttpEntity<>(new JSONObject().put("code", parseCode).toString(), header);
+            ResponseEntity<String> response = conn.postForEntity(apiUrl + "/verifyEmail/confirmVerification", entity,
+                    String.class);
+
+            JSONObject responseOJsonObject = new JSONObject(response.getBody());
+
+            return responseOJsonObject.getBoolean("verificationCompletedStatus");
+
+        } catch (IOException e) {
+            // ? LOG: User temp token not found
+        }
+
+        return false;
+    }
+
+    public String getEmail() {
+        RestTemplate conn = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+
+            HttpEntity<String> entity = new HttpEntity<>(header);
+            ResponseEntity<String> response = conn.postForEntity(apiUrl + "/user/getEmail", entity,
+                    String.class);
+
+            JSONObject responseOJsonObject = new JSONObject(response.getBody());
+
+            return responseOJsonObject.getString("email");
+
+        } catch (IOException e) {
+            // ? LOG: User temp token not found
+        }
+
+        return "";
+    }
 }

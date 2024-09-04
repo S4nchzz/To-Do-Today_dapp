@@ -33,9 +33,28 @@ public class MainControllerApp {
     @FXML   
     private ImageView fxid_menuImage;
 
+    private boolean isEmailVerified;
+    // Left option menu panes
+    @FXML
+    private Pane fxid_hoverPaneA;
+    @FXML
+    private Pane fxid_hoverPaneB;
+    @FXML
+    private Pane fxid_hoverPaneC;
+    @FXML
+    private Pane fxid_hoverPaneD;
+
+    private boolean isTeamsBloqued;
+
     // Principal app panes
     @FXML
     private Pane fxid_allPanes;
+    
+    // Account restrictions
+    @FXML
+    private ImageView fxid_accountNotVerifiedWarning;
+    @FXML
+    private ImageView fxid_teamsBloqued;
 
     // Each function with his pane
     @FXML
@@ -107,11 +126,30 @@ public class MainControllerApp {
     @FXML
     private VBox fxid_notificationVbox;
 
+    // Settings Pane
+    @FXML
+    private Pane fxid_settingsPane;
+    @FXML
+    private Text fxid_emailVerificationInfo;
+    @FXML
+    private Button fxid_verifyButton;
+    @FXML
+    private Pane fxid_settingsVerifyEmailCodePlacemenetPane;
+    @FXML
+    private TextField fxid_codeField;
+    @FXML
+    private Text fxid_settingsEmail;
+
     @FXML
     public void initialize() {
         this.fxid_userNameField.setText(apiConnection.getUserName());
         preloadToDoElements();
         this.notificationController = NotificationController.getInstance();
+        if (!isEmailVerified) {
+            this.fxid_accountNotVerifiedWarning.setVisible(true);
+            this.fxid_teamsBloqued.setVisible(true);
+            blockTeams();
+        }
     }
 
     private MainControllerApp() {
@@ -119,7 +157,9 @@ public class MainControllerApp {
         this.menuHidden = false;
         this.isOpened = false;
         this.createTeamMenuRevealed = false;
+        this.isTeamsBloqued = false;
 
+        this.isEmailVerified = apiConnection.isEmailVerified();
         apiConnection.getGroupData();
     }
 
@@ -357,9 +397,12 @@ public class MainControllerApp {
         this.fxid_toDoManagementPane.setVisible(true);
     }
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     @FXML
     public void openTeams() {
+        if (this.isTeamsBloqued) {
+            return;
+        }
+
         setVisibleMainControllerPanes(false);
         if (apiConnection.userIsInGroup()) {
             this.fxid_teamManagementPane.setVisible(true);
@@ -413,7 +456,7 @@ public class MainControllerApp {
             return;
         }
 
-        if (apiConnection.createTeam(new JSONObject().put("name", this.fxid_createTeamNameField.getText()).put("description", this.fxid_createTeamDescriptionField.getText()).put("password", this.fxid_createTeamPasswordField.getText()).put("private", this.fxid_createTeamPrivateCheck.isSelected()))) {
+        if (apiConnection.createTeam(new JSONObject().put("name", this.fxid_createTeamNameField.getText()).put("description", this.fxid_createTeamDescriptionField.getText()).put("password", this.fxid_createTeamPasswordField.getText()).put("public", !this.fxid_createTeamPrivateCheck.isSelected()))) {
             // Group has been created correctly
             preloadTeamsPanes();
         }
@@ -423,6 +466,62 @@ public class MainControllerApp {
         for (Node node : this.fxid_allPanes.getChildren()) {
             node.setVisible(property);
         }
+    }
+
+    @FXML
+    private void openSettings() {
+        setVisibleMainControllerPanes(false);
+        this.fxid_settingsPane.setVisible(true);
+
+        this.fxid_settingsEmail.setText("Email: ");
+        this.fxid_settingsEmail.setText(this.fxid_settingsEmail.getText() + apiConnection.getEmail());
+
+        if (apiConnection.isEmailVerified()) {
+            setEmailVerificationInfo("Your email is verified!", "#19C701");
+        } else {
+            setEmailVerificationInfo("Your email is not verified.", "red");
+
+            this.fxid_verifyButton.setVisible(true);
+        }
+    }
+
+    private void setEmailVerificationInfo(String info, String hexColor) {
+        this.fxid_emailVerificationInfo.setStyle("-fx-background-color: " + hexColor);
+        this.fxid_emailVerificationInfo.setText(info);
+    }
+
+    @FXML
+    private void startEmailVerification() {
+        if (apiConnection.requestVerification()) {
+            this.fxid_settingsVerifyEmailCodePlacemenetPane.setVisible(true);
+            setEmailVerificationInfo("A code has been sent to the email.", "#19C701");
+        }
+    }
+
+    @FXML
+    private void sendVerificationCode() {
+        if (this.fxid_codeField.getText().isEmpty() || !this.fxid_codeField.getText().matches("\\d+")) {
+            setEmailVerificationInfo("Place a code number valid", "red");
+            return;
+        }
+
+        if (apiConnection.sendVerificationCode(this.fxid_codeField.getText())) {
+            this.fxid_verifyButton.setVisible(false);
+            this.fxid_settingsVerifyEmailCodePlacemenetPane.setVisible(false);
+
+            setEmailVerificationInfo("Email verification completed", "#19C701");
+            this.fxid_accountNotVerifiedWarning.setVisible(false);
+            this.fxid_teamsBloqued.setVisible(false);
+            unBlockTeams();
+        }
+    }
+
+    private void blockTeams() {
+        this.isTeamsBloqued = true;
+    }
+
+    private void unBlockTeams() {
+        this.isTeamsBloqued = false;
     }
     
     public ToDoController getCurrentToDoControllerBeignEdited() {
