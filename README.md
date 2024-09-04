@@ -1,6 +1,6 @@
 <h1 align="center"> To-Do Today </h1> <br>
 <p align="center">
-  <img alt="To-Do Today" title="To-Do Today" src="https://i.imgur.com/VSpOOxo.png" width="450">
+  <img alt="To-Do Today" title="To-Do Today" src="https://i.imgur.com/8VqL8vu.jpeg" width="450">
 </p>
 
 <p align="center">
