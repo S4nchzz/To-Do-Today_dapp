@@ -146,28 +146,33 @@
                   </ImageView>
                </children>
             </Pane>
-            <Pane fx:id="fxid_teamSearchAndCreate" layoutX="1.0" prefHeight="565.0" prefWidth="956.0" visible="false">
+            <Pane fx:id="fxid_teamSearchAndCreate" layoutX="1.0" prefHeight="565.0" prefWidth="956.0">
                <children>
-                  <Pane fx:id="fxid_createTeamPane" layoutX="229.0" layoutY="444.0" prefHeight="62.0" prefWidth="499.0">
+                  <Pane fx:id="fxid_createTeamPane" layoutX="213.0" layoutY="441.0" prefHeight="124.0" prefWidth="531.0">
                      <children>
-                        <TextField fx:id="fxid_createTeamNameField" layoutX="14.0" layoutY="19.0" promptText="Name" />
-                        <TextField fx:id="fxid_createTeamDescriptionField" layoutX="175.0" layoutY="19.0" promptText="Description" />
-                        <PasswordField fx:id="fxid_createTeamPasswordField" layoutX="337.0" layoutY="19.0" prefHeight="25.0" prefWidth="88.0" promptText="Password" />
-                        <CheckBox fx:id="fxid_createTeamPrivateCheck" layoutX="433.0" layoutY="23.0" mnemonicParsing="false" text="Private" />
-                        <Text fill="#a6a6a6" layoutX="354.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(Optional)" />
-                        <Button fx:id="fxid_createTeamSendTeam" layoutX="459.0" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#createNewTeam" text="Create (temp)" />
+                        <TextField fx:id="fxid_createTeamNameField" layoutX="14.0" layoutY="43.0" promptText="Name" />
+                        <TextField fx:id="fxid_createTeamDescriptionField" layoutX="175.0" layoutY="43.0" promptText="Description" />
+                        <PasswordField fx:id="fxid_createTeamPasswordField" layoutX="337.0" layoutY="43.0" prefHeight="25.0" prefWidth="88.0" promptText="Password" />
+                        <CheckBox fx:id="fxid_createTeamPrivateCheck" layoutX="433.0" layoutY="47.0" mnemonicParsing="false" text="Private" />
+                        <Text fill="#a6a6a6" layoutX="354.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(Optional)" />
+                        <Button fx:id="fxid_createTeamSendTeam" layoutX="225.0" layoutY="85.0" mnemonicParsing="false" onMouseClicked="#createNewTeam" stylesheets="@../../src/css/GroupScene.css" text="Create team" />
+                        <Text layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create a new team">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Text>
                      </children>
                   </Pane>
-                  <ScrollPane fx:id="fxid_groupScrollPane" layoutX="229.0" layoutY="49.0" prefHeight="371.0" prefWidth="499.0">
+                  <ScrollPane fx:id="fxid_groupScrollPane" layoutX="213.0" layoutY="53.0" prefHeight="372.0" prefWidth="531.0" stylesheets="@../../src/css/GroupScene.css">
                      <content>
-                        <VBox fx:id="fxid_groupVBox" prefHeight="370.0" prefWidth="499.0" />
+                        <VBox fx:id="fxid_groupVBox" prefHeight="366.0" prefWidth="515.0" />
                      </content>
                   </ScrollPane>
-                  <Pane layoutX="229.0" layoutY="426.0" prefHeight="80.0" prefWidth="499.0" style="-fx-background-color: #c4c4c4;">
-                     <children>
-                        <Button fx:id="fxid_createTeamBtn" layoutX="224.0" layoutY="27.0" mnemonicParsing="false" onMouseClicked="#createTeamAction" text="CREATE" />
-                     </children>
-                  </Pane>
+                  <Text layoutX="87.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Teams">
+                     <font>
+                        <Font name="System Bold" size="25.0" />
+                     </font>
+                  </Text>
                </children></Pane>
             <Pane fx:id="fxid_teamManagementPane" prefHeight="565.0" prefWidth="956.0" style="-fx-background-color: red;" visible="false" />
             <Pane fx:id="fxid_settingsPane" layoutX="10.0" layoutY="10.0" prefHeight="565.0" prefWidth="956.0" visible="false">

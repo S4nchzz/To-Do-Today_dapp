@@ -3,28 +3,30 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="91.5" prefWidth="483.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="91.5" prefWidth="500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Text fx:id="fxid_title" layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{Title}">
+      <Region fx:id="fxid_regionBorder" layoutX="5.0" layoutY="8.0" mouseTransparent="true" prefHeight="76.0" prefWidth="491.0" stylesheets="@../../../src/css/GroupScene.css" />
+      <Text fx:id="fxid_title" layoutX="14.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{Title}">
          <font>
             <Font size="17.0" />
          </font>
       </Text>
-      <Text fx:id="fxid_description" fill="#848484" layoutX="14.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{description}">
+      <Text fx:id="fxid_description" fill="#848484" layoutX="14.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{description}">
          <font>
             <Font size="13.0" />
          </font>
       </Text>
-      <Text fx:id="fxid_members" layoutX="416.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{Members}" />
-      <Text fx:id="fxid_creationDate" fill="#aeaeae" layoutX="14.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{Creation date}" />
-      <Button fx:id="fxid_joinButton" layoutX="426.0" layoutY="41.0" mnemonicParsing="false" onMouseClicked="#joinActionHandler" text="Join" />
-      <TextField fx:id="fxid_passwordPlacement" layoutX="416.0" layoutY="41.0" onKeyPressed="#sendPassword" prefHeight="25.0" prefWidth="57.0" promptText="password" visible="false">
+      <Text fx:id="fxid_members" layoutX="436.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0/4" />
+      <Text fx:id="fxid_creationDate" fill="#aeaeae" layoutX="14.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <TextField fx:id="fxid_passwordPlacement" layoutX="320.0" layoutY="38.0" onKeyPressed="#sendPassword" prefHeight="31.0" prefWidth="85.0" promptText="Place password" stylesheets="@../../../src/css/GroupScene.css" visible="false">
          <font>
-            <Font size="10.0" />
+            <Font size="10.5" />
          </font>
       </TextField>
+      <Button fx:id="fxid_joinButton" layoutX="416.0" layoutY="38.0" mnemonicParsing="false" onMouseClicked="#joinActionHandler" prefHeight="31.0" prefWidth="57.0" stylesheets="@../../../src/css/GroupScene.css" text="Join" />
    </children>
 </Pane>

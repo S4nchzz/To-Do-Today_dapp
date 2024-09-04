@@ -1,0 +1,22 @@
+#fxid_groupScrollPane, #fxid_groupVBox, scroll-bar:vertical .thumb{
+    -fx-background-color: white;
+}
+
+#fxid_joinButton, #fxid_passwordPlacement, #fxid_createTeamSendTeam {
+    -fx-border-color: rgb(208, 206, 206);
+    -fx-border-radius: 3 3 3 3;
+    -fx-background-color: white;
+}
+
+#fxid_joinButton {
+    -fx-cursor: hand;
+}
+
+#fxid_regionBorder {
+    -fx-border-color: rgb(160, 160, 160);
+    -fx-border-radius: 10 10 10 10;
+}
+
+#fxid_createTeamPane {
+    -fx-background-color: rgb(213, 213, 213);
+}

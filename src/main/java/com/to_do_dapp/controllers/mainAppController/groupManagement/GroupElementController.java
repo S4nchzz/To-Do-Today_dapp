@@ -43,6 +43,7 @@ public class GroupElementController {
     private boolean publicgroup;
     private String password;
     private String date;
+    private int members;
 
     public GroupElementController(JSONObject group) {
         apiConnection = ApiConnection.getInstance();
@@ -52,7 +53,9 @@ public class GroupElementController {
         this.description = group.getString("description");
         this.administrator = group.getInt("administrator");
         this.publicgroup = group.getBoolean("publicgroup");
+        this.password = group.getString("password");
         this.date = group.getString("date");
+        this.members = group.getInt("nMembers");
 
         try {
             this.password = group.getString("password");
@@ -66,8 +69,12 @@ public class GroupElementController {
         Platform.runLater(() -> {
             this.fxid_title.setText(this.title);
             this.fxid_description.setText(this.description);
-            this.fxid_creationDate.setText(this.date);
-            this.fxid_members.setText("Not defined!!!");
+            this.fxid_creationDate.setText("Created on " + this.date);
+            this.fxid_members.setText(members + "/4");
+
+            if (!password.isEmpty()) {
+                this.fxid_passwordPlacement.setVisible(true);
+            }
         });
 
         FXMLLoader loader = new FXMLLoader();
@@ -82,17 +89,10 @@ public class GroupElementController {
     }
 
     @FXML
-    private void joinActionHandler() {
-        if (!this.password.isEmpty()) {
-            placePasswordAnimation(true);
-        } else if (apiConnection.associateUserToGroup(this)) {
+    private void joinActionHandler() { 
+        if (this.fxid_passwordPlacement.getText().equals(this.password  ) && apiConnection.associateUserToGroup(this)) {
             mainControllerApp.openTeams();
         }
-    }
-
-    private void placePasswordAnimation(boolean flip) {
-        this.fxid_joinButton.setVisible(!flip);
-        this.fxid_passwordPlacement.setVisible(flip);
     }
 
     @FXML

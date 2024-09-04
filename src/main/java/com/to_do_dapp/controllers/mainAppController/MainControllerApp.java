@@ -411,36 +411,7 @@ public class MainControllerApp {
             preloadTeamsPanes();
         }
     }
-
-    @FXML
-    private void createTeamAction() {
-        if (createTeamMenuRevealed) {
-            hideCreateTeamMenu();
-            return;
-        }
-
-        showCreateTeamMenu();
-
-    }
-
-    private void showCreateTeamMenu() {
-        this.createTeamMenuRevealed = true;
-        TranslateTransition show = new TranslateTransition();
-        show.setNode(this.fxid_createTeamPane);
-        show.setByY(this.fxid_createTeamPane.getHeight());
-        show.setDuration(Duration.millis(700));
-        show.play();
-    }
-
-    private void hideCreateTeamMenu() {
-        this.createTeamMenuRevealed = false;
-        TranslateTransition show = new TranslateTransition();
-        show.setNode(this.fxid_createTeamPane);
-        show.setByY(-this.fxid_createTeamPane.getHeight());
-        show.setDuration(Duration.millis(700));
-        show.play();
-    }
-
+    
     private void preloadTeamsPanes() {
         this.fxid_groupVBox.getChildren().clear();
         ArrayList<GroupElementController> teamEntyList = apiConnection.getTeams();
