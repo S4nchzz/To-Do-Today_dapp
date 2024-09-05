@@ -8,6 +8,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -181,7 +182,6 @@
                         <Font name="System Bold" size="29.0" />
                      </font>
                   </Text>
-                  <VBox fx:id="fxid_membersGroup" layoutX="87.0" layoutY="255.0" prefHeight="228.0" prefWidth="196.0" />
                   <Text fx:id="fxid_groupDescription" fill="#a4a4a4" layoutX="87.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{Description}">
                      <font>
                         <Font size="29.0" />
@@ -190,6 +190,14 @@
                   <Text layoutX="87.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Members">
                      <font>
                         <Font name="Arial" size="21.0" />
+                     </font>
+                  </Text>
+                  <HBox fx:id="fxid_membersGroup1" layoutX="86.0" layoutY="254.0" prefHeight="57.0" prefWidth="784.0" />
+                  <HBox fx:id="fxid_membersGroup2" layoutX="86.0" layoutY="311.0" prefHeight="57.0" prefWidth="784.0" />
+                  <HBox fx:id="fxid_membersGroup3" layoutX="86.0" layoutY="368.0" prefHeight="57.0" prefWidth="784.0" />
+                  <Text fx:id="fxid_restOfUsersCount" layoutX="780.0" layoutY="464.0" strokeType="OUTSIDE" strokeWidth="0.0">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
                      </font>
                   </Text>
                </children></Pane>

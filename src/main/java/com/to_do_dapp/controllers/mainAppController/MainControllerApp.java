@@ -23,6 +23,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -103,7 +104,6 @@ public class MainControllerApp {
     private boolean toDoCreation = false; // If the user press the add ToDo button, this value will go true
 
     // Team search elements
-    
     @FXML
     private VBox fxid_groupVBox;
     @FXML
@@ -147,8 +147,17 @@ public class MainControllerApp {
     private Text fxid_groupName;
     @FXML
     private Text fxid_groupDescription;
+
+    ArrayList<HBox> memberListHbox;
+    private int memberListPointer;
     @FXML
-    private VBox fxid_membersGroup;
+    private HBox fxid_membersGroup1;
+    @FXML
+    private HBox fxid_membersGroup2;
+    @FXML
+    private HBox fxid_membersGroup3;
+    @FXML
+    private Text fxid_restOfUsersCount;
 
     @FXML
     public void initialize() {
@@ -160,6 +169,10 @@ public class MainControllerApp {
             this.fxid_teamsBloqued.setVisible(true);
             blockTeams();
         }
+
+        this.memberListHbox.add(fxid_membersGroup1);
+        this.memberListHbox.add(fxid_membersGroup2);
+        this.memberListHbox.add(fxid_membersGroup3);
     }
 
     private MainControllerApp() {
@@ -174,6 +187,9 @@ public class MainControllerApp {
             // ? LOG: Group Data has been saved correctly
             groupData = GroupData.getInstance();
         }
+
+        this.memberListHbox = new ArrayList<>();
+        this.memberListPointer = 0;
     }
 
     public static MainControllerApp getInstance() {
@@ -433,12 +449,26 @@ public class MainControllerApp {
         this.fxid_groupDescription.setText(groupData.getDescription());
 
         // Members
-        this.fxid_membersGroup.getChildren().clear();
+        this.fxid_membersGroup1.getChildren().clear();
+        this.fxid_membersGroup2.getChildren().clear();
+        this.fxid_membersGroup3.getChildren().clear();
         JSONObject membersOnJson = apiConnection.getMembersFromGroup();
         
         for (String key : membersOnJson.keySet()) {
             JSONObject user = membersOnJson.getJSONObject(key);
-            this.fxid_membersGroup.getChildren().add(new MemberController(user.getString("username"), user.getBoolean("groupAdmin"), user.getBoolean("online")).getPane());
+            
+            if (memberListPointer <= 2 && memberListHbox.get(memberListPointer).getChildren().size() >= 4) {
+                memberListPointer++;
+            }
+            
+            if (memberListPointer <= 2) {
+                memberListHbox.get(memberListPointer).getChildren().add(new MemberController(user.getString("username"),
+                        user.getBoolean("groupAdmin"), user.getBoolean("online")).getPane());
+            }
+
+            if (membersOnJson.keySet().size() > 12) {
+                this.fxid_restOfUsersCount.setText((membersOnJson.keySet().size() - 12) + " more users...");
+            }
         }
     }
 

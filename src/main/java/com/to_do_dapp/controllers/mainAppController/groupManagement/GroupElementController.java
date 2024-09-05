@@ -73,7 +73,7 @@ public class GroupElementController {
             this.fxid_title.setText(this.title);
             this.fxid_description.setText(this.description);
             this.fxid_creationDate.setText("Created on " + this.date);
-            this.fxid_members.setText(members + "/4");
+            this.fxid_members.setText(String.valueOf(members));
 
             if (!password.isEmpty()) {
                 this.fxid_passwordPlacement.setVisible(true);
