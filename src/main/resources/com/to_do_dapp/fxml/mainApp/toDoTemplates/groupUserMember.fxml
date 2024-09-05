@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="57.0" prefWidth="196.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane fx:id="fxid_statusColorPane" layoutX="10.0" opacity="0.45" prefHeight="16.0" prefWidth="51.0">
+         <children>
+            <Text fx:id="fxid_userType" fill="WHITE" layoutX="8.0" layoutY="12.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{&lt;?&gt;}">
+               <font>
+                  <Font name="System Bold" size="11.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Text fx:id="fxid_usernameField" layoutX="14.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{User}">
+         <font>
+            <Font name="Arial Bold" size="14.0" />
+         </font>
+      </Text>
+      <Circle fx:id="fxid_loggedInInfo" fill="RED" layoutX="164.0" layoutY="28.0" radius="8.0" stroke="#878787" strokeType="INSIDE" />
+      <Region fx:id="fxid_regionBorder" mouseTransparent="true" prefHeight="57.0" prefWidth="196.0" stylesheets="@../../../src/css/MemberList.css" />
+   </children>
+</Pane>

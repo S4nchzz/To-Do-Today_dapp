@@ -486,6 +486,7 @@ public class ApiConnection {
         groupData.setPublicgroup(responseOnJSON.getBoolean("publicGroup"));
         groupData.setPassword(responseOnJSON.getString("password"));
         groupData.setDate(responseOnJSON.getString("date"));
+        groupData.setGroupDataPlaced();
 
         return true;
     }
@@ -601,5 +602,44 @@ public class ApiConnection {
         }
 
         return "";
+    }
+
+    public JSONObject getMembersFromGroup() {
+        RestTemplate conn = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+
+            GroupData groupData = GroupData.getInstance();
+
+            HttpEntity<String> entity = new HttpEntity<>(new JSONObject().put("teamKey", 
+                    groupData.getTeamKey()).toString(), header);
+            ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teams/getMembers", entity,
+                    String.class);
+
+            return new JSONObject(response.getBody());
+
+
+        } catch (IOException e) {
+            // ? LOG: User temp token not found
+        }
+
+        return null;
+    }
+
+    public void setUserOnline() {
+        RestTemplate conn = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+            HttpEntity<String> entity = new HttpEntity<>(header);
+
+            conn.postForEntity(apiUrl + "/user/setOnlineUser", entity, String.class);
+        } catch (IOException e) {
+            // ? LOG: User temp token not found
+        }
+
     }
 }

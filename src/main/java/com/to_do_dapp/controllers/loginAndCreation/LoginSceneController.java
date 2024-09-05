@@ -46,6 +46,7 @@ public class LoginSceneController {
             if (api.checkKeepLoggedToken()) {
                 ToDoFiles.overwriteUserTempTokenOnLogin();
                 stage.close();
+                api.setUserOnline();
                 initializeMainScene();
             }
         });   
@@ -55,7 +56,7 @@ public class LoginSceneController {
     private void createAccountLoadScene() {
         FXMLLoader createAccLoader = new FXMLLoader();
         createAccLoader.setLocation(getClass().getResource("/com/to_do_dapp/fxml/loginAndCreation/toDo_AccountCreation.fxml"));
-        createAccLoader.setController(new CreateAccSceneController(stage, this));
+        createAccLoader.setController(new CreateAccController(stage, this));
 
         Parent createAccParent;
         try {
@@ -106,7 +107,7 @@ public class LoginSceneController {
                 // ? LOG: File authUser.tkn not found at C:/User/user/appdata/Local/ToDoToday/ check absolute path
                 e.printStackTrace();
             }
-        
+            api.setUserOnline();
             initializeMainScene();
         }
     }

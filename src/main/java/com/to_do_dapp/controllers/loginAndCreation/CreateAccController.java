@@ -15,7 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class CreateAccSceneController {
+public class CreateAccController {
     private final Stage stage;
     private final LoginSceneController loginSceneController;
 
@@ -37,7 +37,7 @@ public class CreateAccSceneController {
     @FXML
     private Text fxid_passwordRegWarn;
 
-    public CreateAccSceneController(Stage stage, LoginSceneController loginController) {
+    public CreateAccController(Stage stage, LoginSceneController loginController) {
         this.stage = stage;
         this.loginSceneController = loginController;
     }
@@ -95,7 +95,6 @@ public class CreateAccSceneController {
             ApiConnection api = ApiConnection.getInstance();
             api.addUser(new UserData(username, password, email));
             loginAccountLoadScene();
-
         }
     }
 }

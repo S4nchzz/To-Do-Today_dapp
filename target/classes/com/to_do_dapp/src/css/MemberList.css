@@ -1,0 +1,4 @@
+#fxid_regionBorder {
+    -fx-border-color: rgb(160, 160, 160);
+    -fx-border-radius: 10 10 10 10;
+}

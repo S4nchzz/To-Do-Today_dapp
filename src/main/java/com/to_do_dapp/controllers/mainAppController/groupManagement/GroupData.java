@@ -11,7 +11,10 @@ public class GroupData {
     private String password;
     private String date;
 
+    private boolean dataHasBeenPlaced;
+
     private GroupData () {
+        dataHasBeenPlaced = false;
     }
 
     public static GroupData getInstance() {
@@ -76,5 +79,13 @@ public class GroupData {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public void setGroupDataPlaced() {
+        this.dataHasBeenPlaced = true;
+    }
+
+    public boolean dataHasBeenPlaced() {
+        return this.dataHasBeenPlaced;
     }
 }

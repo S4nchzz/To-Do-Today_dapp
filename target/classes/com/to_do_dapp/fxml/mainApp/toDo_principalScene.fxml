@@ -146,7 +146,7 @@
                   </ImageView>
                </children>
             </Pane>
-            <Pane fx:id="fxid_teamSearchAndCreate" layoutX="1.0" prefHeight="565.0" prefWidth="956.0">
+            <Pane fx:id="fxid_teamSearchAndCreate" layoutX="1.0" prefHeight="565.0" prefWidth="956.0" visible="false">
                <children>
                   <Pane fx:id="fxid_createTeamPane" layoutX="213.0" layoutY="441.0" prefHeight="124.0" prefWidth="531.0">
                      <children>
@@ -174,7 +174,25 @@
                      </font>
                   </Text>
                </children></Pane>
-            <Pane fx:id="fxid_teamManagementPane" prefHeight="565.0" prefWidth="956.0" style="-fx-background-color: red;" visible="false" />
+            <Pane fx:id="fxid_teamManagementPane" prefHeight="565.0" prefWidth="956.0" visible="false">
+               <children>
+                  <Text fx:id="fxid_groupName" layoutX="87.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{Group Name}">
+                     <font>
+                        <Font name="System Bold" size="29.0" />
+                     </font>
+                  </Text>
+                  <VBox fx:id="fxid_membersGroup" layoutX="87.0" layoutY="255.0" prefHeight="228.0" prefWidth="196.0" />
+                  <Text fx:id="fxid_groupDescription" fill="#a4a4a4" layoutX="87.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{Description}">
+                     <font>
+                        <Font size="29.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="87.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Members">
+                     <font>
+                        <Font name="Arial" size="21.0" />
+                     </font>
+                  </Text>
+               </children></Pane>
             <Pane fx:id="fxid_settingsPane" layoutX="10.0" layoutY="10.0" prefHeight="565.0" prefWidth="956.0" visible="false">
                <children>
                   <Text layoutX="176.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings">

@@ -6,7 +6,9 @@ import org.json.JSONObject;
 
 import com.to_do_dapp.api.ApiConnection;
 import com.to_do_dapp.controllers.notification_system.NotificationController;
+import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupData;
 import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupElementController;
+import com.to_do_dapp.controllers.mainAppController.groupManagement.MemberController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoControllerList;
 
@@ -24,6 +26,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import java.time.LocalDateTime;
 
 public class MainControllerApp {
     private final ApiConnection apiConnection;
@@ -118,8 +121,6 @@ public class MainControllerApp {
     private CheckBox fxid_createTeamPrivateCheck;
     @FXML
     private Button fxid_createTeamSendTeam;
-
-    private boolean createTeamMenuRevealed;
     
     // Notification elements + mainController requirements
     private NotificationController notificationController;
@@ -140,6 +141,15 @@ public class MainControllerApp {
     @FXML
     private Text fxid_settingsEmail;
 
+    // User group Pane
+    private GroupData groupData;
+    @FXML
+    private Text fxid_groupName;
+    @FXML
+    private Text fxid_groupDescription;
+    @FXML
+    private VBox fxid_membersGroup;
+
     @FXML
     public void initialize() {
         this.fxid_userNameField.setText(apiConnection.getUserName());
@@ -156,11 +166,14 @@ public class MainControllerApp {
         apiConnection = ApiConnection.getInstance();
         this.menuHidden = false;
         this.isOpened = false;
-        this.createTeamMenuRevealed = false;
         this.isTeamsBloqued = false;
 
         this.isEmailVerified = apiConnection.isEmailVerified();
-        apiConnection.getGroupData();
+        this.groupData = GroupData.getInstance();
+        if (apiConnection.getGroupData()) {
+            // ? LOG: Group Data has been saved correctly
+            groupData = GroupData.getInstance();
+        }
     }
 
     public static MainControllerApp getInstance() {
@@ -359,7 +372,6 @@ public class MainControllerApp {
 
             notificationController.show("To-Dos",
                     "You just updated 1 To-Dos", "Now");
-
         }
 
         this.fxid_sendInfoButton.setDisable(true);
@@ -406,12 +418,30 @@ public class MainControllerApp {
         setVisibleMainControllerPanes(false);
         if (apiConnection.userIsInGroup()) {
             this.fxid_teamManagementPane.setVisible(true);
+            openUserGroup();
         } else {
             this.fxid_teamSearchAndCreate.setVisible(true);
             preloadTeamsPanes();
         }
     }
     
+    private void openUserGroup() {
+        if (!groupData.dataHasBeenPlaced()) {
+            apiConnection.getGroupData();
+        }
+        this.fxid_groupName.setText(groupData.getTitle());
+        this.fxid_groupDescription.setText(groupData.getDescription());
+
+        // Members
+        this.fxid_membersGroup.getChildren().clear();
+        JSONObject membersOnJson = apiConnection.getMembersFromGroup();
+        
+        for (String key : membersOnJson.keySet()) {
+            JSONObject user = membersOnJson.getJSONObject(key);
+            this.fxid_membersGroup.getChildren().add(new MemberController(user.getString("username"), user.getBoolean("groupAdmin"), user.getBoolean("online")).getPane());
+        }
+    }
+
     private void preloadTeamsPanes() {
         this.fxid_groupVBox.getChildren().clear();
         ArrayList<GroupElementController> teamEntyList = apiConnection.getTeams();
@@ -427,7 +457,12 @@ public class MainControllerApp {
             return;
         }
 
-        if (apiConnection.createTeam(new JSONObject().put("name", this.fxid_createTeamNameField.getText()).put("description", this.fxid_createTeamDescriptionField.getText()).put("password", this.fxid_createTeamPasswordField.getText()).put("public", !this.fxid_createTeamPrivateCheck.isSelected()))) {
+        LocalDateTime localdate = LocalDateTime.now();
+        JSONObject currentDate = new JSONObject()
+        .put("date", localdate.getDayOfMonth() + "/" + localdate.getMonthValue() + "/" + localdate.getYear())
+        .put("time", localdate.getHour() + ":" + localdate.getMinute());
+
+        if (apiConnection.createTeam(new JSONObject().put("name", this.fxid_createTeamNameField.getText()).put("description", this.fxid_createTeamDescriptionField.getText()).put("password", this.fxid_createTeamPasswordField.getText()).put("public", !this.fxid_createTeamPrivateCheck.isSelected()).put("date", currentDate.toString()))) {
             // Group has been created correctly
             preloadTeamsPanes();
         }

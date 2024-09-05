@@ -54,7 +54,10 @@ public class GroupElementController {
         this.administrator = group.getInt("administrator");
         this.publicgroup = group.getBoolean("publicgroup");
         this.password = group.getString("password");
-        this.date = group.getString("date");
+
+        JSONObject dateOnJson = new JSONObject(group.getString("date"));
+        this.date = dateOnJson.getString("date");
+
         this.members = group.getInt("nMembers");
 
         try {
@@ -90,7 +93,7 @@ public class GroupElementController {
 
     @FXML
     private void joinActionHandler() { 
-        if (this.fxid_passwordPlacement.getText().equals(this.password  ) && apiConnection.associateUserToGroup(this)) {
+        if (this.fxid_passwordPlacement.getText().equals(this.password) && apiConnection.associateUserToGroup(this)) {
             mainControllerApp.openTeams();
         }
     }
