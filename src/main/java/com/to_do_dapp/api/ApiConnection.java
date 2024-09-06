@@ -34,28 +34,26 @@ public class ApiConnection {
         return instance;
     }
 
-    private String getApiAuthToken() {
-        FileReader file;
+    private ResponseEntity<String> simpleRequestWithoutContent(String path) {
+        RestTemplate conn = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
         try {
-            file = new FileReader(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authApiFile));
-            BufferedReader reader = new BufferedReader(file);
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+            HttpEntity<String> entity = new HttpEntity<>(header);
 
-            final String token = reader.readLine();
-            reader.close();
-
-            return token;
+            return conn.postForEntity(apiUrl + path, entity, String.class);
         } catch (IOException e) {
-            // ? LOG: Token File not founded skiping...
-            e.printStackTrace();
+            //? LOG: Token fiele not founded
         }
 
         return null;
     }
 
-    private String getUserTempToken() {
+    private String getApiAuthToken() {
         FileReader file;
         try {
-            file = new FileReader(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authTempUserFile));
+            file = new FileReader(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authApiFile));
             BufferedReader reader = new BufferedReader(file);
 
             final String token = reader.readLine();
@@ -75,7 +73,6 @@ public class ApiConnection {
         
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        httpHeaders.add("Authorization", "Bearer " + getApiAuthToken());
      
         HttpEntity<String> httpEntity = new HttpEntity<>(DataToJson.userDataToJson(userModelClient), httpHeaders);
         Boolean response = apiCreateAcc.postForObject(apiUrl + "/user/addUser", httpEntity, Boolean.class);
@@ -162,15 +159,7 @@ public class ApiConnection {
     }
 
     public void generateUserTempToken() {
-        RestTemplate getUserTempToken = new RestTemplate();
-
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.TEXT_PLAIN);
-        header.add("Authorization", "Bearer " + ToDoFiles.getKeepLoggedTkn());
-
-        HttpEntity<String> entity = new HttpEntity<>(header);
-        
-        ResponseEntity<String> response = getUserTempToken.postForEntity(apiUrl + "/user/generateUserTempToken", entity, String.class);
+        ResponseEntity<String> response = simpleRequestWithoutContent("/user/generateUserTempToken");
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authTempUserFile)));
             writer.write(response.getBody());
@@ -181,15 +170,7 @@ public class ApiConnection {
     }
 
     public void generateKeepLoggedToken() {
-        RestTemplate generateKeepLoggedInToken = new RestTemplate();
-
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_JSON);
-        header.add("Authorization", "Bearer " + getUserTempToken());
-        
-        HttpEntity<String> httpEntity = new HttpEntity<>(header);
-
-        ResponseEntity<String> response = generateKeepLoggedInToken.postForEntity(ApiConnection.apiUrl + "/user/generateKeepLoggedTkn", httpEntity, String.class);
+        ResponseEntity<String> response = simpleRequestWithoutContent("/user/generateKeepLoggedTkn");
         
         JSONObject json = new JSONObject(response.getBody());
         try {
@@ -208,7 +189,6 @@ public class ApiConnection {
         
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_JSON);
-        header.add("Authorization", "Bearer " + getApiAuthToken());
 
         JSONObject keepLoggedUser = new JSONObject();
 
@@ -236,20 +216,8 @@ public class ApiConnection {
     }
 
     public String getUserName() {
-        RestTemplate getUserName = new RestTemplate();
-        
-        HttpHeaders header = new HttpHeaders();
-        try {
-            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
-            HttpEntity<String> httpEntity = new HttpEntity<>(header);
-            ResponseEntity<String> response = getUserName.postForEntity(apiUrl + "/user/getUserName", httpEntity, String.class);
-    
-            return new JSONObject(response.getBody()).getString("username");
-        } catch (IOException e) {
-            //? LOG: Unnable to find user temp token
-        }
-
-        return "";
+        ResponseEntity<String> response = simpleRequestWithoutContent("/user/getUserName");
+        return new JSONObject(response.getBody()).getString("username");
     }
 
     public boolean updateToDo(JSONObject updatedData) {
@@ -341,7 +309,6 @@ public class ApiConnection {
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_JSON);
 
-        header.setContentType(MediaType.APPLICATION_JSON);
         try {
             header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
         } catch (IOException e) {
@@ -370,63 +337,34 @@ public class ApiConnection {
     }
 
     public boolean userIsInGroup() {
-        RestTemplate conn = new RestTemplate();
-
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_JSON);
-        try {
-            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
-
-            HttpEntity<String> entity = new HttpEntity<>(header);
-            ResponseEntity<String> responseEntity = conn.postForEntity(apiUrl + "/user/isInGroup", entity, String.class);
-            
-            JSONObject responseOnJson = new JSONObject(responseEntity.getBody());
+        ResponseEntity<String> response = simpleRequestWithoutContent("/user/isInGroup");
+        JSONObject responseOnJson = new JSONObject(response.getBody());
     
-            return responseOnJson.getBoolean("hasGroup");
-        } catch (IOException e) {
-            //? LOG: User temp token not found
-        }
-
-        return false;
+        return responseOnJson.getBoolean("hasGroup");
     }
 
     public ArrayList<GroupElementController> getTeams() {
-        RestTemplate conn = new RestTemplate();
-        HttpHeaders header = new HttpHeaders();
-
-        header.setContentType(MediaType.APPLICATION_JSON);
-        try {
-            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
-            
-            HttpEntity<String> entity = new HttpEntity<>(header);
-
-            ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teams/getGroups", entity, String.class);
-            
-            JSONObject responseOnJson = new JSONObject(response.getBody());
-            if (!responseOnJson.getBoolean("responseStatus")) {
+        ResponseEntity<String> responseEntity = simpleRequestWithoutContent("/teams/getGroups");
+            JSONObject response = new JSONObject(responseEntity.getBody());
+            if (!response.getBoolean("responseStatus")) {
                 return null;
             }
 
-            responseOnJson.remove("responseStatus");
+            response.remove("responseStatus");
 
-            java.util.Iterator<String> iterator = responseOnJson.keys();
+            java.util.Iterator<String> iterator = response.keys();
 
             ArrayList<GroupElementController> groupElementList = new ArrayList<>();
             while (iterator.hasNext()) {
                 String i = iterator.next();
 
-                JSONObject group = new JSONObject(responseOnJson.getJSONObject(i).toString());
+                JSONObject group = new JSONObject(response.getJSONObject(i).toString());
 
                 if (group.getBoolean("publicgroup")) {
                     groupElementList.add(new GroupElementController(group));
                 }
             }
             return groupElementList;
-
-        } catch (IOException e) {
-            //? LOG: Unnable to find user temp token
-        }
-        return null;
     }
 
     public boolean associateUserToGroup(GroupElementController group) {
@@ -458,20 +396,7 @@ public class ApiConnection {
     }
 
     public boolean getGroupData() {
-        RestTemplate conn = new RestTemplate();
-        
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_JSON);
-        try {
-            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
-        } catch (IOException e) {
-            // ? LOG: Failed to get user temp token
-        }
-
-        HttpEntity<String> entity;
-        entity = new HttpEntity<>(header);
-        ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teams/getGroupData", entity, String.class);
-
+        ResponseEntity<String> response = simpleRequestWithoutContent("/teams/getGroupData");
         JSONObject responseOnJSON = new JSONObject(response.getBody());
 
         if (!responseOnJSON.getBoolean("dataExist")) {
@@ -514,48 +439,16 @@ public class ApiConnection {
     }
 
     public boolean isEmailVerified() {
-        RestTemplate conn = new RestTemplate();
-
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_JSON);
-        try {
-            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
-
-            HttpEntity<String> entity = new HttpEntity<>(header);
-            ResponseEntity<String> response = conn.postForEntity(apiUrl + "/user/isEmailVerified", entity,
-                    String.class);
-
-            JSONObject responseOJsonObject = new JSONObject(response.getBody());
-
-            return responseOJsonObject.getBoolean("isEmailVerified");
-
-        } catch (IOException e) {
-            // ? LOG: User temp token not found
-        }
-
-        return false;
+        ResponseEntity<String> response = simpleRequestWithoutContent("/user/isEmailVerified");
+        JSONObject responseOJsonObject = new JSONObject(response.getBody());
+        return responseOJsonObject.getBoolean("isEmailVerified");
     }
 
     public boolean requestVerification() {
-        RestTemplate conn = new RestTemplate();
-
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_JSON);
-        try {
-            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
-
-            HttpEntity<String> entity = new HttpEntity<>(header);
-            ResponseEntity<String> response = conn.postForEntity(apiUrl + "/verifyEmail/requestVerification", entity, String.class);
-
+        ResponseEntity<String> response = simpleRequestWithoutContent("/verifyEmail/requestVerification");
             JSONObject responseOJsonObject = new JSONObject(response.getBody());
 
             return responseOJsonObject.getBoolean("requestVerificationStatus");
-
-        } catch (IOException e) {
-            // ? LOG: User temp token not found
-        }
-
-        return false;
     }
 
     public boolean sendVerificationCode(String code) {
@@ -583,25 +476,10 @@ public class ApiConnection {
     }
 
     public String getEmail() {
-        RestTemplate conn = new RestTemplate();
+        ResponseEntity<String> response = simpleRequestWithoutContent("/user/getEmail");
+        JSONObject responseOJsonObject = new JSONObject(response.getBody());
 
-        HttpHeaders header = new HttpHeaders();
-        try {
-            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
-
-            HttpEntity<String> entity = new HttpEntity<>(header);
-            ResponseEntity<String> response = conn.postForEntity(apiUrl + "/user/getEmail", entity,
-                    String.class);
-
-            JSONObject responseOJsonObject = new JSONObject(response.getBody());
-
-            return responseOJsonObject.getString("email");
-
-        } catch (IOException e) {
-            // ? LOG: User temp token not found
-        }
-
-        return "";
+        return responseOJsonObject.getString("email");
     }
 
     public JSONObject getMembersFromGroup() {
@@ -629,17 +507,78 @@ public class ApiConnection {
     }
 
     public void setUserOnline() {
-        RestTemplate conn = new RestTemplate();
+        simpleRequestWithoutContent("/user/setOnlineUser");
+    }
 
+    public boolean leaveGroup() {
+        ResponseEntity<String> response = simpleRequestWithoutContent("/teams/leaveGroup");
+        JSONObject responseOnJson = new JSONObject(response.getBody());
+        
+        return responseOnJson.getBoolean("leavedGroup");
+    }
+
+    public void addOrChangePassword(String teamKey, String password) {
+        RestTemplate conn = new RestTemplate();
         HttpHeaders header = new HttpHeaders();
         try {
             header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
-            HttpEntity<String> entity = new HttpEntity<>(header);
-
-            conn.postForEntity(apiUrl + "/user/setOnlineUser", entity, String.class);
         } catch (IOException e) {
-            // ? LOG: User temp token not found
+            //? LOG: Unnable to find user temp token
+            return;
         }
 
+        header.setContentType(MediaType.APPLICATION_JSON);
+        
+        HttpEntity<String> entity = new HttpEntity<>(new JSONObject().put("teamKey", teamKey).put("newPassword", password).toString(), header);
+        conn.postForEntity(apiUrl + "/teams/addOrChangePassword", entity, String.class);
+    }
+
+    public boolean amIAdminFromGroup() {
+        ResponseEntity<String> response = simpleRequestWithoutContent("/teams/amiadmin");
+        return new JSONObject(response.getBody()).getBoolean("areYouAdmin");
+    }
+
+    public boolean updateTeamAdmin(String teamKey, String username) {
+        RestTemplate conn = new RestTemplate();
+        HttpHeaders header = new HttpHeaders();
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            // ? LOG: Unnable to find user temp token
+            return false;
+        }
+
+        header.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<>(
+                new JSONObject().put("teamKey", teamKey).put("newAdminUsername", username).toString(), header);
+        ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teams/updateTeamAdmin", entity, String.class);
+        JSONObject responseOnJson = new JSONObject(response.getBody());
+        return responseOnJson.getBoolean("newAdminModificationStatus");
+    
+    }
+
+    public void deleteEmptyGroup() {
+        simpleRequestWithoutContent("/teams/deleteEmptyGroup");
+    }
+
+    public boolean deleteEntireTeam(String teamKey) {
+        RestTemplate conn = new RestTemplate();
+        HttpHeaders header = new HttpHeaders();
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            // ? LOG: Unnable to find user temp token
+            return false;
+        }
+
+        header.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<>(
+                new JSONObject().put("teamKey", teamKey).toString(), header);
+        ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teams/deleteEntireTeam", entity, String.class);
+        JSONObject responseOnJson = new JSONObject(response.getBody());
+
+        return responseOnJson.getBoolean("deleteTeamAction");
     }
 }

@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
@@ -16,7 +17,7 @@
 
 <Pane fx:id="fxid_parentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="1134.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane fx:id="fxid_leftPane" layoutY="2.0" prefHeight="590.0" prefWidth="160.0" style="-fx-background-color: #f6f9f9;">
+      <Pane fx:id="fxid_leftPane" layoutY="2.0" prefHeight="588.0" prefWidth="160.0" style="-fx-background-color: #f6f9f9;">
          <children>
             <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="14.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -175,7 +176,7 @@
                      </font>
                   </Text>
                </children></Pane>
-            <Pane fx:id="fxid_teamManagementPane" prefHeight="565.0" prefWidth="956.0" visible="false">
+            <Pane fx:id="fxid_teamManagementPane" prefHeight="565.0" prefWidth="956.0">
                <children>
                   <Text fx:id="fxid_groupName" layoutX="87.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{Group Name}">
                      <font>
@@ -200,6 +201,45 @@
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Text>
+                  <Button fx:id="fxid_leaveGroup" layoutX="86.0" layoutY="502.0" mnemonicParsing="false" onMouseClicked="#leaveGroupAction" stylesheets="@../../src/css/GroupScene.css" text="Leave group" />
+                  <Pane fx:id="fxid_showPasssordMenu" layoutX="681.0" layoutY="14.0" prefHeight="62.0" prefWidth="261.0" visible="false">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="30.0" layoutX="217.0" layoutY="16.0" onMouseClicked="#revealPassword" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+                           <image>
+                              <Image url="@../../src/pictures/eye.png" />
+                           </image>
+                        </ImageView>
+                        <Text layoutX="14.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Group Password">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="fxid_groupPasswordTextView" layoutX="14.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="**********">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="fxid_modifyOrAddPasswordPane" layoutX="85.0" layoutY="128.0" prefHeight="78.0" prefWidth="373.0" visible="false">
+                     <children>
+                        <TextField fx:id="fxid_groupPasswordPlace" layoutX="6.0" layoutY="14.0" promptText="Password" />
+                        <Text fill="#949494" layoutX="164.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(Add or change the group password)" />
+                        <Button fx:id="fxid_setPasswordButton" layoutX="6.0" layoutY="51.0" mnemonicParsing="false" onMouseClicked="#addOrChangePassword" stylesheets="@../../src/css/GroupScene.css" text="Set password" />
+                     </children>
+                  </Pane>
+                  <Pane fx:id="fxid_adminWarningLeaving" layoutX="28.0" layoutY="479.0" prefHeight="72.0" prefWidth="517.0" style="-fx-background-color: white;" visible="false">
+                     <children>
+                        <Text layoutX="13.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You must to select a new group admin before leaving" />
+                        <ComboBox fx:id="fxid_comboBoxNextAdmin" layoutX="307.0" layoutY="23.0" prefHeight="25.0" prefWidth="104.0" />
+                        <Button layoutX="431.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#setNewGroupAdmin" text="Give admin" />
+                     </children>
+                  </Pane>
+                  <ImageView fx:id="fxid_deleteEntireTeam" fitHeight="150.0" fitWidth="30.0" layoutX="36.0" layoutY="500.0" onMouseClicked="#deleteEntireGroup" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;" visible="false">
+                     <image>
+                        <Image url="@../../src/pictures/bin.png" />
+                     </image>
+                  </ImageView>
                </children></Pane>
             <Pane fx:id="fxid_settingsPane" layoutX="10.0" layoutY="10.0" prefHeight="565.0" prefWidth="956.0" visible="false">
                <children>

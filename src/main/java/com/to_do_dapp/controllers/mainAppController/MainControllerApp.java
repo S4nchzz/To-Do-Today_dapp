@@ -8,6 +8,8 @@ import com.to_do_dapp.api.ApiConnection;
 import com.to_do_dapp.controllers.notification_system.NotificationController;
 import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupData;
 import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupElementController;
+import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupElementControllerList;
+import com.to_do_dapp.controllers.mainAppController.groupManagement.Member;
 import com.to_do_dapp.controllers.mainAppController.groupManagement.MemberController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoControllerList;
@@ -18,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -85,6 +88,7 @@ public class MainControllerApp {
     // Left Pane elements
     @FXML
     private Text fxid_userNameField;
+    private String localUsername;
 
     //Right menu swipeable entry
     @FXML
@@ -148,6 +152,8 @@ public class MainControllerApp {
     @FXML
     private Text fxid_groupDescription;
 
+    private GroupElementControllerList groupElementControllerList;
+
     ArrayList<HBox> memberListHbox;
     private int memberListPointer;
     @FXML
@@ -158,10 +164,26 @@ public class MainControllerApp {
     private HBox fxid_membersGroup3;
     @FXML
     private Text fxid_restOfUsersCount;
+    @FXML
+    private TextField fxid_groupPasswordPlace;
+    @FXML
+    private Pane fxid_showPasssordMenu;
+    @FXML
+    private Text fxid_groupPasswordTextView;
+    private boolean passRevealed;
+    @FXML
+    private Pane fxid_modifyOrAddPasswordPane;
+    @FXML
+    private Pane fxid_adminWarningLeaving;
+    @FXML
+    private ComboBox<String> fxid_comboBoxNextAdmin;
+    @FXML
+    private ImageView fxid_deleteEntireTeam;
 
     @FXML
     public void initialize() {
-        this.fxid_userNameField.setText(apiConnection.getUserName());
+        this.localUsername = apiConnection.getUserName();
+        this.fxid_userNameField.setText(localUsername);
         preloadToDoElements();
         this.notificationController = NotificationController.getInstance();
         if (!isEmailVerified) {
@@ -181,6 +203,8 @@ public class MainControllerApp {
         this.isOpened = false;
         this.isTeamsBloqued = false;
 
+        this.groupElementControllerList = GroupElementControllerList.getInstance();
+
         this.isEmailVerified = apiConnection.isEmailVerified();
         this.groupData = GroupData.getInstance();
         if (apiConnection.getGroupData()) {
@@ -190,6 +214,7 @@ public class MainControllerApp {
 
         this.memberListHbox = new ArrayList<>();
         this.memberListPointer = 0;
+        this.passRevealed = false;
     }
 
     public static MainControllerApp getInstance() {
@@ -442,9 +467,21 @@ public class MainControllerApp {
     }
     
     private void openUserGroup() {
-        if (!groupData.dataHasBeenPlaced()) {
-            apiConnection.getGroupData();
+        this.fxid_adminWarningLeaving.setVisible(false);
+        this.fxid_comboBoxNextAdmin.getItems().clear();
+        groupData.clearMembers();
+        this.fxid_modifyOrAddPasswordPane.setVisible(false);
+        passRevealed = true;
+        
+        if (!groupData.getPassword().isEmpty()) {
+            this.fxid_showPasssordMenu.setVisible(true);
+            revealPassword();
+        } else {
+            this.fxid_showPasssordMenu.setVisible(false);
         }
+        memberListPointer = 0;
+
+        apiConnection.getGroupData();   
         this.fxid_groupName.setText(groupData.getTitle());
         this.fxid_groupDescription.setText(groupData.getDescription());
 
@@ -462,20 +499,84 @@ public class MainControllerApp {
             }
             
             if (memberListPointer <= 2) {
-                memberListHbox.get(memberListPointer).getChildren().add(new MemberController(user.getString("username"),
-                        user.getBoolean("groupAdmin"), user.getBoolean("online")).getPane());
+                groupData.setMember(new Member(user));
+                memberListHbox.get(memberListPointer).getChildren().add(new MemberController(user).getPane());
             }
 
             if (membersOnJson.keySet().size() > 12) {
                 this.fxid_restOfUsersCount.setText((membersOnJson.keySet().size() - 12) + " more users...");
             }
         }
+
+        if (!groupData.getPassword().isEmpty()) {
+            this.fxid_showPasssordMenu.setVisible(true);
+        }
+
+        if (apiConnection.amIAdminFromGroup()) {
+            fxid_modifyOrAddPasswordPane.setVisible(true);
+            fxid_deleteEntireTeam.setVisible(true);
+        }
+    }
+
+    @FXML
+    private void leaveGroupAction() {
+        if (apiConnection.amIAdminFromGroup() && groupData.getMembers().size() > 1) {
+            adminLeavingGroupWarn();
+        } else if (groupData.getMembers().size() == 1) {
+            apiConnection.deleteEmptyGroup();
+            openTeams();
+        } else {
+            confirmLeaveGroup();
+        }
+    }
+
+    private void confirmLeaveGroup() {
+        if (apiConnection.leaveGroup()) {
+            openTeams();
+        } else {
+            //? Log: an error occurs when trying to leave the group
+        }
+    }
+
+    private void adminLeavingGroupWarn() {
+        this.fxid_adminWarningLeaving.setVisible(true);
+        for (Member m : groupData.getMembers()) {
+            if (!m.getUsername().equals(this.localUsername)) {
+                this.fxid_comboBoxNextAdmin.getItems().add(m.getUsername());  
+            }
+        }
+    }
+
+    @FXML
+    private void setNewGroupAdmin () {
+        if (!this.fxid_comboBoxNextAdmin.getSelectionModel().getSelectedItem().isEmpty() && apiConnection.updateTeamAdmin(groupData.getTeamKey(), this.fxid_comboBoxNextAdmin.getSelectionModel().getSelectedItem())) {
+            confirmLeaveGroup();
+        }
+    }
+
+    @FXML
+    private void addOrChangePassword() {
+        if (!fxid_groupPasswordPlace.getText().isEmpty()) {
+            apiConnection.addOrChangePassword(groupData.getTeamKey(), this.fxid_groupPasswordPlace.getText());
+            openTeams();
+        }
+    }
+
+    @FXML
+    private void revealPassword() {
+        if (!passRevealed) {
+            this.fxid_groupPasswordTextView.setText(groupData.getPassword());
+            this.passRevealed = true;
+        } else {
+            this.fxid_groupPasswordTextView.setText("**********");
+            this.passRevealed = false;
+        }
     }
 
     private void preloadTeamsPanes() {
+        updateGroupElementControllerList();
         this.fxid_groupVBox.getChildren().clear();
-        ArrayList<GroupElementController> teamEntyList = apiConnection.getTeams();
-        for (GroupElementController groupElementController : teamEntyList) {
+        for (GroupElementController groupElementController : groupElementControllerList.getGroupElementList()) {
             this.fxid_groupVBox.getChildren().add(groupElementController.getPane());
         }
     }
@@ -493,8 +594,29 @@ public class MainControllerApp {
         .put("time", localdate.getHour() + ":" + localdate.getMinute());
 
         if (apiConnection.createTeam(new JSONObject().put("name", this.fxid_createTeamNameField.getText()).put("description", this.fxid_createTeamDescriptionField.getText()).put("password", this.fxid_createTeamPasswordField.getText()).put("public", !this.fxid_createTeamPrivateCheck.isSelected()).put("date", currentDate.toString()))) {
-            // Group has been created correctly
             preloadTeamsPanes();
+            // Group has been created correctly
+            for (GroupElementController c : groupElementControllerList.getGroupElementList()) {
+                if (c.getTitle().equals(this.fxid_createTeamNameField.getText())) {
+                    c.joinActionHandler();
+                    break;
+                }
+            }
+        }
+    }
+
+    private void updateGroupElementControllerList() {
+        ArrayList<GroupElementController> teamEntryList = apiConnection.getTeams();
+        groupElementControllerList.clearList();
+        for (GroupElementController groupElementController : teamEntryList) {
+            groupElementControllerList.addGroupElement(groupElementController);
+        }
+    }
+
+    @FXML
+    private void deleteEntireGroup() {
+        if (apiConnection.deleteEntireTeam(groupData.getTeamKey())) {
+            openTeams();
         }
     }
 

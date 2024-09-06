@@ -92,7 +92,7 @@ public class GroupElementController {
     }
 
     @FXML
-    private void joinActionHandler() { 
+    public void joinActionHandler() {
         if (this.fxid_passwordPlacement.getText().equals(this.password) && apiConnection.associateUserToGroup(this)) {
             mainControllerApp.openTeams();
         }

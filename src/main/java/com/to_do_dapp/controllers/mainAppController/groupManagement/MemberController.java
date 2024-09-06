@@ -2,6 +2,8 @@ package com.to_do_dapp.controllers.mainAppController.groupManagement;
 
 import java.io.IOException;
 
+import org.json.JSONObject;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +24,7 @@ public class MemberController {
     @FXML
     private Circle fxid_loggedInInfo;
 
-    public MemberController(String username, boolean isAdmin, boolean isLoggedIn) {
+    public MemberController(JSONObject user) {
         FXMLLoader loader = new FXMLLoader();
         loader.setController(this);
         loader.setLocation(getClass().getResource("/com/to_do_dapp/fxml/mainApp/toDoTemplates/groupUserMember.fxml"));
@@ -34,7 +36,7 @@ public class MemberController {
         }
 
         Platform.runLater(() -> {
-            if (isAdmin) {
+        if (user.getBoolean("groupAdmin")) {
             fxid_userType.setText("Admin");
             fxid_statusColorPane.setStyle("-fx-background-color: green");
         } else {
@@ -42,14 +44,14 @@ public class MemberController {
             fxid_statusColorPane.setStyle("-fx-background-color: blue");
         }
 
-        if (isLoggedIn) {
+        if (user.getBoolean("online")) {
             fxid_loggedInInfo.setFill(Color.GREEN);
         } else {
             fxid_loggedInInfo.setFill(Color.RED);
         }
         });
 
-        fxid_usernameField.setText(username);
+        fxid_usernameField.setText(user.getString("username"));
     }
 
     public Pane getPane() {

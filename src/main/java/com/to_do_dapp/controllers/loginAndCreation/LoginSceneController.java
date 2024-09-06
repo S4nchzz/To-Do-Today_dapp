@@ -49,20 +49,21 @@ public class LoginSceneController {
                 api.setUserOnline();
                 initializeMainScene();
             }
-        });   
+        });
     }
 
     @FXML
     private void createAccountLoadScene() {
         FXMLLoader createAccLoader = new FXMLLoader();
-        createAccLoader.setLocation(getClass().getResource("/com/to_do_dapp/fxml/loginAndCreation/toDo_AccountCreation.fxml"));
+        createAccLoader
+                .setLocation(getClass().getResource("/com/to_do_dapp/fxml/loginAndCreation/toDo_AccountCreation.fxml"));
         createAccLoader.setController(new CreateAccController(stage, this));
 
         Parent createAccParent;
         try {
             createAccParent = createAccLoader.load();
             Scene createAccScene = new Scene(createAccParent);
-            
+
             stage.setScene(createAccScene);
             stage.setResizable(false);
             stage.centerOnScreen();
@@ -94,7 +95,8 @@ public class LoginSceneController {
 
         if (authUser != null) {
             try {
-                OutputStream out = new FileOutputStream(new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authTempUserFile));
+                OutputStream out = new FileOutputStream(
+                        new File(ToDoFiles.toDoTodayAbsolutePath + ToDoFiles.authTempUserFile));
 
                 out.write(authUser.getString("tempUserAuthTkn").getBytes());
 
@@ -104,7 +106,8 @@ public class LoginSceneController {
 
                 out.close();
             } catch (IOException e) {
-                // ? LOG: File authUser.tkn not found at C:/User/user/appdata/Local/ToDoToday/ check absolute path
+                // ? LOG: File authUser.tkn not found at C:/User/user/appdata/Local/ToDoToday/
+                // check absolute path
                 e.printStackTrace();
             }
             api.setUserOnline();

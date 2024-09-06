@@ -1,5 +1,7 @@
 package com.to_do_dapp.controllers.mainAppController.groupManagement;
 
+import java.util.ArrayList;
+
 public class GroupData {
     private static GroupData groupData;
     
@@ -11,10 +13,13 @@ public class GroupData {
     private String password;
     private String date;
 
+    private ArrayList<Member> members;
+
     private boolean dataHasBeenPlaced;
 
     private GroupData () {
         dataHasBeenPlaced = false;
+        this.members = new ArrayList<>();
     }
 
     public static GroupData getInstance() {
@@ -87,5 +92,17 @@ public class GroupData {
 
     public boolean dataHasBeenPlaced() {
         return this.dataHasBeenPlaced;
+    }
+
+    public void setMember(Member member) {
+        this.members.add(member);
+    }
+
+    public ArrayList<Member> getMembers() {
+        return this.members;
+    }
+
+    public void clearMembers() {
+        this.members.clear();
     }
 }
