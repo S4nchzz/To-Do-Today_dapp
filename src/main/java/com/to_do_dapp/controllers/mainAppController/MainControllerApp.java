@@ -15,6 +15,7 @@ import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoControlle
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoControllerList;
 
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
@@ -84,6 +85,8 @@ public class MainControllerApp {
     private Pane fxid_toDoMenu;
     @FXML
     private Text fxid_detailMenuTitleText;
+    @FXML
+    private CheckBox fxid_TeamToDo;
 
     // Left Pane elements
     @FXML
@@ -181,6 +184,13 @@ public class MainControllerApp {
     private ImageView fxid_deleteEntireTeam;
 
     @FXML
+    private TextField fxid_teamNameJoinPrivate;
+    @FXML
+    private PasswordField fxid_teamPasswordJoinPrivate;
+    @FXML
+    private Text fxid_joinPrivateWarn;
+
+    @FXML
     public void initialize() {
         this.localUsername = apiConnection.getUserName();
         this.fxid_userNameField.setText(localUsername);
@@ -210,6 +220,9 @@ public class MainControllerApp {
         if (apiConnection.getGroupData()) {
             // ? LOG: Group Data has been saved correctly
             groupData = GroupData.getInstance();
+            Platform.runLater(() -> {
+                this.fxid_TeamToDo.setDisable(false);
+            });
         }
 
         this.memberListHbox = new ArrayList<>();
@@ -398,7 +411,7 @@ public class MainControllerApp {
                 // ? LOG: Unnable to create ToDo
                 return;
             }
-
+            
             notificationController.show("To-Dos",
                     "You just created a new To-Do", "Now");
 
@@ -471,9 +484,10 @@ public class MainControllerApp {
         this.fxid_comboBoxNextAdmin.getItems().clear();
         groupData.clearMembers();
         this.fxid_modifyOrAddPasswordPane.setVisible(false);
+        fxid_deleteEntireTeam.setVisible(false);
         passRevealed = true;
         
-        if (!groupData.getPassword().isEmpty()) {
+        if (groupData.getPassword() != null && !groupData.getPassword().isEmpty()) {
             this.fxid_showPasssordMenu.setVisible(true);
             revealPassword();
         } else {
@@ -524,6 +538,7 @@ public class MainControllerApp {
             adminLeavingGroupWarn();
         } else if (groupData.getMembers().size() == 1) {
             apiConnection.deleteEmptyGroup();
+            disableToDoTeamCheckbox();
             openTeams();
         } else {
             confirmLeaveGroup();
@@ -532,6 +547,7 @@ public class MainControllerApp {
 
     private void confirmLeaveGroup() {
         if (apiConnection.leaveGroup()) {
+            disableToDoTeamCheckbox();
             openTeams();
         } else {
             //? Log: an error occurs when trying to leave the group
@@ -593,12 +609,24 @@ public class MainControllerApp {
         .put("date", localdate.getDayOfMonth() + "/" + localdate.getMonthValue() + "/" + localdate.getYear())
         .put("time", localdate.getHour() + ":" + localdate.getMinute());
 
+        // Group creation
         if (apiConnection.createTeam(new JSONObject().put("name", this.fxid_createTeamNameField.getText()).put("description", this.fxid_createTeamDescriptionField.getText()).put("password", this.fxid_createTeamPasswordField.getText()).put("public", !this.fxid_createTeamPrivateCheck.isSelected()).put("date", currentDate.toString()))) {
-            preloadTeamsPanes();
-            // Group has been created correctly
+            // If the group is private join and return
+            if (this.fxid_createTeamPrivateCheck.isSelected() && apiConnection.associateUserToPrivateGroup(this.fxid_createTeamNameField.getText(), this.fxid_createTeamPasswordField.getText())) {
+                this.fxid_TeamToDo.setDisable(false);
+                openTeams();
+                return;
+            }
+
+            updateGroupElementControllerList();
+
+            // If the group is public, find the controller and use his join function, !less api calls
             for (GroupElementController c : groupElementControllerList.getGroupElementList()) {
                 if (c.getTitle().equals(this.fxid_createTeamNameField.getText())) {
+                    c.writePasswordPlacementOnCreation(this.fxid_createTeamPasswordField.getText());
                     c.joinActionHandler();
+                    apiConnection.getGroupData();
+                    openTeams();
                     break;
                 }
             }
@@ -672,6 +700,24 @@ public class MainControllerApp {
             this.fxid_teamsBloqued.setVisible(false);
             unBlockTeams();
         }
+    }
+
+    @FXML
+    private void joinPrivate() {
+        if (apiConnection.associateUserToPrivateGroup(this.fxid_teamNameJoinPrivate.getText(), this.fxid_teamPasswordJoinPrivate.getText())) {
+            enableToDoTeamCheckBox();
+            openTeams();
+        } else {
+            this.fxid_joinPrivateWarn.setText("Check the name or password");
+        }
+    }
+
+    public void disableToDoTeamCheckbox() {
+        this.fxid_TeamToDo.setDisable(true);
+    }
+
+    public void enableToDoTeamCheckBox() {
+        this.fxid_TeamToDo.setDisable(false);
     }
 
     private void blockTeams() {

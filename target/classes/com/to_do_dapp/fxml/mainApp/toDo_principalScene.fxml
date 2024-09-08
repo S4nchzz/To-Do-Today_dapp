@@ -17,6 +17,11 @@
 
 <Pane fx:id="fxid_parentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="1134.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
+      <ImageView fx:id="fxid_menuImage" fitHeight="30.0" fitWidth="30.0" layoutX="174.0" layoutY="15.0" onMouseClicked="#showLeftMenu" pickOnBounds="true" preserveRatio="true" rotate="180.0" style="-fx-cursor: hand;">
+         <image>
+            <Image url="@../../src/pictures/menu.png" />
+         </image>
+      </ImageView>
       <Pane fx:id="fxid_leftPane" layoutY="2.0" prefHeight="588.0" prefWidth="160.0" style="-fx-background-color: #f6f9f9;">
          <children>
             <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="14.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
@@ -175,8 +180,21 @@
                         <Font name="System Bold" size="25.0" />
                      </font>
                   </Text>
+                  <Pane layoutX="757.0" layoutY="58.0" prefHeight="190.0" prefWidth="185.0">
+                     <children>
+                        <Text layoutX="23.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Join private team">
+                           <font>
+                              <Font name="System Bold" size="17.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="fxid_joinPrivateWarn" layoutX="14.0" layoutY="172.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+                        <TextField fx:id="fxid_teamNameJoinPrivate" layoutX="18.0" layoutY="34.0" promptText="Name" />
+                        <PasswordField fx:id="fxid_teamPasswordJoinPrivate" layoutX="18.0" layoutY="71.0" promptText="Password" />
+                        <Button fx:id="fxid_joinPrivateTeam" layoutX="67.0" layoutY="108.0" mnemonicParsing="false" onMouseClicked="#joinPrivate" text="Button" />
+                     </children>
+                  </Pane>
                </children></Pane>
-            <Pane fx:id="fxid_teamManagementPane" prefHeight="565.0" prefWidth="956.0">
+            <Pane fx:id="fxid_teamManagementPane" prefHeight="565.0" prefWidth="956.0" stylesheets="@../../src/css/GroupScene.css" visible="false">
                <children>
                   <Text fx:id="fxid_groupName" layoutX="87.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{Group Name}">
                      <font>
@@ -228,11 +246,11 @@
                         <Button fx:id="fxid_setPasswordButton" layoutX="6.0" layoutY="51.0" mnemonicParsing="false" onMouseClicked="#addOrChangePassword" stylesheets="@../../src/css/GroupScene.css" text="Set password" />
                      </children>
                   </Pane>
-                  <Pane fx:id="fxid_adminWarningLeaving" layoutX="28.0" layoutY="479.0" prefHeight="72.0" prefWidth="517.0" style="-fx-background-color: white;" visible="false">
+                  <Pane fx:id="fxid_adminWarningLeaving" layoutX="72.0" layoutY="479.0" prefHeight="72.0" prefWidth="517.0" style="-fx-background-color: white;" visible="false">
                      <children>
                         <Text layoutX="13.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You must to select a new group admin before leaving" />
-                        <ComboBox fx:id="fxid_comboBoxNextAdmin" layoutX="307.0" layoutY="23.0" prefHeight="25.0" prefWidth="104.0" />
-                        <Button layoutX="431.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#setNewGroupAdmin" text="Give admin" />
+                        <ComboBox fx:id="fxid_comboBoxNextAdmin" layoutX="307.0" layoutY="23.0" prefHeight="25.0" prefWidth="104.0" promptText="Choose" stylesheets="@../../src/css/GroupScene.css" />
+                        <Button fx:id="fxid_giveAdminBtn" layoutX="425.0" layoutY="23.0" mnemonicParsing="false" onMouseClicked="#setNewGroupAdmin" text="Give admin" />
                      </children>
                   </Pane>
                   <ImageView fx:id="fxid_deleteEntireTeam" fitHeight="150.0" fitWidth="30.0" layoutX="36.0" layoutY="500.0" onMouseClicked="#deleteEntireGroup" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;" visible="false">
@@ -264,14 +282,12 @@
                </children>
             </Pane>
          </children></Pane>
-      <ImageView fx:id="fxid_menuImage" fitHeight="30.0" fitWidth="30.0" layoutX="174.0" layoutY="15.0" onMouseClicked="#showLeftMenu" pickOnBounds="true" preserveRatio="true" rotate="180.0" style="-fx-cursor: hand;">
-         <image>
-            <Image url="@../../src/pictures/menu.png" />
-         </image>
-      </ImageView>
       <Pane fx:id="fxid_toDoMenu" layoutX="1134.0" layoutY="75.0" prefHeight="444.0" prefWidth="282.0" style="-fx-background-color: white;" stylesheets="@../../src/css/MainScene.css">
          <children>
-            <Pane layoutY="384.0" prefHeight="62.0" prefWidth="282.0" style="-fx-background-color: #f4f4f4f4;" />
+            <Pane layoutY="384.0" prefHeight="62.0" prefWidth="282.0" style="-fx-background-color: #f4f4f4f4;">
+               <children>
+                  <CheckBox fx:id="fxid_TeamToDo" disable="true" layoutX="14.0" layoutY="23.0" mnemonicParsing="false" text="Team To-Do" />
+               </children></Pane>
             <TextArea fx:id="fxid_toDoMenuContent" layoutX="20.0" layoutY="200.0" prefHeight="72.0" prefWidth="238.0" stylesheets="@../../src/css/MainScene.css" />
             <Button fx:id="fxid_sendInfoButton" layoutX="188.0" layoutY="402.0" mnemonicParsing="false" onMouseClicked="#sendToDoData" stylesheets="@../../src/css/MainScene.css" text="Send ToDo" textFill="WHITE">
                <font>

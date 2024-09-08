@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.shape.Circle?>
@@ -22,7 +24,12 @@
             <Font name="Arial Bold" size="14.0" />
          </font>
       </Text>
-      <Circle fx:id="fxid_loggedInInfo" fill="RED" layoutX="164.0" layoutY="28.0" radius="8.0" stroke="#878787" strokeType="INSIDE" />
+      <Circle fx:id="fxid_loggedInInfo" fill="RED" layoutX="158.0" layoutY="28.0" radius="8.0" stroke="#878787" strokeType="INSIDE" />
       <Region fx:id="fxid_regionBorder" layoutX="5.0" layoutY="5.0" mouseTransparent="true" prefHeight="47.0" prefWidth="186.0" stylesheets="@../../../src/css/MemberList.css" />
+      <ImageView fx:id="fxid_kickUserImageView" fitHeight="150.0" fitWidth="10.0" layoutX="175.0" layoutY="10.0" onMouseClicked="#kickUser" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;" visible="false">
+         <image>
+            <Image url="@../../../src/pictures/cancelar.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>

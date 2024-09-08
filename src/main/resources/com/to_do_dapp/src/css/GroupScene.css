@@ -2,7 +2,7 @@
     -fx-background-color: white;
 }
 
-#fxid_joinButton, #fxid_createTeamSendTeam, #fxid_leaveGroup, #fxid_setPasswordButton {
+#fxid_joinButton, #fxid_createTeamSendTeam, #fxid_leaveGroup, #fxid_setPasswordButton, #fxid_comboBoxNextAdmin, #fxid_giveAdminBtn {
     -fx-border-color: rgb(208, 206, 206);
     -fx-border-radius: 3 3 3 3;
     -fx-background-color: white;

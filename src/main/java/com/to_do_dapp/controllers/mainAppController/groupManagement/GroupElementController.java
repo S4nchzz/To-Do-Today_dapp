@@ -94,6 +94,7 @@ public class GroupElementController {
     @FXML
     public void joinActionHandler() {
         if (this.fxid_passwordPlacement.getText().equals(this.password) && apiConnection.associateUserToGroup(this)) {
+            mainControllerApp.enableToDoTeamCheckBox();
             mainControllerApp.openTeams();
         }
     }
@@ -103,6 +104,10 @@ public class GroupElementController {
         if (key.getCode() == KeyCode.ENTER && this.fxid_passwordPlacement.getText().equals(this.password) && apiConnection.associateUserToGroup(this)) {
             mainControllerApp.openTeams();
         }
+    }
+
+    public void writePasswordPlacementOnCreation(String password) {
+        this.fxid_passwordPlacement.setText(password);
     }
     
     public Pane getPane() {

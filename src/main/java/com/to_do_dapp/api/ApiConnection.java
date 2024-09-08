@@ -581,4 +581,45 @@ public class ApiConnection {
 
         return responseOnJson.getBoolean("deleteTeamAction");
     }
+
+    public boolean kickUser(String username, String teamKey) {
+        RestTemplate conn = new RestTemplate();
+        HttpHeaders header = new HttpHeaders();
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            // ? LOG: Unnable to find user temp token
+            return false;
+        }
+
+        header.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<>(
+                new JSONObject().put("username", username).put("teamKey", teamKey).toString(), header);
+        ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teams/kickUser", entity, String.class);
+        JSONObject responseOnJson = new JSONObject(response.getBody());
+
+        return responseOnJson.getBoolean("userKicked");
+    }
+
+    public boolean associateUserToPrivateGroup(String name, String password) {
+        RestTemplate conn = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            // ? LOG: Unnable to find user temp token
+            return false;
+        }
+
+        header.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<>(
+                new JSONObject().put("name", name).put("password", password).toString(), header);
+        ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teams/associateUserToPrivateTeam", entity, String.class);
+        JSONObject responseOnJson = new JSONObject(response.getBody());
+
+        return responseOnJson.getBoolean("userJoinedToPrivateTeam");
+    }
 }

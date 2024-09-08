@@ -47,5 +47,10 @@
          </image>
       </ImageView>
       <CheckBox fx:id="fxid_checkBoxEntry" layoutX="34.0" layoutY="36.0" mnemonicParsing="false" stylesheets="@../../../src/css/ToDoEntry.css" />
+      <ImageView fx:id="fxid_toDoFromTeam" fitHeight="150.0" fitWidth="20.0" layoutX="540.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../src/pictures/grupo.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>
