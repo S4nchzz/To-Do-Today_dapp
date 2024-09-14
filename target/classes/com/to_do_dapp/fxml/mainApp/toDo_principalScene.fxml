@@ -125,7 +125,7 @@
       </Pane>
       <Pane fx:id="fxid_allPanes" layoutX="157.0" layoutY="14.0" prefHeight="565.0" prefWidth="956.0">
          <children>
-            <Pane fx:id="fxid_toDoManagementPane" prefHeight="565.0" prefWidth="956.0" visible="false">
+            <Pane fx:id="fxid_toDoManagementPane" prefHeight="565.0" prefWidth="956.0">
                <children>
                   <Text fx:id="fxid_toDoListText" layoutX="178.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To-Do List">
                      <font>
@@ -151,6 +151,7 @@
                         <Image url="@../../src/pictures/trash_red.png" />
                      </image>
                   </ImageView>
+                  <Button fx:id="fxid_teamToDoButton" layoutX="654.0" layoutY="72.0" mnemonicParsing="false" onMouseClicked="#swapBetweenTeamToDoAndPrivateToDos" stylesheets="@../../src/css/MainScene.css" text="Team To-Dos" />
                </children>
             </Pane>
             <Pane fx:id="fxid_teamSearchAndCreate" layoutX="1.0" prefHeight="565.0" prefWidth="956.0" visible="false">

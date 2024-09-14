@@ -21,6 +21,7 @@ import com.to_do_dapp.api.requests.req_AddUser.UserData;
 import com.to_do_dapp.controllers.ToDoFiles;
 import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupData;
 import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupElementController;
+import com.to_do_dapp.controllers.mainAppController.teamToDoManagement.TeamToDoController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 
 public class ApiConnection {
@@ -234,7 +235,7 @@ public class ApiConnection {
         HttpEntity<String> entity = new HttpEntity<>(updatedData.toString(), header);
         
         ResponseEntity<String> response = connection.postForEntity(apiUrl + "/toDos/updateToDo", entity, String.class);
-
+        
         return new JSONObject(response.getBody()).getBoolean("updated");
     }
 
@@ -606,7 +607,7 @@ public class ApiConnection {
         RestTemplate conn = new RestTemplate();
 
         HttpHeaders header = new HttpHeaders();
-        try {
+        try {   
             header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
         } catch (IOException e) {
             // ? LOG: Unnable to find user temp token
@@ -621,5 +622,75 @@ public class ApiConnection {
         JSONObject responseOnJson = new JSONObject(response.getBody());
 
         return responseOnJson.getBoolean("userJoinedToPrivateTeam");
+    }
+
+    public boolean addTeamToDo(JSONObject toDo) {
+        RestTemplate conn = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            // ? LOG: Unnable to find user temp token
+            return false;
+        }
+
+        header.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<>(toDo.toString(), header);
+        ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teamToDo/addTeamToDo", entity,
+                String.class);
+        JSONObject responseOnJson = new JSONObject(response.getBody());
+
+        return responseOnJson.getBoolean("teamToDoCreated");
+    }
+
+    public JSONObject getTeamToDos() {
+        ResponseEntity<String> response = simpleRequestWithoutContent("/teamToDo/getTeamToDos");
+        return new JSONObject(response.getBody());
+    }
+
+    public boolean completeTeamToDo(boolean completed, String teamkey, int id) {
+        RestTemplate conn = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            // ? LOG: Unnable to find user temp token
+            return false;
+        }
+
+        header.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<>(new JSONObject().put("id", id).put("teamkey", teamkey).put("completedStatus", completed).toString(), header);
+        ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teamToDo/completeTeamToDo", entity,
+                String.class);
+        JSONObject responseOnJson = new JSONObject(response.getBody());
+
+        return responseOnJson.getBoolean("teamToDoCompleted");
+    }
+
+    public boolean deleteTeamToDo(String teamkey, int id) {
+        RestTemplate conn = new RestTemplate();
+
+        HttpHeaders header = new HttpHeaders();
+        try {
+            header.add("Authorization", "Bearer " + ToDoFiles.getTempUserToken());
+        } catch (IOException e) {
+            // ? LOG: Unnable to find user temp token
+            return false;
+        }
+
+        header.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<>(
+                new JSONObject().put("id", id).put("teamkey", teamkey).toString(),
+                header);
+        ResponseEntity<String> response = conn.postForEntity(apiUrl + "/teamToDo/deleteTeamToDo", entity,
+                String.class);
+        JSONObject responseOnJson = new JSONObject(response.getBody());
+
+        return responseOnJson.getBoolean("teamToDoDeleted");
     }
 }

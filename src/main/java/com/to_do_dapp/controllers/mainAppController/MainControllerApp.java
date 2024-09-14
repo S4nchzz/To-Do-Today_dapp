@@ -11,6 +11,7 @@ import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupElement
 import com.to_do_dapp.controllers.mainAppController.groupManagement.GroupElementControllerList;
 import com.to_do_dapp.controllers.mainAppController.groupManagement.Member;
 import com.to_do_dapp.controllers.mainAppController.groupManagement.MemberController;
+import com.to_do_dapp.controllers.mainAppController.teamToDoManagement.TeamToDoController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoController;
 import com.to_do_dapp.controllers.mainAppController.toDoManagement.ToDoControllerList;
 
@@ -118,6 +119,9 @@ public class MainControllerApp {
     @FXML
     private Pane fxid_createTeamPane;
 
+    @FXML
+    private Button fxid_teamToDoButton;
+    private boolean teamToDoDisplay;
     @FXML
     private TextField fxid_createTeamNameField;
     @FXML
@@ -228,6 +232,8 @@ public class MainControllerApp {
         this.memberListHbox = new ArrayList<>();
         this.memberListPointer = 0;
         this.passRevealed = false;
+
+        this.teamToDoDisplay = true;
     }
 
     public static MainControllerApp getInstance() {
@@ -381,58 +387,94 @@ public class MainControllerApp {
     @FXML
     private void sendToDoData() {
         JSONObject toDo = new JSONObject();
+        if (this.fxid_TeamToDo.isSelected()) {
+            // Add teamToDo
+            toDo.put("header", this.fxid_toDoMenuHeader.getText());
+            toDo.put("content", this.fxid_toDoMenuContent.getText());
 
-        if (this.fxid_toDoMenuDate.getText().isBlank() || this.fxid_toDoMenuTime.getText().isBlank()) {
-            return;
-        }
+            JSONObject dateOnJson = new JSONObject();
+            dateOnJson.put("date", this.fxid_toDoMenuDate.getText());
+            dateOnJson.put("time", this.fxid_toDoMenuTime.getText());
 
-        if (currentToDoControllerBeignEdited != null) {
-            toDo.put("id", currentToDoControllerBeignEdited.getId());
-            toDo.put("fav", currentToDoControllerBeignEdited.isFavSelected());
-        } else {
+            toDo.put("date", dateOnJson.toString());
             toDo.put("fav", false);
-        }
-        
-        toDo.put("header", this.fxid_toDoMenuHeader.getText());
-        toDo.put("content", this.fxid_toDoMenuContent.getText());
-        
-        JSONObject dateOnJson = new JSONObject();
-        dateOnJson.put("date", this.fxid_toDoMenuDate.getText());
-        dateOnJson.put("time", this.fxid_toDoMenuTime.getText());
-        
-        toDo.put("date", dateOnJson.toString());
-        
-        if (toDoCreation) {
             toDo.put("ended", false);
-            boolean hasBeenCreated = apiConnection.addToDo(toDo);
-            toDoCreation = false;
 
-            if (!hasBeenCreated) {
-                // ? LOG: Unnable to create ToDo
-                return;
-            }
-            
-            notificationController.show("To-Dos",
-                    "You just created a new To-Do", "Now");
-
+            apiConnection.addTeamToDo(toDo);
         } else {
-            toDo.put("ended", currentToDoControllerBeignEdited.isCompleted());
-            boolean hasBeenUpdated = apiConnection.updateToDo(toDo);
-
-            if (!hasBeenUpdated) {
-                // ? LOG: Unnable to update ToDo
+            if (this.fxid_toDoMenuDate.getText().isBlank() || this.fxid_toDoMenuTime.getText().isBlank()) {
                 return;
             }
 
-            notificationController.show("To-Dos",
-                    "You just updated 1 To-Dos", "Now");
+            if (currentToDoControllerBeignEdited != null) {
+                toDo.put("id", currentToDoControllerBeignEdited.getId());
+                toDo.put("fav", currentToDoControllerBeignEdited.isFavSelected());
+            } else {
+                toDo.put("fav", false);
+            }
+
+            toDo.put("header", this.fxid_toDoMenuHeader.getText());
+            toDo.put("content", this.fxid_toDoMenuContent.getText());
+
+            JSONObject dateOnJson = new JSONObject();
+            dateOnJson.put("date", this.fxid_toDoMenuDate.getText());
+            dateOnJson.put("time", this.fxid_toDoMenuTime.getText());
+
+            toDo.put("date", dateOnJson.toString());
+
+            if (toDoCreation) {
+                toDo.put("ended", false);
+                boolean hasBeenCreated = apiConnection.addToDo(toDo);
+                toDoCreation = false;
+
+                if (!hasBeenCreated) {
+                    // ? LOG: Unnable to create ToDo
+                    return;
+                }
+
+                notificationController.show("To-Dos",
+                        "You just created a new To-Do", "Now");
+
+            } else {
+                toDo.put("ended", currentToDoControllerBeignEdited.isCompleted());
+                boolean hasBeenUpdated = apiConnection.updateToDo(toDo);
+
+                if (!hasBeenUpdated) {
+                    // ? LOG: Unnable to update ToDo
+                    return;
+                }
+
+                notificationController.show("To-Dos",
+                        "You just updated 1 To-Dos", "Now");
+            }
+
+            this.fxid_sendInfoButton.setDisable(true);
+
+            clearVbox();
+            preloadToDoElements();
+            closeMenuDetails();
+        }
+    }
+
+    @FXML
+    private void swapBetweenTeamToDoAndPrivateToDos () {
+        if (this.teamToDoDisplay) {
+            preloadToDoElements();
+        } else {
+            preloadTeamToDos();
         }
 
-        this.fxid_sendInfoButton.setDisable(true);
-        
-        clearVbox();
-        preloadToDoElements();
-        closeMenuDetails();
+        this.teamToDoDisplay = !this.teamToDoDisplay;
+    }
+
+    private void preloadTeamToDos() {
+        JSONObject entries = apiConnection.getTeamToDos();
+        java.util.Set<String> s = entries.keySet();
+
+        for (String key : s) {
+            this.clearVbox();
+            this.fxid_toDoVbox.getChildren().add(new TeamToDoController(new JSONObject(entries.getString(key))).createPane());
+        }
     }
 
     @FXML

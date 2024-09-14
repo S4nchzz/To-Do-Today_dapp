@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane fx:id="fxid_toDoEntryPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="91.4" prefWidth="578.0" style="-fx-background-color: white;" stylesheets="@../../../src/css/MainScene.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Region fx:id="fxid_regionBorder" layoutX="15.0" layoutY="10.0" prefHeight="71.0" prefWidth="549.0" stylesheets="@../../../src/css/ToDoEntry.css" />
+      <Text fx:id="fxid_toDoDueData" fill="#aeaeae" layoutX="327.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="fxid_toDoHeader" layoutX="71.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{ToDoElementHeader:}">
+         <font>
+            <Font name="Helvetica" size="16.0" />
+         </font>
+      </Text>
+      <Text fx:id="fxid_toDoContent" fill="#aeaeae" layoutX="71.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{ToDoElementContent}" />
+      <Pane fx:id="fxid_endedColorPane" layoutX="448.0" layoutY="22.0" prefHeight="25.0" prefWidth="88.0" stylesheets="@../../../src/css/ToDoEntry.css">
+         <children>
+            <Text fx:id="fxid_hasBeenEnded" fill="WHITE" layoutX="3.0" layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="{Ended?}" textAlignment="CENTER" wrappingWidth="81.82049560546875">
+               <font>
+                  <Font name="System Bold" size="11.0" />
+               </font>
+            </Text>
+         </children></Pane>
+      <ImageView fitHeight="150.0" fitWidth="22.0" layoutX="528.0" layoutY="53.0" onMouseClicked="#deleteToDoEvent" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+         <image>
+            <Image url="@../../../src/pictures/trash.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="84.0" fitWidth="25.0" layoutX="496.0" layoutY="51.0" onMouseClicked="#completeToDo" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+         <image>
+            <Image url="@../../../src/pictures/check.png" />
+         </image>
+      </ImageView>
+      <CheckBox fx:id="fxid_checkBoxEntry" layoutX="34.0" layoutY="36.0" mnemonicParsing="false" stylesheets="@../../../src/css/ToDoEntry.css" />
+      <ImageView fx:id="fxid_toDoFromTeam" fitHeight="150.0" fitWidth="20.0" layoutX="540.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../src/pictures/grupo.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="150.0" fitWidth="20.0" layoutX="540.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../src/pictures/grupo.png" />
+         </image>
+      </ImageView>
+      <Text fx:id="fxid_teamToDoId" fill="#a6a6a6" layoutX="507.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+   </children>
+</Pane>
